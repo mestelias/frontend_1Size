@@ -1,11 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 
 export default function HomeScreen() {
+
+const navigation = useNavigation();
+
   return (
-    <View style={styles.container}>
-      <Text>HomeScreen</Text>
-      <StatusBar style="auto" />
+    <View style={styles.background}>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity                     
+                onPress={() => navigation.openDrawer()}>
+                    <FontAwesome 
+                    name={'bars'} 
+                    size={40} 
+                    color={'#25958A'}
+                    />
+                </TouchableOpacity>
+            </View>
+            <Text>HomeScreen</Text>
+            <TouchableOpacity 
+            style={styles.button} 
+            activeOpacity={0.8}>
+                <Text style={styles.textButton}>Continuer</Text>
+            </TouchableOpacity>
+        </SafeAreaView>
     </View>
   );
 }
@@ -13,8 +36,34 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#d6d1bd',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+  },
+  background: {
+    flex: 1,
+    backgroundColor: '#d6d1bd',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: '100%',
+    paddingTop: 15,
+    paddingLeft: 20,
+  },
+  button: {
+    alignItems: 'center',
+    paddingTop: 8,
+    width: '80%',
+    marginTop: 30,
+    backgroundColor: '#d95b33',
+    borderRadius: 10,
+    marginBottom: 80,
+  },
+  textButton: {
+    color: '#ffffff',
+    height: 30,
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
