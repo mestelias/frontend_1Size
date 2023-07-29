@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>ONE SIZE BITCHEEEEES !!! </Text>
+      <Text>ONE SIZE BITCHEEEEES !!! Hein Maxime ? </Text>
       <StatusBar style="auto" />
     </View>
   );
