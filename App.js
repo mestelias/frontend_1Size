@@ -1,20 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
+import HomeScreen from './screens/HomeScreen';
+import profileScreen from './screens/ProfileScreen';
+
+const Drawer = createDrawerNavigator();
+
+const AppDrawerNavigation = () => (
+  <Drawer.Navigator>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Profile" component={profileScreen} />
+  </Drawer.Navigator>
+);
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>ONE SIZE BITCHEEEEES !!! Hein sacha ??? </Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <AppDrawerNavigation />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
