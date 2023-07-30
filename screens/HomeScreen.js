@@ -1,50 +1,73 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import * as React from 'react';
+import { useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TabView, SceneMap } from 'react-native-tab-view';
 
 
+const FirstRoute = () => (
+  <View style={{ flex: 1, backgroundColor: '#FCFAF1' }} />
+);
+
+const SecondRoute = () => (
+  <View style={{ flex: 1, backgroundColor: '#FCFAF1' }} />
+);
+
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
 
 export default function HomeScreen({navigation}) {
 
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'first', title: 'Pour moi' },
+    { key: 'second', title: 'Pour un ami' },
+  ]);
 
   return (
     <View style={styles.background}>
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity                     
-                onPress={() => navigation.openDrawer()}>
-                    <FontAwesome 
-                    name={'bars'} 
-                    size={40} 
-                    color={'#25958A'}
-                    />
-                </TouchableOpacity>
-                <Text>HomeScreen</Text>
-            </View>
-            <Text style={styles.titreH1}>Recherche ton vêtement</Text>
-
-            <TouchableOpacity 
-             style={styles.button} 
-             activeOpacity={0.8}
-            >
-              <Text style={styles.textButton}>Continuer</Text>
-            </TouchableOpacity>
-        </SafeAreaView>
+        <View style={styles.container}>
+          <SafeAreaView style={styles.header}>
+              <TouchableOpacity                     
+              onPress={() => navigation.openDrawer()}>
+                  <FontAwesome 
+                  name={'bars'} 
+                  size={40} 
+                  color={'#25958A'}
+                  />
+              </TouchableOpacity>
+              <Text>HomeScreen</Text>
+          </SafeAreaView>
+          <View style={styles.titleBox}>
+            <Text style={styles.H1}>Recherche ton vêtement</Text>
+          </View>
+        </View>
+        <TabView
+          style={styles.tabView}
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+        />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FCFAF1',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   background: {
     flex: 1,
-    backgroundColor: '#d6d1bd',
+    backgroundColor: '#FCFAF1',
+  },
+  container: {
+    flex: 0.4,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   header: {
     flexDirection: 'row',
@@ -53,33 +76,15 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 20,
   },
-  titreH1: {
-    top: 106,
-    fontSize: 24,
-    fontWeight: '600',
+  titleBox: {
 
   },
-  button: {
-    alignItems: 'center',
-    paddingTop: 8,
-    width: '80%',
-    marginTop: 30,
-    backgroundColor: '#d95b33',
-    borderRadius: 10,
-    marginBottom: 80,
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
-  },
-  textButton: {
-    color: '#FFFF',
-    height: 30,
+  H1: {
+    fontSize: 24,
     fontWeight: '600',
-    fontSize: 16,
+    marginBottom: 20,
+  },
+  tabView: {
+    marginTop: 10,
   },
 });

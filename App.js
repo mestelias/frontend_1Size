@@ -11,6 +11,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+
+
 const AppDrawerNavigation = () => (
   <Drawer.Navigator 
   screenOptions={({ route }) => ({
@@ -44,10 +46,10 @@ const AppDrawerNavigation = () => (
 
 export default function App() {
   return (
-    <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="AppDrawerNavigation" component={AppDrawerNavigation} />
-        </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="AppDrawerNavigation" component={AppDrawerNavigation} />
+          </Stack.Navigator>
+      </NavigationContainer>
   );
 }
