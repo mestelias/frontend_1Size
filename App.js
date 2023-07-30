@@ -6,16 +6,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-// Elements
-import { SafeAreaView, View, Text, TouchableOpacity } from "react-native";
-
-//font
+//fonts
 import { useFonts } from "expo-font";
-// import * as SplashScreen from 'expo-splash-screen';
 
 //Screens
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+
+//Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const Stack = createNativeStackNavigator();
@@ -36,7 +34,7 @@ const AppDrawerNavigation = () => (
           iconName = focused ? "user" : "user"; // Nom de l'icône FontAwesome pour "Profile"
         }
         // Définis la couleur en fonction de la variable 'iconColor'
-        iconColor = focused ? "#D95B33" : "#000"; // Mettre '#d95b33' pour la couleur souhaitée
+        iconColor = focused ? "#D95B33" : "#000"; 
 
         // Retourne l'icône FontAwesome avec le nom calculé
         return <FontAwesome name={iconName} size={size} color={color} />;
@@ -44,7 +42,7 @@ const AppDrawerNavigation = () => (
     })}
     drawerStyle={{
       backgroundColor: "#FCFAF1",
-      width: "80%", // Ajoute la largeur de 80% ici
+      width: "80%", 
     }}
   >
     <Drawer.Screen name="Home" component={HomeScreen} />
