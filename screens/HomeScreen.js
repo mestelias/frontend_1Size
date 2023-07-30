@@ -4,11 +4,11 @@ import { useState } from 'react';
 //font
 import { useFonts } from 'expo-font';
 
-import { StyleSheet, View, TouchableOpacity, Text, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 
 const FirstRoute = () => (
@@ -41,7 +41,7 @@ const renderScene = SceneMap({
 
 export default function HomeScreen({navigation}) {
 
-  const layout = useWindowDimensions();
+  const initialLayout = { width: Dimensions.get('window').width };
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -68,12 +68,23 @@ export default function HomeScreen({navigation}) {
           </View>
         </View>
         <TabView
-          style={styles.tabView}
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{ width: layout.width }}
+      navigationState={{ index, routes }}
+      renderTabBar={props => (
+        <TabBar
+          {...props}
+          renderLabel={({ route, color }) => (
+            <Text style={{ color: '#FFFF', margin: 8 }}>
+              {route.title}
+            </Text>
+          )}
+          style={{backgroundColor: '#d95b33', fontFamily:'Outfit'}}
         />
+      )}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={initialLayout}
+      style={styles.tabView}
+    />
     </View>
   );
 }
@@ -107,12 +118,14 @@ const styles = StyleSheet.create({
   },
   tabView: {
     marginTop: 10,
+    
   },
   firstRoute: { 
     flex: 1, 
     backgroundColor: '#FCFAF1',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    
   },
   button: {
     width: 150,
