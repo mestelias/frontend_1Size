@@ -5,9 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
 
-const navigation = useNavigation();
 
   return (
     <View style={styles.background}>
@@ -21,12 +20,15 @@ const navigation = useNavigation();
                     color={'#25958A'}
                     />
                 </TouchableOpacity>
+                <Text>HomeScreen</Text>
             </View>
-            <Text>HomeScreen</Text>
+            <Text style={styles.titreH1}>Recherche ton vêtement</Text>
+
             <TouchableOpacity 
-            style={styles.button} 
-            activeOpacity={0.8}>
-                <Text style={styles.textButton}>Continuer</Text>
+             style={styles.button} 
+             activeOpacity={0.8}
+            >
+              <Text style={styles.textButton}>Continuer</Text>
             </TouchableOpacity>
         </SafeAreaView>
     </View>
@@ -36,7 +38,7 @@ const navigation = useNavigation();
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#d6d1bd',
+    backgroundColor: '#FCFAF1',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -46,10 +48,16 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
-    paddingTop: 15,
-    paddingLeft: 20,
+    padding: 20,
+  },
+  titreH1: {
+    top: 106,
+    fontSize: 24,
+    fontWeight: '600',
+
   },
   button: {
     alignItems: 'center',
@@ -59,9 +67,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#d95b33',
     borderRadius: 10,
     marginBottom: 80,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "rgba(0, 0, 0, 0.25)",
   },
   textButton: {
-    color: '#ffffff',
+    color: '#FFFF',
     height: 30,
     fontWeight: '600',
     fontSize: 16,

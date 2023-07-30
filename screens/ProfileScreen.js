@@ -5,29 +5,35 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen() {
 
-  const nav = useNavigation(); 
+  const navigation = useNavigation(); 
 
   return (
     <View style={styles.background}>
         <SafeAreaView style={styles.container}>
           <View style={styles.header}>
             <TouchableOpacity                     
-                onPress={() => nav.openDrawer()}>
-                  <FontAwesome 
+                onPress={() => navigation.openDrawer()}>
+                <FontAwesome 
                   name={'bars'} 
                   size={40} 
                   color={'#25958A'}
                   />
             </TouchableOpacity>
+            <Text>ProfileScreen</Text>
           </View>
-          <Text>ProfileScreen</Text>
+
+          <Text>
+            Profil
+          </Text>
           <TouchableOpacity 
           style={styles.button} 
           activeOpacity={0.8}
+          //AJOUTER LA FONCTIONNALITE POUR SAUVEGARDER LES INPUTS DE PROFIL
+          // onPress={()=> }
           >
-            <Text style={styles.textButton}>Continuer</Text>
+            <Text style={styles.textButton}>Sauvegarder</Text>
           </TouchableOpacity>
       </SafeAreaView>
     </View>
@@ -37,7 +43,7 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#d6d1bd',
+    backgroundColor: '#FCFAF1',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -47,22 +53,30 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
-    paddingTop: 15,
-    paddingLeft: 20,
+    padding: 20,
   },
   button: {
     alignItems: 'center',
     paddingTop: 8,
     width: '80%',
     marginTop: 30,
-    backgroundColor: '#d95b33',
-    borderRadius: 10,
+    backgroundColor: '#D6D1BD',
+    borderRadius: 30,
     marginBottom: 80,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "rgba(0, 0, 0, 0.25)",
   },
   textButton: {
-    color: '#ffffff',
+    color: '#707B81',
     height: 30,
     fontWeight: '600',
     fontSize: 16,
