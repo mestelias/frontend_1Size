@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
+
+//font
+import { useFonts } from 'expo-font';
+
 import { StyleSheet, View, TouchableOpacity, Text, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -8,7 +12,22 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 
 
 const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: '#FCFAF1' }} />
+  <View style={styles.firstRoute}>
+    <View>
+      <Text style={styles.h3} >Choisis ton vêtement</Text>
+    </View>
+    <View></View>
+    <View>
+      <TouchableOpacity 
+        style={styles.button} 
+        activeOpacity={0.8}
+        //AJOUTER LA FONCTIONNALITE POUR PASSER A L'ETAPE SUIVANTE
+        // onPress={()=> }
+        >
+          <Text style={styles.textButton}>Continuer</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
 );
 
 const SecondRoute = () => (
@@ -83,8 +102,45 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 20,
+    fontFamily: 'Outfit'
+
   },
   tabView: {
     marginTop: 10,
+  },
+  firstRoute: { 
+    flex: 1, 
+    backgroundColor: '#FCFAF1',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  button: {
+    width: 150,
+    alignItems: 'center',
+    marginTop: 20,
+    paddingTop: 8,
+    backgroundColor: '#D6D1BD',
+    borderRadius: 30,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "rgba(0, 0, 0, 0.25)",
+  },
+  h3: {
+    color: '#707B81',
+    fontSize: 20,
+    fontFamily: 'Outfit'
+
+  },
+  textButton: {
+    color: '#707B81',
+    height: 30,
+    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: 'Outfit'
   },
 });

@@ -1,8 +1,20 @@
 import 'react-native-gesture-handler';
+import { useCallback } from 'react';
+
+
+//Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+
+// Elements
 import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
+
+//font
+import { useFonts } from 'expo-font';
+// import * as SplashScreen from 'expo-splash-screen';
+
+//Screens
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -45,6 +57,23 @@ const AppDrawerNavigation = () => (
 );
 
 export default function App() {
+
+
+  const [fontsLoaded] = useFonts({
+    'Outfit': require('./assets/fonts/Outfit-Regular.ttf'),
+  });
+  
+    const onLayoutRootView = useCallback(async () => {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }, [fontsLoaded]);
+  
+    if (!fontsLoaded) {
+      return null;
+    }
+
+
   return (
       <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>

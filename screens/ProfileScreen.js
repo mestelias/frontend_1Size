@@ -80,5 +80,7 @@ const styles = StyleSheet.create({
     height: 30,
     fontWeight: '600',
     fontSize: 16,
+    fontFamily: 'Outfit'
+
   },
 });
