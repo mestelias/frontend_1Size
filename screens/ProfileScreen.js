@@ -33,13 +33,44 @@ export default function ProfileScreen() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
+
   const [modalVisible, setModalVisible] = useState(false); // à ajouter
   const [cameraVisible, setCameraVisible] = useState(false); // à ajouter
   const [hasPermission, setHasPermission] = useState(false); // à ajouter
   const [type, setType] = useState(CameraType.front); // à ajouter
   const [flashMode, setFlashMode] = useState(FlashMode.off); // à ajouter
   const [picPreview, setPicPreview] = useState(null)
+
+    const [gender, setGender] = useState([
+    { id: 1, value: true, name: "Homme", selected: false },
+    { id: 2, value: false, name: "Femme", selected: false }
+  ]);
+
+  // Création des différents éléments pour chaque radiobouton qui sera map dans le return
+
+  const RadioButton = ({ onPress, selected, children }) => {
+    return (
+      <View style={styles.radioButtonContainer}>
+        <TouchableOpacity onPress={onPress} style={styles.radioButton}>
+          {selected ? <View style={styles.radioButtonIcon} /> : null}
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onPress}>
+          <Text style={styles.radioButtonText}>{children}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+   // Fonction onclick du Radiobouton pour passer d'un sexe à un autre
+
+  const onRadioBtnClick = (item) => {
+    let updatedState = gender.map((isGender) =>
+      isGender.id === item.id
+        ? { ...isGender, selected: true }
+        : { ...isGender, selected: false }
+    );
+    setGender(updatedState);
+  };
 
   let cameraRef = useRef(null); // à ajouter
 // à ajouter
@@ -95,14 +126,16 @@ export default function ProfileScreen() {
         </View>
         <View style={styles.profilAvatar}>
           <Text style={styles.h1}>Profil</Text>
-          <TouchableOpacity onPress={() => {
+          <TouchableOpacity style={styles.picture} onPress={() => {
               setModalVisible(!modalVisible);
             }}>
           <Image
             source={picPreview != null ? { uri: picPreview } : require('../assets/Nelson.jpg')}
             style={styles.roundedImage}
           />
-          <Ionicons name="camera-outline" size={32} color="#D95B33"/>
+          <View style={styles.iconContainer}>
+           <Ionicons name="camera-outline" size={23} color="#fff"/>
+          </View>
           </TouchableOpacity>
           <Text>@Samy</Text>
           <TouchableOpacity
@@ -237,14 +270,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingBottom: 25,
   },
-  background: {
-    flex: 1,
-    backgroundColor: '#FCFAF1' ,
-  },
-  scrollView: {
-    marginHorizontal: 20,
-  },
-  // Ajouter style de la modale
   modal : {
   flexDirection: "row",
   marginTop: 50,
@@ -254,6 +279,13 @@ const styles = StyleSheet.create({
   alignItems: "space-around",
   shadowColor: "#000"
   },  
+  background: {
+    flex: 1,
+    backgroundColor: '#FCFAF1' ,
+  },
+  scrollView: {
+    marginHorizontal: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: "#FCFAF1",
@@ -333,8 +365,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 5,
     paddingTop: 8,
-    width: "80%",
-    marginTop: 50,
+    width: "50%",
+    marginTop: 30,
+    backgroundColor: "#D95B33",
+    borderRadius: 30,
+    marginBottom: 40,
+    fontSize : 12,
+  },
+  savebutton: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 5,
+    paddingTop: 8,
+    width: "90%",
+    marginTop: 35,
     backgroundColor: "#D6D1BD",
     borderRadius: 30,
     fontSize : 12,
