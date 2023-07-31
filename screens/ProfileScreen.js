@@ -40,7 +40,7 @@ export default function ProfileScreen() {
           <Text style={styles.h1}>Profil</Text>
           <Image
             style={styles.imageAvatar}
-            source={require("../assets/avatar-profil.png")}
+            source={require("../assets/splash-nico.png")}
           />
           <Text>@USERNAME</Text>
           <TouchableOpacity
