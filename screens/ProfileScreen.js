@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
+  Modal, //Ajout modal import
   StyleSheet,
   Text,
   View,
@@ -10,13 +11,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableWithoutFeedback,
   Icon
 } from "react-native";
+import { Camera, CameraType, FlashMode } from 'expo-camera'; //ADD TOUT CA
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Avatar } from "@rneui/themed";
 import Ionicons from '@expo/vector-icons/Ionicons';
-//import { Icon } from "@rneui/base";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -25,12 +26,57 @@ export default function ProfileScreen() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
+  const [modalVisible, setModalVisible] = useState(false); // à ajouter
+  const [cameraVisible, setCameraVisible] = useState(false); // à ajouter
+  const [hasPermission, setHasPermission] = useState(false); // à ajouter
+  const [type, setType] = useState(CameraType.front); // à ajouter
+  const [flashMode, setFlashMode] = useState(FlashMode.off); // à ajouter
+  const [picPreview, setPicPreview] = useState(null)
 
-  return (
+  let cameraRef = useRef(null); // à ajouter
+// à ajouter
+  const takePicture = async () => {
+    const photo = await cameraRef.takePictureAsync({ quality: 0.3 })
+    setPicPreview(photo.uri)
+  }
+
+  //Ajout handleCameraButton
+  const handleCameraButton = () => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+      setCameraVisible(true)
+    })();
+  }
+
+  console.log(cameraVisible)
+  //Ajout condition
+  if (!cameraVisible) return (
     <KeyboardAvoidingView
       style={styles.background}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+{/* Modal à ajouter */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}>
+        <View style={styles.modal}>
+          <TouchableOpacity
+            onPress={() => {
+              handleCameraButton();
+            }}>
+            <Ionicons name="camera-outline" size={32} color="#D95B33"/>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <Ionicons name="folder-open-outline" size={32} color="#D95B33"/>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+{/* fin de l'ajout */}
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -41,11 +87,13 @@ export default function ProfileScreen() {
         </View>
         <View style={styles.profilAvatar}>
           <Text style={styles.h1}>Profil</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+              setModalVisible(!modalVisible);
+            }}>
           <Image
-            source={require("../assets/Nelson.jpg")}
+            source={picPreview != null ? { uri: picPreview } : require('../assets/Nelson.jpg')}
             style={styles.roundedImage}
-  />
+          />
           <Ionicons name="camera-outline" size={32} color="#D95B33"/>
           </TouchableOpacity>
           <Text>@Samy</Text>
@@ -101,15 +149,61 @@ export default function ProfileScreen() {
       </ScrollView>
     </KeyboardAvoidingView>
   );
+  if (hasPermission) return (
+    <Camera type={type} flashMode={flashMode} ref={(ref)=>cameraRef=ref} style={styles.camera}>
+      <View style={styles.cameraIconsDiv}>
+      <TouchableOpacity onPress={() => setType(type === CameraType.back ? CameraType.front : CameraType.back)} style={styles.cameraButton}>
+        <Ionicons name="refresh-outline" size={32} color="#D95B33"/>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off)} style={styles.cameraButton}>
+        <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? '#D95B33' : '#e8be4b'}/>
+      </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.cameraSnap} onPress={() => cameraRef && takePicture()}>
+        <Ionicons name="scan-circle-outline" size={95} color="#D95B33"/>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {setCameraVisible(false)}} >
+        <Ionicons name="return-up-back" size={32} color="#D95B33"/>
+      </TouchableOpacity>
+    </Camera>
+  )
 }
 
 const styles = StyleSheet.create({
+  camera: {
+    flex:1,
+  }, 
+  cameraIconsDiv: {
+    flex: 0.1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  cameraSnap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 25,
+  },
   background: {
     flex: 1,
   },
   scrollView: {
     marginHorizontal: 20,
   },
+  // Ajouter style de la modale
+  modal : {
+  flexDirection: "row",
+  marginTop: 50,
+  backgroundColor: "white",
+  padding: 35,
+  justifyContent: "space-around",
+  alignItems: "space-around",
+  shadowColor: "#000"
+  },  
   container: {
     flex: 1,
     // backgroundColor: "#FCFAF1",
@@ -163,7 +257,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 8,
     width: "80%",
-    marginTop: 30,
+    marginTop: 50,
     backgroundColor: "#D6D1BD",
     borderRadius: 30,
     marginBottom: 80,
