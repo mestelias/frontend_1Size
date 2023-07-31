@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
-  Modal, //Ajout modal import
+  Modal, 
   StyleSheet,
   Text,
   View,
@@ -14,7 +14,7 @@ import {
   TouchableWithoutFeedback,
   Icon
 } from "react-native";
-import { Camera, CameraType, FlashMode } from 'expo-camera'; //ADD TOUT CA
+import { Camera, CameraType, FlashMode } from 'expo-camera'; 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -34,11 +34,11 @@ export default function ProfileScreen() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
-  const [modalVisible, setModalVisible] = useState(false); // à ajouter
-  const [cameraVisible, setCameraVisible] = useState(false); // à ajouter
-  const [hasPermission, setHasPermission] = useState(false); // à ajouter
-  const [type, setType] = useState(CameraType.front); // à ajouter
-  const [flashMode, setFlashMode] = useState(FlashMode.off); // à ajouter
+  const [modalVisible, setModalVisible] = useState(false);
+  const [cameraVisible, setCameraVisible] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
+  const [type, setType] = useState(CameraType.front);
+  const [flashMode, setFlashMode] = useState(FlashMode.off);
   const [picPreview, setPicPreview] = useState(null)
 
     const [gender, setGender] = useState([
