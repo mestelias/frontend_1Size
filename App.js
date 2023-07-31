@@ -1,5 +1,8 @@
 import "react-native-gesture-handler";
-import { useCallback } from "react";
+
+//Sound
+import React, { useEffect } from "react";
+import { Audio } from "expo-av";
 
 //Navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -15,7 +18,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-//import {} from 'react-native-material-design';
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -56,11 +59,21 @@ export default function App() {
     Outfit: require("./assets/fonts/Outfit-Regular.ttf"),
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+ /*const playSplashAudio = async () => {
+    try {
+      const soundObject = new Audio.Sound();
+      await soundObject.loadAsync(require("./assets/OneLove.mp3"));
+      await soundObject.playAsync();
+    } catch (error) {
+      console.error("Error playing splash audio: ", error);
     }
-  }, [fontsLoaded]);
+  };
+
+ useEffect(() => {
+    if (fontsLoaded) {
+      playSplashAudio(); // Play the splash audio when fonts are loaded
+    }
+  }, [fontsLoaded]);*/
 
   if (!fontsLoaded) {
     return null;
