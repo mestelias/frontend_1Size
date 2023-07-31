@@ -10,10 +10,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Icon
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Avatar } from "@rneui/themed";
+import Ionicons from '@expo/vector-icons/Ionicons';
+//import { Icon } from "@rneui/base";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -38,6 +41,13 @@ export default function ProfileScreen() {
         </View>
         <View style={styles.profilAvatar}>
           <Text style={styles.h1}>Profil</Text>
+          <TouchableOpacity>
+          <Image
+            source={require("../assets/Nelson.jpg")}
+            style={styles.roundedImage}
+  />
+          <Ionicons name="camera-outline" size={32} color="#D95B33"/>
+          </TouchableOpacity>
           <Text>@Samy</Text>
           <TouchableOpacity
             style={styles.button}
@@ -177,5 +187,10 @@ const styles = StyleSheet.create({
     width: 90,
     height: 124,
     marginTop: 15,
+  },
+  roundedImage: {
+    width: 150, 
+    height: 150,
+    borderRadius: 75, 
   },
 });
