@@ -12,6 +12,7 @@ import { useFonts } from "expo-font";
 //Screens
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import SignInScreen from "./screens/SignInScreen";
 
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -68,6 +69,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="SignInScreen"
+          component={SignInScreen}
+        />
         <Stack.Screen
           name="AppDrawerNavigation"
           component={AppDrawerNavigation}

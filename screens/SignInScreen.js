@@ -18,16 +18,16 @@ export default function SignInScreen() {
   const [password, setPassword] = useState("");
 
   return (
-    <View style={styles.container}>
+    <View style={styles.background}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => handleSubmit()} activeOpacity={0.8}>
+          <Text style={styles.color}>Retour</Text>
+        </TouchableOpacity>
+      </View>
+      
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
         <Text style={styles.title}>Connecte-toi</Text>
         <Text style={styles.h3}>Pour obtenir ta vraie taille</Text>
-        <View style={styles.header}>
-          {/* <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-          </TouchableOpacity> */}
-          <Text style={styles.color}>Retour</Text>
-        </View>
   
         <View style={styles.inputContainer}>
           <Text style={styles.texte}>Adresse mail</Text>
@@ -44,16 +44,26 @@ export default function SignInScreen() {
             onChangeText={(value) => setPassword(value)}
             value={password}
           />
-          <Text style={styles.color}>J'ai oublié mon mot de passe</Text>
+          <TouchableOpacity onPress={() => handleSubmit()} style={styles.colormdpBottom} activeOpacity={0.8}>
+            <Text style={styles.colormdp}> J'ai oublié mon mot de passe</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.pressBottom}>
           <TouchableOpacity onPress={() => handleSubmit()} style={styles.register} activeOpacity={0.8}>
             <Text style={styles.textButton}>Se connecter</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => handleSubmit()} style={styles.google} activeOpacity={0.8}>
-            <Text style={styles.textButton}>Se connecter avec Google</Text>
+            <Text style={styles.textGoogle}>Se connecter avec Google</Text>
           </TouchableOpacity>
-          <Text style={styles.textButton}>Tu n'as pas de compte ?</Text>
-          <Text style={styles.textCreation}>Crée un compte</Text>
+          
+          <View style={styles.creation}>
+            <Text style={styles.textCompte}>Tu n'as pas de compte ?</Text>
+            <TouchableOpacity onPress={() => handleSubmit()} activeOpacity={0.8}>
+              <Text style={styles.textCreation}> Crée un compte</Text>
+            </TouchableOpacity>
+          </View>
   
           {/* {emailError && <Text style={styles.error}>Invalid email address</Text>} */}
   
@@ -66,18 +76,31 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    width: '100%',
+    height: '100%',
+  },
+  header: {
+    flex: 0.1,
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    paddingTop: 60,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: '#fcfaf1',
+  },
+  color: {
+    // LA POLICE N'EST PAS LA BONNE, PAS COMPATIBLE AVEC LE BOLD
+    color: '#d95b33',
+    //fontFamily: 'Outfit',
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   container: {
     flex: 1,
-    flexDirection : 'column',
-    // backgroundColor: "#FCFAF1",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: 50,
     backgroundColor: '#fcfaf1'
-  },
-  texte: {
-    fontFamily: 'Outfit',
-
   },
   title: {
     fontSize: 30,
@@ -93,47 +116,93 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontFamily: "Outfit",
     marginBottom: 10,
+    textAlign: "center"
+  },
+  inputContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '90%',
+    backgroundColor: '#fcfaf1',
+    padding: 20,
+    marginTop: 30,
+    borderRadius: 10,
+  },
+  texte: {
+    fontFamily: 'Outfit',
   },
   input: {
-    alignItems: "center",
+    alignItems: 'flex-start',
     height: 40,
-    margin: 8,
     borderWidth: 1,
     borderColor: "#D6D1BD",
     padding: 5,
-    width: "80%",
+    marginTop: 10,
+    marginBottom: 20, 
+    width: "100%",
     fontFamily: 'Outfit',
     borderRadius: 5,
   },
-  color: {
+  colormdpBottom: {
+    width: '100%',
+  },
+  colormdp: {
     color: '#d95b33',
     fontFamily: 'Outfit',
+    fontSize: 15,
+    textAlign: 'right',
   },
-  header: {
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start'
+  pressBottom: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '90%',
+    backgroundColor: '#fcfaf1',
+    padding: 20,
+    marginTop: 30,
+    borderRadius: 10,
   },
   register: {
     alignItems: 'center',
-    paddingTop: 8,
+    paddingTop: 3,
     width: '100%',
-    marginTop: 30,
+    height: '20%',
+    marginTop: 10,
     backgroundColor: '#d95b33',
-    borderRadius: 15,
+    borderRadius: 30,
   },
   google: {
     alignItems: 'center',
-    paddingTop: 8,
+    paddingTop: 3,
     width: '100%',
-    marginTop: 30,
+    height: '20%',
+    marginTop: 10,
     backgroundColor: 'white',
-    borderRadius: 15,
+    borderRadius: 30,
   },
   textButton: {
-    fontFamily: 'Outfit'
+    fontFamily: 'Outfit',
+    color: 'white',
+    padding : '5%',
+    fontSize: 20,
+  },
+  textGoogle: {
+    fontFamily: 'Outfit',
+    padding : '5%',
+    fontSize: 20,
+  },
+  creation: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 30
+  },
+  textCompte: {
+    fontFamily: 'Outfit',
+    fontSize: 15,
   },
   textCreation: {
     fontFamily: 'Outfit',
     color: '#d95b33',
-  }
+    fontSize: 15,
+    marginStart: 5
+  },
 })
