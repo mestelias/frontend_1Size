@@ -20,7 +20,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function ProfileScreen() {
+  
   const navigation = useNavigation();
+
+//états pour gérer les focus des champs inputs 
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused2, setIsFocused2] = useState(false);
+  const [isFocused3, setIsFocused3] = useState(false);
+  const [isFocused4, setIsFocused4] = useState(false);
+
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -82,8 +90,8 @@ export default function ProfileScreen() {
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-          </TouchableOpacity>
-          <Text>Retour</Text>
+          </TouchableOpacity>      
+          <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text> 
         </View>
         <View style={styles.profilAvatar}>
           <Text style={styles.h1}>Profil</Text>
@@ -98,12 +106,12 @@ export default function ProfileScreen() {
           </TouchableOpacity>
           <Text>@Samy</Text>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.classicbutton}
             activeOpacity={0.8}
             // A REDIRIGER VERS LE CALIBRAGE
             // onPress={()=> }
           >
-            <Text style={styles.textButton}>Me re-calibrer</Text>
+            <Text style={styles.textButtonactive}>Me re-calibrer</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.dataProfil}>
@@ -111,26 +119,59 @@ export default function ProfileScreen() {
             <Text style={styles.h3}>Mes coordonnées</Text>
           </View>
           <View style={styles.inputProfil}>
+            <View style = {styles.gender}>
+              {/* Radio boutons */}
+              {gender.map((item) => (
+              <RadioButton
+                onPress={() => onRadioBtnClick(item)}
+                selected={item.selected}
+                key={item.id}
+              >
+              {item.name}
+              </RadioButton>
+              ))} 
+              {/* Radio boutons */}
+            </View>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                { borderColor: isFocused ? "#D95B33" : "#D6D1BD" }
+              ]}
+              onFocus={()=> setIsFocused(true)}
+              onBlur={()=> setIsFocused(false)}
               onChangeText={setFirstname}
               value={firstname}
               placeholder="Prénom"
             ></TextInput>
             <TextInput
-              style={styles.input}
+               style={[
+                styles.input,
+                { borderColor: isFocused2 ? "#D95B33" : "#D6D1BD" }
+              ]}
+              onFocus={()=> setIsFocused2(true)}
+              onBlur={()=> setIsFocused2(false)}
               onChangeText={setName}
               value={name}
               placeholder="Nom"
             ></TextInput>
             <TextInput
-              style={styles.input}
+               style={[
+                styles.input,
+                { borderColor: isFocused3 ? "#D95B33" : "#D6D1BD" }
+              ]}
+              onFocus={()=> setIsFocused3(true)}
+              onBlur={()=> setIsFocused3(false)}
               onChangeText={setUsername}
               value={username}
               placeholder="Nom utilisateur"
             ></TextInput>
             <TextInput
-              style={styles.input}
+               style={[
+                styles.input,
+                { borderColor: isFocused4 ? "#D95B33" : "#D6D1BD" }
+              ]}
+              onFocus={()=> setIsFocused4(true)}
+              onBlur={()=> setIsFocused4(false)}
               onChangeText={setEmail}
               value={email}
               placeholder="Email"
@@ -138,12 +179,20 @@ export default function ProfileScreen() {
           </View>
         </View>
         <TouchableOpacity
-          style={styles.button}
+          style={styles.savebutton}
           activeOpacity={0.8}
           //todo : AJOUTER LA FONCTIONNALITE POUR SAUVEGARDER LES INPUTS DE PROFIL
           // onPress={()=> }
         >
-          <Text style={styles.textButton}>Sauvegarder</Text>
+          <Text style={styles.textButtoninactive}>Sauvegarder mes modifications</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.classicbutton}
+          activeOpacity={0.8}
+          //todo : AJOUTER LA FONCTIONNALITE POUR INVITER UN AMI
+          // onPress={()=> }
+        >
+          <Text style={styles.textButtonactive}>Inviter un ami</Text>
         </TouchableOpacity>
       </SafeAreaView>
       </ScrollView>
@@ -190,6 +239,7 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
+    backgroundColor: '#FCFAF1' ,
   },
   scrollView: {
     marginHorizontal: 20,
@@ -206,7 +256,7 @@ const styles = StyleSheet.create({
   },  
   container: {
     flex: 1,
-    // backgroundColor: "#FCFAF1",
+    backgroundColor: "#FCFAF1",
     alignItems: "center",
     justifyContent: "flex-end",
   },
@@ -219,9 +269,30 @@ const styles = StyleSheet.create({
   },
   profilAvatar: {
     width: "100%",
-    margin: 15,
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
+    margin : 0,
+  },
+  picture: {
+  flex: 1,
+  position: 'relative',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom : 25,
+  },
+  iconContainer: {
+    flex:1,
+    position: 'absolute',
+    top: '85%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#D95B33',
+    width: 40, 
+    height: 40,
+    borderRadius: 20,
+    padding: 8,
   },
   h3: {
     width: "80%",
@@ -233,49 +304,55 @@ const styles = StyleSheet.create({
   dataProfil: {
     alignItems: "center",
     width: "100%",
+    margin : 0,
   },
   inputProfil: {
+    flex: 1, 
     alignItems: "center",
     width: "100%",
   },
   input: {
     alignItems: "center",
-    height: 40,
-    margin: 8,
+    height: 50,
+    width: "95%",
+    marginTop: 10,
     borderWidth: 1,
-    borderColor: "#D6D1BD",
     padding: 5,
-    width: "80%",
     fontFamily: 'Outfit',
+    borderRadius: 5,
+    backgroundColor: '#FFF',
+    fontSize: 12,
   },
   h1: {
     fontFamily: "Outfit",
     fontSize: 24,
-    marginBottom: 5,
+    marginBottom: 15,
   },
-  button: {
+  classicbutton: {
     alignItems: "center",
+    justifyContent: "center",
+    padding: 5,
     paddingTop: 8,
     width: "80%",
     marginTop: 50,
     backgroundColor: "#D6D1BD",
     borderRadius: 30,
-    marginBottom: 80,
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
+    fontSize : 12,
+    marginBottom: 10,
   },
-  textButton: {
+  textButtonactive: {
     color: "#707B81",
     height: 30,
-    fontWeight: "600",
-    fontSize: 16,
     fontFamily: "Outfit",
+    fontWeight: "600",
+    color: "#FFF",
+  },
+  textButtoninactive: {
+    color: "#707B81",
+    height: 30,
+    fontFamily: "Outfit",
+    fontWeight: "600",
+    color: "#707B81",
   },
   imageAvatar: {
     width: 90,
@@ -287,4 +364,37 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75, 
   },
+  radioButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 15,
+    marginRight: 30,
+    marginLeft: 30,
+    padding: 5,
+  },
+  radioButton: {
+    height: 20,
+    width: 20,
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#D6D1BD",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  radioButtonIcon: {
+    height: 14,
+    width: 14,
+    borderRadius: 7,
+    backgroundColor: "#25958A"
+  },
+  radioButtonText: {
+    fontFamily: "Outfit",
+    fontSize: 12,
+    marginLeft: 16,
+  },
+  gender: {
+    marginTop: 20,
+    flexDirection: "row",
+  }
 });
