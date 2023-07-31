@@ -38,10 +38,6 @@ export default function ProfileScreen() {
         </View>
         <View style={styles.profilAvatar}>
           <Text style={styles.h1}>Profil</Text>
-          <Image
-            style={styles.imageAvatar}
-            source={require("../assets/avatar-profil.png")}
-          />
           <Text>@Samy</Text>
           <TouchableOpacity
             style={styles.button}
