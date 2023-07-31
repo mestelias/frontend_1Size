@@ -42,11 +42,11 @@ export default function ProfileScreen() {
             style={styles.imageAvatar}
             source={require("../assets/avatar-profil.png")}
           />
-          <Text>@USERNAME</Text>
+          <Text>@Samy</Text>
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
-            //A REDIRIGER VERS LE CALIBRAGE
+            // A REDIRIGER VERS LE CALIBRAGE
             // onPress={()=> }
           >
             <Text style={styles.textButton}>Me re-calibrer</Text>
@@ -86,7 +86,7 @@ export default function ProfileScreen() {
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.8}
-          //AJOUTER LA FONCTIONNALITE POUR SAUVEGARDER LES INPUTS DE PROFIL
+          //todo : AJOUTER LA FONCTIONNALITE POUR SAUVEGARDER LES INPUTS DE PROFIL
           // onPress={()=> }
         >
           <Text style={styles.textButton}>Sauvegarder</Text>
