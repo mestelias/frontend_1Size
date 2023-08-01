@@ -15,6 +15,7 @@ import { useFonts } from "expo-font";
 //Screens
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 
 //Store
 import { Provider } from 'react-redux';
@@ -50,11 +51,12 @@ const AppDrawerNavigation = () => (
     })}
     drawerStyle={{
       backgroundColor: "#FCFAF1",
-      width: "80%", 
+      width: "80%",
     }}
   >
     <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
+    <Drawer.Screen name="SignUp" component={SignUpScreen} />
   </Drawer.Navigator>
 );
 
