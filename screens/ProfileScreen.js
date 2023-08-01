@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect} from "react";
+import { useSelector } from 'react-redux';
 import { useNavigation } from "@react-navigation/native";
 import {
   Modal, 
@@ -18,6 +19,8 @@ import { Camera, CameraType, FlashMode } from 'expo-camera';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
+
+const BACKEND_ADRESS = "http://192.168.10.188:3000/users"
 
 export default function ProfileScreen() {
   
@@ -45,6 +48,16 @@ export default function ProfileScreen() {
     { id: 1, value: true, name: "Homme", selected: false },
     { id: 2, value: false, name: "Femme", selected: false }
   ]);
+
+//Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
+
+const usertoken = useSelector((state) => state.user.token);
+
+useEffect(
+    fetch(`${BACKEND_ADRESS}/userdata:${usertoken}`)
+    .then(response =>response.json())
+    .then(data => {setFirstname(data.nom), setName(data.prenom), setUsername(data.username), setEmail(data.email)})
+    )
 
   // Création des différents éléments pour chaque radiobouton qui sera map dans le return
 

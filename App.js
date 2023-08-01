@@ -20,11 +20,31 @@ import SignInScreen from "./screens/SignInScreen";
 
 //Store
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
+import user from './reducers/user';
+
+//Persistance du Store
+import {persistStore, persistReducer} from "redux-persist"
+import { PersistGate } from "redux-persist/integration/react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+
+const reducers=combineReducers({user});
+const persistConfig = {
+  key: "1size",
+  storage: AsyncStorage
+};
+
+const store = configureStore({
+  reducer : persistReducer(persistConfig, reducers),
+  middleware : (getDefaultMiddleware) =>
+  getDefaultMiddleware({serializableCheck : false}),
+});
+
+const persistor = persistStore(store);
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -88,13 +108,17 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="AppDrawerNavigation"
-          component={AppDrawerNavigation}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <NavigationContainer>
+         <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+            name="AppDrawerNavigation"
+            component={AppDrawerNavigation}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
