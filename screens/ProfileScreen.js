@@ -20,22 +20,37 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-//const BACKEND_ADRESS = "http://192.168.10.188:3000/users"
+const backendIp = process.env.EXPO_PUBLIC_IP
+
+
 
 export default function ProfileScreen() {
   
   const navigation = useNavigation();
-
-//états pour gérer les focus des champs inputs 
+  
+  //états pour gérer les focus des champs inputs 
   const [isFocused, setIsFocused] = useState(false);
   const [isFocused2, setIsFocused2] = useState(false);
   const [isFocused3, setIsFocused3] = useState(false);
   const [isFocused4, setIsFocused4] = useState(false);
-
+  
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+
+/* Afin d'éviter de faire plein de fetchs vers la BDD, l'ensemble des infos du user doivent être mis dans un seul état - à faire
+  const [userData, setUserData] = useState({
+    firstname: "",
+    name: "",
+    username: "",
+    email: "",
+    gender: [
+      { id: 1, value: true, name: "Homme", selected: false },
+      { id: 2, value: false, name: "Femme", selected: false }
+    ],
+  })
+  */
 
   const [modalVisible, setModalVisible] = useState(false);
   const [cameraVisible, setCameraVisible] = useState(false);
@@ -43,21 +58,33 @@ export default function ProfileScreen() {
   const [type, setType] = useState(CameraType.front);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
   const [picPreview, setPicPreview] = useState(null)
-
-    const [gender, setGender] = useState([
+  
+  const [gender, setGender] = useState([
     { id: 1, value: true, name: "Homme", selected: false },
     { id: 2, value: false, name: "Femme", selected: false }
   ]);
-
-//Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
-
-//const usertoken = useSelector((state) => state.user.token);
-
-/*useEffect(
-    fetch(`${BACKEND_ADRESS}/userdata:${usertoken}`)
-    .then(response =>response.json())
-    .then(data => {setFirstname(data.nom), setName(data.prenom), setUsername(data.username), setEmail(data.email)})
-    )*/
+  
+  console.log(usertoken)
+  console.log(backendIp)
+  
+  //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
+  const usertoken = useSelector((state) => state.user.value.token);
+  
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(`${backendIp}/users/userdata${usertoken}`);
+      const data = await response.json();
+      console.log(data);
+      setFirstname(data.nom);
+      setName(data.prenom);
+      setUsername(data.username);
+      setEmail(data.email);
+      setGender([
+        { id: 1, value: true, name: "Homme", selected: data.genre === true || data.genre === 'Homme' },
+        { id: 2, value: false, name: "Femme", selected: data.genre === false || data.genre === 'Femme' }        
+      ]);
+    })();
+  }, []);
 
   // Création des différents éléments pour chaque radiobouton qui sera map dans le return
 
@@ -101,7 +128,7 @@ export default function ProfileScreen() {
     })();
   }
 
-  console.log(cameraVisible)
+  //console.log(cameraVisible)
   //Ajout condition
   if (!cameraVisible) return (
     <KeyboardAvoidingView

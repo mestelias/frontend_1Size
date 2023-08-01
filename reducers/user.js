@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
- value: [],
+ value: '',
 };
 
 export const userSlice = createSlice({
@@ -9,7 +9,7 @@ export const userSlice = createSlice({
  initialState,
  reducers: {
    addUserToStore: (state, action) => {
-     state.value.push(action.payload.token);
+     state.value = action.payload;
    },
  },
 });

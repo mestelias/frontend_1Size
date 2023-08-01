@@ -12,11 +12,15 @@ import {
   ScrollView,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useDispatch } from 'react-redux';
+import { addUserToStore } from '../reducers/user';
 
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+  
 export default function SignInScreen({ navigation }) {
+
+  const dispatch = useDispatch();
 
   const backendIp = process.env.EXPO_PUBLIC_IP
   // les états correspondants aux inputs
@@ -81,11 +85,13 @@ export default function SignInScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          dispatch(addUserToStore(data));
           navigation.navigate("AppDrawerNavigation", { screen: "Home" });
         } else {
           // User already exists in database
           //TO DO : gérer l'affichage
           setErrorMsg(data.error);
+          console.log(data)
         }
         // dispatch(login(signInUsername));
         setEmail("");
