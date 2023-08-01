@@ -20,7 +20,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-const BACKEND_ADRESS = "http://192.168.10.188:3000/users"
+//const BACKEND_ADRESS = "http://192.168.10.188:3000/users"
 
 export default function ProfileScreen() {
   
@@ -51,13 +51,13 @@ export default function ProfileScreen() {
 
 //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
 
-const usertoken = useSelector((state) => state.user.token);
+//const usertoken = useSelector((state) => state.user.token);
 
-useEffect(
+/*useEffect(
     fetch(`${BACKEND_ADRESS}/userdata:${usertoken}`)
     .then(response =>response.json())
     .then(data => {setFirstname(data.nom), setName(data.prenom), setUsername(data.username), setEmail(data.email)})
-    )
+    )*/
 
   // Création des différents éléments pour chaque radiobouton qui sera map dans le return
 

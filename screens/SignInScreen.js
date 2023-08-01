@@ -68,7 +68,7 @@ export default function SignInScreen({ navigation }) {
     setErrorMsg('')
 
 
-    fetch(`http://192.168.220.101:3000/users/signin`, {
+    fetch(`http://192.168.10.188:3000/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
