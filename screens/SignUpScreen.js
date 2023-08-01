@@ -13,20 +13,20 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { checkbody } from "../modules/checkBody";
-
 import { useDispatch } from 'react-redux';
 import { addUserToStore } from '../reducers/user';
 
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export default function SignUpScreen({ navigation }) {
-  // les états correspondants aux inputs
+
+export default function SignUpScreen() {
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState([{ id: 1, value: true, name: "Homme", selected: false },
+  { id: 2, value: false, name: "Femme", selected: false }]);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -44,7 +44,7 @@ export default function SignUpScreen({ navigation }) {
     confirmPassword: false,
   })
 
- // Message d'erreur
+  // Message d'erreur
   const [errorMsg, setErrorMsg] = useState("")
   const [passwordMatch, setPasswordMatch] = useState(true)
   const [emailValid, setEmailValid] = useState(true)
@@ -133,130 +133,144 @@ export default function SignUpScreen({ navigation }) {
       });
   };
 
-  console.log('password', passwordMatch)
-  console.log('email', emailValid)
+  // Création des différents éléments pour chaque radiobouton qui sera map dans le return
+  const RadioButton = ({ onPress, selected, children }) => {
+    return (
+      <View style={styles.radioButtonContainer}>
+        <TouchableOpacity onPress={onPress} style={styles.radioButton}>
+          {selected ? <View style={styles.radioButtonIcon} /> : null}
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onPress}>
+          <Text style={styles.radioButtonText}>{children}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  // Fonction onclick du Radiobouton pour passer d'un sexe à un autre
+  const onRadioBtnClick = (item) => {
+    let updatedState = gender.map((isGender) =>
+      isGender.id === item.id
+        ? { ...isGender, selected: true }
+        : { ...isGender, selected: false }
+    );
+    setGender(updatedState);
+  };
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <Text style={styles.title}>Crée ton compte</Text>
-        <Text style={styles.h3}>Pour commencer l'aventure OneSize</Text>
-        {/* FIXME error lors de la navigation (même si ça fonctionne) */}
+    <View style={styles.background}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => {
           navigation.reset({
             index: 0,
             routes: [{ name: 'AppDrawerNavigation' }],
           });
           navigation.navigate('HomeScreen');}} 
-          style={styles.header}>
+          activeOpacity={0.8}>
             
           <Text style={styles.color}>Retour</Text>
         </TouchableOpacity>
-
+      </View>
+      
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+        <Text style={styles.title}>Crée ton compte</Text>
+        <View style={styles.onesize}>
+          <Text style={styles.h3}>Pour commencer l'aventure</Text>
+          <Text style={styles.one}> 1</Text>
+          <Text style={styles.size}>Size</Text>
+        </View>
+  
         <View style={styles.inputContainer}>
+          <View style = {styles.gender}>
+            {/* Radio boutons */}
+            {gender.map((item) => (
+            <RadioButton
+              onPress={() => onRadioBtnClick(item)}
+              selected={item.selected}
+              key={item.id}
+            >
+            {item.name}
+            </RadioButton>
+            ))} 
+            {/* Radio boutons */}
+          </View>
           <TextInput
-            placeholder="Prenom"
+            placeholder="Prenom" 
             style={[
               styles.input,
               (errors.firstname) ? styles.inputError : null
             ]}
-            onChangeText={setFirstname}
+            onChangeText={(value) => setFirstname(value)}
             value={firstname}
           />
-          {/* Add error styles to other input fields */}
           <TextInput
-            placeholder="Nom"
+            placeholder="Nom" 
             style={[
               styles.input,
               (errors.name) ? styles.inputError : null
-
             ]}
-            onChangeText={setName}
+            onChangeText={(value) => setName(value)}
             value={name}
           />
           <TextInput
-            placeholder="Username"
+            placeholder="Username" 
             style={[
               styles.input,
               (errors.username) ? styles.inputError : null
-
             ]}
-            onChangeText={setUsername}
+            onChangeText={(value) => setUsername(value)}
             value={username}
           />
           <TextInput
-            placeholder="Adresse mail"
+            placeholder="Adresse mail" 
             style={[
               styles.input,
               (errors.email || !emailValid) ? styles.inputError : null
-              
             ]}
             onChangeText={(value) => setEmail(value)}
             value={email}
           />
           <TextInput
-            placeholder="Sexe"
-            style={[
-              styles.input,
-              (errors.gender) ? styles.inputError : null
-
-            ]}
-            onChangeText={(value) => setGender(value)}
-            value={gender}
-          />
-          <TextInput
-            placeholder="Mot de passe"
+            placeholder="Mot de passe" 
             style={[
               styles.input,
               (errors.password || !passwordMatch ) ? styles.inputError : null
-
-
             ]}
             onChangeText={(value) => setPassword(value)}
             value={password}
             secureTextEntry={true}
           />
           <TextInput
-            placeholder="Confirmation mot de passe"
+            placeholder="Confirmation mot de passe" 
             style={[
               styles.input,
               (errors.confirmPassword || !passwordMatch ) ? styles.inputError : null
-
             ]}
             onChangeText={(value) => setConfirmPassword(value)}
             value={confirmPassword}
             secureTextEntry={true}
           />
           { errorMsg !== '' ? <Text style={styles.error}>{errorMsg}</Text>  : null }
-          {/* {errorEmail ? <Text style={styles.error}>{errorEmail}</Text> : null}
-          {errorPassword ? (
-            <Text style={styles.error}>{errorPassword}</Text>
-          ) : null}
-          {errorMessage ? (
-            <Text style={styles.error}>{errorMessage}</Text>
-          ) : null} */}
+        </View>
 
-          <TouchableOpacity
-            onPress={() => handleRegister()}
-            style={styles.register}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButton}>S'enregistrer</Text>
+        <View style={styles.pressBottom}>
+          <TouchableOpacity onPress={() => handleRegister()} style={styles.register} activeOpacity={0.8}>
+            <Text style={styles.textButton}>S'inscrire</Text>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity
-            onPress={() => handleSubmit()}
-            style={styles.google}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButton}>S'enregistrer avec Google</Text>
-          </TouchableOpacity> */}
-
+          <TouchableOpacity onPress={() => handleSubmit()} style={styles.google} activeOpacity={0.8}>
+            <Text style={styles.textGoogle}>S'inscrire avec Google</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.connect}>
+            <Text style={styles.textCompte}>Tu as déjà un compte ?</Text>
+            <TouchableOpacity onPress={() => handleSubmit()} activeOpacity={0.8}>
+              <Text style={styles.textConnexion}> Connecte-toi</Text>
+            </TouchableOpacity>
+          </View>
+  
           {/* {emailError && <Text style={styles.error}>Invalid email address</Text>} */}
-
+  
           {/* <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
           </TouchableOpacity> */}
         </View>
@@ -266,66 +280,178 @@ export default function SignUpScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    width: '100%',
+    height: '100%',
+  },
+  header: {
+    flex: 0.1,
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    paddingTop: 60,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: '#fcfaf1',
+  },
+  color: {
+    // LA POLICE N'EST PAS LA BONNE, PAS COMPATIBLE AVEC LE BOLD
+    color: '#d95b33',
+    //fontFamily: 'Outfit',
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   container: {
     flex: 1,
-    flexDirection: "column",
-    // backgroundColor: "#FCFAF1",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: 50,
+    backgroundColor: '#fcfaf1'
   },
   title: {
     fontSize: 30,
-    fontWeight: "600",
-    fontFamily: "Futura",
+    fontWeight: '600',
+    fontFamily: 'Outfit',
     marginBottom: 20,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'center'
+  },
+  onesize: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  one: {
+    fontSize: 20,
+    fontFamily: "Outfit",
+    textAlign: "center",
+    color: '#d95b33'
+  },
+  size: {
+    color: '#707B81',
+    textAlign: "center",
+    fontFamily: "Outfit",
+    fontSize: 20,
   },
   h3: {
-    width: "80%",
     fontSize: 20,
     fontWeight: "600",
     fontFamily: "Outfit",
-    marginBottom: 10,
+    textAlign: "center"
   },
   inputContainer: {
-    flex: 1,
-    width: "100%",
-    alignItems: "center",
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '80%',
+    backgroundColor: '#fcfaf1',
+    borderRadius: 10,
+  },
+  texte: {
+    fontFamily: 'Outfit',
   },
   input: {
-    // alignItems: "center",
+    alignItems: 'flex-start',
     height: 40,
-    margin: 8,
     borderWidth: 1,
     borderColor: "#D6D1BD",
     padding: 5,
-    width: 300,
-    fontFamily: "Outfit",
+    marginTop: 10,
+    marginBottom: 10, 
+    width: "100%",
+    fontFamily: 'Outfit',
+    borderRadius: 5,
+    backgroundColor: '#ffffff'
   },
-  color: {
-    color: "#d95b33",
+  colormdpBottom: {
+    width: '100%',
   },
-  header: {
-    alignItems: "flex-end",
-    justifyContent: "flex-start",
+  colormdp: {
+    color: '#d95b33',
+    fontFamily: 'Outfit',
+    fontSize: 15,
+    textAlign: 'right',
+  },
+  pressBottom: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '90%',
+    backgroundColor: '#fcfaf1',
+    padding: 10,
+    borderRadius: 10,
   },
   register: {
-    alignItems: "center",
-    paddingTop: 8,
-    width: "100%",
-    marginTop: 30,
-    backgroundColor: "#d95b33",
-    borderRadius: 1,
+    alignItems: 'center',
+    width: '100%',
+    height: '18%',
+    marginTop: 10,
+    backgroundColor: '#d95b33',
+    borderRadius: 30,
   },
   google: {
+    alignItems: 'center',
+    width: '100%',
+    height: '18%',
+    marginTop: 10,
+    backgroundColor: 'white',
+    borderRadius: 30,
+  },
+  textButton: {
+    fontFamily: 'Outfit',
+    color: 'white',
+    padding : '5%',
+    fontSize: 20,
+  },
+  textGoogle: {
+    fontFamily: 'Outfit',
+    padding : '5%',
+    fontSize: 20,
+  },
+  connect: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10
+  },
+  textCompte: {
+    fontFamily: 'Outfit',
+    fontSize: 15,
+  },
+  textConnexion: {
+    fontFamily: 'Outfit',
+    color: '#d95b33',
+    fontSize: 15,
+    marginStart: 5
+  },
+  radioButtonContainer: {
+    flexDirection: "row",
     alignItems: "center",
-    paddingTop: 8,
-    width: "100%",
-    marginTop: 30,
-    backgroundColor: "white",
-    borderRadius: 1,
+    marginBottom: 15,
+    marginRight: 30,
+    marginLeft: 30,
+    padding: 5,
+  },
+  radioButton: {
+    height: 20,
+    width: 20,
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#D6D1BD",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  radioButtonIcon: {
+    height: 14,
+    width: 14,
+    borderRadius: 7,
+    backgroundColor: "#25958A"
+  },
+  radioButtonText: {
+    fontFamily: "Outfit",
+    fontSize: 12,
+    marginLeft: 16,
+  },
+  gender: {
+    marginTop: 20,
+    flexDirection: "row",
   },
   inputError: {
     borderColor: "#DF1C28",
@@ -335,4 +461,4 @@ const styles = StyleSheet.create({
     color: "#DF1C28",
     fontFamily: "Outfit",
   },
-});
+})

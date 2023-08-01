@@ -68,7 +68,7 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
       <TabView
-        navigationState={{ index, routes }}
+        navigationState={{ index, routes }} 
         renderTabBar={(props) => (
           <TabBar
             {...props}
