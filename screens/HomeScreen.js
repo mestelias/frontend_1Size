@@ -45,6 +45,7 @@ const renderScene = SceneMap({
 });
 
 export default function HomeScreen({ navigation }) {
+  
   const initialLayout = { width: Dimensions.get("window").width };
 
   const [index, setIndex] = React.useState(0);
