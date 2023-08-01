@@ -12,6 +12,11 @@ import {
   ScrollView,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { checkbody } from "../modules/checkBody";
+
+const EMAIL_REGEX =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 
 export default function SignUpScreen() {
   const [firstname, setFirstname] = useState("");
@@ -22,6 +27,106 @@ export default function SignUpScreen() {
   { id: 2, value: false, name: "Femme", selected: false }]);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  //l'état pour afficher le messsage d'erreur 
+  const [errors, setErrors] = useState({
+    firstname: false,
+    name: false,
+    username: false,
+    email: false,
+    gender: false,
+    password: false,
+    confirmPassword: false,
+  })
+
+  // Message d'erreur
+  const [errorMsg, setErrorMsg] = useState("")
+  const [passwordMatch, setPasswordMatch] = useState(true)
+  const [emailValid, setEmailValid] = useState(true)
+
+  //Enregistrement d'un nouvel utilisateur
+  const handleRegister = () => {
+    // Reset error message and error inputs
+  
+  let errors = {};
+  
+  errors.firstname = (firstname === "")
+  errors.name = (name === "")
+  errors.username = (username === "")
+  errors.email = (email === "")
+  errors.gender = (gender === "")
+  errors.password = (password === "")
+  errors.confirmPassword = (confirmPassword === "")
+  
+  setErrors(errors)
+
+  // Vérifie si email valide
+  const emailValid = (EMAIL_REGEX.test(email))
+  setEmailValid(emailValid)
+
+  // Vérifie si un état est en erreur
+  let inputMissing = false
+  for (let e in errors){
+    if (errors[e]) {
+      inputMissing = true
+      break
+    }
+  }
+  // Vérifie si les mots de passe sont identiques
+    let passwordMatch = password === confirmPassword
+    setPasswordMatch(passwordMatch)
+    
+  if (inputMissing){
+    console.log('1')
+    setErrorMsg('Merci de remplir le(s) champ(s) manquant(s)')
+    return
+  }
+  
+  if (!passwordMatch){
+    console.log('2')
+
+    setErrorMsg('Les mots de passe ne sont pas identiques')
+    return
+  }
+
+  if (!emailValid){
+    console.log('3')
+
+    setErrorMsg("L'email n'est pas valide")
+    return
+  }
+
+  console.log('4')
+  setErrorMsg('')
+
+  
+    // On requête la route sign up
+    fetch("http://192.168.10.164:3000/users/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nom: name,
+        prenom: firstname,
+        genre: gender,
+        email: email,
+        username: username,
+        motdepasse: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          // dispatch(login({ username: signUpUsername, token: data.token }));
+          setUsername("");
+          setPassword("");
+          navigation.navigate("HomeScreen");
+        } else {
+          // User already exists in database
+          //TO DO : gérer l'affichage
+          console.log("User already exists");
+        }
+      });
+  };
 
   // Création des différents éléments pour chaque radiobouton qui sera map dans le return
   const RadioButton = ({ onPress, selected, children }) => {
@@ -50,7 +155,14 @@ export default function SignUpScreen() {
   return (
     <View style={styles.background}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => handleSubmit()} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'AppDrawerNavigation' }],
+          });
+          navigation.navigate('HomeScreen');}} 
+          activeOpacity={0.8}>
+            
           <Text style={styles.color}>Retour</Text>
         </TouchableOpacity>
       </View>
@@ -79,44 +191,65 @@ export default function SignUpScreen() {
           </View>
           <TextInput
             placeholder="Prenom" 
-            style={styles.input}
+            style={[
+              styles.input,
+              (errors.firstname) ? styles.inputError : null
+            ]}
             onChangeText={(value) => setFirstname(value)}
             value={firstname}
           />
           <TextInput
             placeholder="Nom" 
-            style={styles.input}
+            style={[
+              styles.input,
+              (errors.name) ? styles.inputError : null
+            ]}
             onChangeText={(value) => setName(value)}
             value={name}
           />
           <TextInput
             placeholder="Username" 
-            style={styles.input}
+            style={[
+              styles.input,
+              (errors.username) ? styles.inputError : null
+            ]}
             onChangeText={(value) => setUsername(value)}
             value={username}
           />
           <TextInput
             placeholder="Adresse mail" 
-            style={styles.input}
+            style={[
+              styles.input,
+              (errors.email || !emailValid) ? styles.inputError : null
+            ]}
             onChangeText={(value) => setEmail(value)}
             value={email}
           />
           <TextInput
             placeholder="Mot de passe" 
-            style={styles.input}
+            style={[
+              styles.input,
+              (errors.password || !passwordMatch ) ? styles.inputError : null
+            ]}
             onChangeText={(value) => setPassword(value)}
             value={password}
+            secureTextEntry={true}
           />
           <TextInput
             placeholder="Confirmation mot de passe" 
-            style={styles.input}
+            style={[
+              styles.input,
+              (errors.confirmPassword || !passwordMatch ) ? styles.inputError : null
+            ]}
             onChangeText={(value) => setConfirmPassword(value)}
             value={confirmPassword}
+            secureTextEntry={true}
           />
+          { errorMsg !== '' ? <Text style={styles.error}>{errorMsg}</Text>  : null }
         </View>
 
         <View style={styles.pressBottom}>
-          <TouchableOpacity onPress={() => handleSubmit()} style={styles.register} activeOpacity={0.8}>
+          <TouchableOpacity onPress={() => handleRegister()} style={styles.register} activeOpacity={0.8}>
             <Text style={styles.textButton}>S'inscrire</Text>
           </TouchableOpacity>
 
@@ -314,5 +447,13 @@ const styles = StyleSheet.create({
   gender: {
     marginTop: 20,
     flexDirection: "row",
-  }
+  },
+  inputError: {
+    borderColor: "#DF1C28",
+    borderWidth: 1,
+  },
+  error: {
+    color: "#DF1C28",
+    fontFamily: "Outfit",
+  },
 })
