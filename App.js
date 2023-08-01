@@ -50,7 +50,7 @@ const AppDrawerNavigation = () => (
       width: "80%", 
     }}
   >
-    <Drawer.Screen name="SignUp" component={SignUpScreen} />
+    {/* <Drawer.Screen name="SignUp" component={SignUpScreen} /> */}
     <Drawer.Screen name="Profile" component={ProfileScreen} />
   </Drawer.Navigator>
 );
@@ -87,10 +87,10 @@ export default function App() {
           name="AppDrawerNavigation"
           component={AppDrawerNavigation}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

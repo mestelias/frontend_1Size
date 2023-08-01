@@ -44,8 +44,6 @@ export default function SignUpScreen({ navigation }) {
   const [passwordMatch, setPasswordMatch] = useState(true)
   const [emailValid, setEmailValid] = useState(true)
 
-  const goToHome = () => {navigation.navigate("HomeScreen")}
-
   //Enregistrement d'un nouvel utilisateur
   const handleRegister = () => {
     // Reset error message and error inputs
@@ -142,7 +140,7 @@ export default function SignUpScreen({ navigation }) {
         <Text style={styles.title}>Crée ton compte</Text>
         <Text style={styles.h3}>Pour commencer l'aventure OneSize</Text>
         <TouchableOpacity onPressstyle={styles.header}>
-          <Text onPress={() => goToHome()} style={styles.color}>Retour</Text>
+          <Text style={styles.color}>Retour</Text>
         </TouchableOpacity>
 
         <View style={styles.inputContainer}>
