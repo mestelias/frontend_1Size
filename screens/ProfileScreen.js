@@ -19,23 +19,41 @@ import { Camera, CameraType, FlashMode } from 'expo-camera';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker'; 
 
-//const BACKEND_ADRESS = "http://192.168.10.188:3000/users"
+const backendIp = process.env.EXPO_PUBLIC_IP
+
+
 
 export default function ProfileScreen() {
-  
+
   const navigation = useNavigation();
+    
+  const formData = new FormData();
 
 //états pour gérer les focus des champs inputs 
   const [isFocused, setIsFocused] = useState(false);
   const [isFocused2, setIsFocused2] = useState(false);
   const [isFocused3, setIsFocused3] = useState(false);
   const [isFocused4, setIsFocused4] = useState(false);
-
+  
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+
+/* Afin d'éviter de faire plein de fetchs vers la BDD, l'ensemble des infos du user doivent être mis dans un seul état - à faire
+  const [userData, setUserData] = useState({
+    firstname: "",
+    name: "",
+    username: "",
+    email: "",
+    gender: [
+      { id: 1, value: true, name: "Homme", selected: false },
+      { id: 2, value: false, name: "Femme", selected: false }
+    ],
+  })
+  */
 
   const [modalVisible, setModalVisible] = useState(false);
   const [cameraVisible, setCameraVisible] = useState(false);
@@ -43,11 +61,45 @@ export default function ProfileScreen() {
   const [type, setType] = useState(CameraType.front);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
   const [picPreview, setPicPreview] = useState(null)
-
-    const [gender, setGender] = useState([
+  
+  const [gender, setGender] = useState([
     { id: 1, value: true, name: "Homme", selected: false },
     { id: 2, value: false, name: "Femme", selected: false }
   ]);
+
+  const handleSaveButton = () => {
+    formData.append('profilePic', {
+      uri: picPreview,
+      name: 'photo.jpg',
+      type: 'image/jpeg',
+    });
+  
+    fetch(`${backendIp}/users/upload`, {
+      method: 'POST',
+      body: formData,
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+      })
+
+  }
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setPicPreview(result.assets[0].uri);
+    }
+  };
 
 //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
 
@@ -101,7 +153,7 @@ export default function ProfileScreen() {
     })();
   }
 
-  console.log(cameraVisible)
+  //console.log(cameraVisible)
   //Ajout condition
   if (!cameraVisible) return (
     <KeyboardAvoidingView
@@ -122,7 +174,8 @@ export default function ProfileScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              setModalVisible(!modalVisible);
+              pickImage()
+              setModalVisible(false)
             }}>
             <Ionicons name="folder-open-outline" size={32} color="#D95B33"/>
           </TouchableOpacity>
@@ -227,8 +280,7 @@ export default function ProfileScreen() {
         <TouchableOpacity
           style={styles.savebutton}
           activeOpacity={0.8}
-          //todo : AJOUTER LA FONCTIONNALITE POUR SAUVEGARDER LES INPUTS DE PROFIL
-          // onPress={()=> }
+          onPress={()=> handleSaveButton()}
         >
           <Text style={styles.textButtoninactive}>Sauvegarder mes modifications</Text>
         </TouchableOpacity>

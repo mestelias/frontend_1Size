@@ -18,13 +18,17 @@ const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
-export default function SignUpScreen() {
+export default function SignUpScreen({navigation}) {
+
+  const backendIp = process.env.EXPO_PUBLIC_IP
+
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState([{ id: 1, value: true, name: "Homme", selected: false },
   { id: 2, value: false, name: "Femme", selected: false }]);
+  const [userGender, setUserGender] = useState(null)
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -77,29 +81,22 @@ export default function SignUpScreen() {
     setPasswordMatch(passwordMatch)
     
   if (inputMissing){
-    console.log('1')
     setErrorMsg('Merci de remplir le(s) champ(s) manquant(s)')
     return
   }
   
   if (!passwordMatch){
-    console.log('2')
-
     setErrorMsg('Les mots de passe ne sont pas identiques')
     return
   }
 
   if (!emailValid){
-    console.log('3')
-
     setErrorMsg("L'email n'est pas valide")
     return
   }
 
-  console.log('4')
   setErrorMsg('')
 
-  
     // On requête la route sign up
     fetch("http://192.168.10.164:3000/users/signup", {
       method: "POST",
@@ -107,7 +104,7 @@ export default function SignUpScreen() {
       body: JSON.stringify({
         nom: name,
         prenom: firstname,
-        genre: gender,
+        genre: userGender,
         email: email,
         username: username,
         motdepasse: password,
@@ -116,14 +113,20 @@ export default function SignUpScreen() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          // dispatch(login({ username: signUpUsername, token: data.token }));
-          setUsername("");
-          setPassword("");
-          navigation.navigate("HomeScreen");
+          dispatch(addUserToStore({data}));
+          setFirstname("")
+          setName("")
+          setUsername("")
+          setEmail("")
+          setPassword("")
+          setConfirmPassword("")
+
+          navigation.navigate("AppDrawerNavigation", { screen: "Home" });
+
         } else {
           // User already exists in database
           //TO DO : gérer l'affichage
-          console.log("User already exists");
+          setErrorMsg(data.error)
         }
       });
   };
@@ -146,13 +149,14 @@ export default function SignUpScreen() {
   const onRadioBtnClick = (item) => {
     let updatedState = gender.map((isGender) =>
       isGender.id === item.id
-        ? { ...isGender, selected: true }
-        : { ...isGender, selected: false }
+        ? ({ ...isGender, selected: true })
+        : ({ ...isGender, selected: false })
     );
     setGender(updatedState);
+    setUserGender(item.name)
   };
-
   return (
+    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
     <View style={styles.background}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => {
@@ -271,6 +275,7 @@ export default function SignUpScreen() {
         </View>
       </KeyboardAvoidingView>
     </View>
+    </ScrollView>
   );
 }
 
@@ -278,6 +283,10 @@ const styles = StyleSheet.create({
   background: {
     width: '100%',
     height: '100%',
+    backgroundColor: '#fcfaf1',
+  },
+  scrollView: {
+    flex: 1,
   },
   header: {
     flex: 0.1,
@@ -286,10 +295,9 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingLeft: 20,
     paddingRight: 20,
-    backgroundColor: '#fcfaf1',
   },
   color: {
-    // LA POLICE N'EST PAS LA BONNE, PAS COMPATIBLE AVEC LE BOLD
+    // FIX ME : LA POLICE N'EST PAS LA BONNE, PAS COMPATIBLE AVEC LE BOLD
     color: '#d95b33',
     //fontFamily: 'Outfit',
     fontSize: 20,
@@ -299,7 +307,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    backgroundColor: '#fcfaf1'
+    marginTop: 25,
   },
   title: {
     fontSize: 30,

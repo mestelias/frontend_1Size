@@ -12,11 +12,15 @@ import {
   ScrollView,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useDispatch } from 'react-redux';
+import { addUserToStore } from '../reducers/user';
 
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+  
 export default function SignInScreen({ navigation }) {
+
+  const dispatch = useDispatch();
 
   const backendIp = process.env.EXPO_PUBLIC_IP
   // les états correspondants aux inputs
@@ -81,11 +85,13 @@ export default function SignInScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          dispatch(addUserToStore(data));
           navigation.navigate("AppDrawerNavigation", { screen: "Home" });
         } else {
           // User already exists in database
           //TO DO : gérer l'affichage
           setErrorMsg(data.error);
+          console.log(data)
         }
         // dispatch(login(signInUsername));
         setEmail("");
@@ -94,6 +100,7 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
+    <ScrollView style={styles.scrollView} > 
     <View style={styles.background}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => handleSubmit()} activeOpacity={0.8}>
@@ -170,6 +177,7 @@ export default function SignInScreen({ navigation }) {
         </View>
       </KeyboardAvoidingView>
     </View>
+    </ScrollView>
   );
 }
 
@@ -177,6 +185,10 @@ const styles = StyleSheet.create({
   background: {
     width: "100%",
     height: "100%",
+    backgroundColor: "#fcfaf1",
+  },
+  scrollView: {
+    flex: 1,
   },
   header: {
     flex: 0.1,
@@ -185,7 +197,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingLeft: 20,
     paddingRight: 20,
-    backgroundColor: "#fcfaf1",
+    // backgroundColor: "#fcfaf1",
   },
   color: {
     // LA POLICE N'EST PAS LA BONNE, PAS COMPATIBLE AVEC LE BOLD
@@ -198,7 +210,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    backgroundColor: "#fcfaf1",
+    // backgroundColor: "#fcfaf1",
+    marginTop: 25,
   },
   title: {
     fontSize: 30,
@@ -239,15 +252,17 @@ const styles = StyleSheet.create({
     width: "100%",
     fontFamily: "Outfit",
     borderRadius: 5,
+    backgroundColor: '#ffffff'
   },
   colormdpBottom: {
     width: "100%",
   },
   colormdp: {
-    color: "#d95b33",
+    color: "#707b81",
     fontFamily: "Outfit",
     fontSize: 15,
     textAlign: "right",
+    textDecorationLine: "underline",
   },
   pressBottom: {
     flexDirection: "column",
@@ -310,5 +325,6 @@ const styles = StyleSheet.create({
   error: {
     color: "#DF1C28",
     fontFamily: "Outfit",
+    fontSize: 17,
   },
 });
