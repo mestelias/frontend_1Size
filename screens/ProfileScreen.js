@@ -195,7 +195,6 @@ export default function ProfileScreen() {
                   <TouchableOpacity
                     onPress={() => {
                       pickImage()
-                      setModalVisible(false)
                     }}>
                     <Ionicons name="folder-open-outline" size={32} color="#D95B33"/>
                   </TouchableOpacity>
