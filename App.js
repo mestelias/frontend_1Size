@@ -87,6 +87,10 @@ export default function App() {
           name="AppDrawerNavigation"
           component={AppDrawerNavigation}
         />
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

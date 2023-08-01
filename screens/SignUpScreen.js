@@ -27,6 +27,7 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+
   //l'état pour afficher le messsage d'erreur 
   const [errors, setErrors] = useState({
     firstname: false,
@@ -42,6 +43,8 @@ export default function SignUpScreen({ navigation }) {
   const [errorMsg, setErrorMsg] = useState("")
   const [passwordMatch, setPasswordMatch] = useState(true)
   const [emailValid, setEmailValid] = useState(true)
+
+  const goToHome = () => {navigation.navigate("HomeScreen")}
 
   //Enregistrement d'un nouvel utilisateur
   const handleRegister = () => {
@@ -138,9 +141,9 @@ export default function SignUpScreen({ navigation }) {
       >
         <Text style={styles.title}>Crée ton compte</Text>
         <Text style={styles.h3}>Pour commencer l'aventure OneSize</Text>
-        <View style={styles.header}>
-          <Text style={styles.color}>Retour</Text>
-        </View>
+        <TouchableOpacity onPressstyle={styles.header}>
+          <Text onPress={() => goToHome()} style={styles.color}>Retour</Text>
+        </TouchableOpacity>
 
         <View style={styles.inputContainer}>
           <TextInput
