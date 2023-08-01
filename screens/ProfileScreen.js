@@ -28,19 +28,22 @@ const backendIp = process.env.EXPO_PUBLIC_IP
 export default function ProfileScreen() {
 
   const navigation = useNavigation();
-    
-  const formData = new FormData();
 
 //états pour gérer les focus des champs inputs 
   const [isFocused, setIsFocused] = useState(false);
   const [isFocused2, setIsFocused2] = useState(false);
   const [isFocused3, setIsFocused3] = useState(false);
   const [isFocused4, setIsFocused4] = useState(false);
-  
+//états des différents inputs  
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  
+  const [gender, setGender] = useState([
+    { id: 1, value: true, name: "Homme", selected: false },
+    { id: 2, value: false, name: "Femme", selected: false }
+  ]);
 
 /* Afin d'éviter de faire plein de fetchs vers la BDD, l'ensemble des infos du user doivent être mis dans un seul état - à faire
   const [userData, setUserData] = useState({
@@ -56,17 +59,17 @@ export default function ProfileScreen() {
   */
 
   const [modalVisible, setModalVisible] = useState(false);
+
   const [cameraVisible, setCameraVisible] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [type, setType] = useState(CameraType.front);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
   const [picPreview, setPicPreview] = useState(null)
-  
-  const [gender, setGender] = useState([
-    { id: 1, value: true, name: "Homme", selected: false },
-    { id: 2, value: false, name: "Femme", selected: false }
-  ]);
+  const userToken = useSelector((state) => state.user.value);
 
+  const formData = new FormData();
+
+  //TODO Sauvegarder ses données de profil 
   const handleSaveButton = () => {
     formData.append('profilePic', {
       uri: picPreview,
@@ -81,12 +84,29 @@ export default function ProfileScreen() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
+        fetch(`${backendIp}/users/update`, {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token: userToken,
+            image: data.url
+          })
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          if (data.result === true) {
+            console.log("Youpi !")
+          } else {
+            console.log("Moins youpi...")
+          }
+        })
       })
-
   }
 
+  // Choisir une image dans le dossier
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+    // Pas de permission nécessaire pour l'accès à la Galerie
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -103,13 +123,27 @@ export default function ProfileScreen() {
 
 //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
 
-//const usertoken = useSelector((state) => state.user.token);
 
 /*useEffect(
     fetch(`${BACKEND_ADRESS}/userdata:${usertoken}`)
     .then(response =>response.json())
     .then(data => {setFirstname(data.nom), setName(data.prenom), setUsername(data.username), setEmail(data.email)})
     )*/
+
+// Prise de photo
+    let cameraRef = useRef(null);
+    const takePicture = async () => {
+      const photo = await cameraRef.takePictureAsync({ quality: 0.3 })
+      setPicPreview(photo.uri)
+    }
+  
+    const handleCameraButton = () => {
+      (async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setHasPermission(status === 'granted');
+        setCameraVisible(true)
+      })();
+    }
 
   // Création des différents éléments pour chaque radiobouton qui sera map dans le return
 
@@ -125,7 +159,7 @@ export default function ProfileScreen() {
       </View>
     );
   };
-
+  
    // Fonction onclick du Radiobouton pour passer d'un sexe à un autre
 
   const onRadioBtnClick = (item) => {
@@ -137,30 +171,13 @@ export default function ProfileScreen() {
     setGender(updatedState);
   };
 
-  let cameraRef = useRef(null); // à ajouter
-// à ajouter
-  const takePicture = async () => {
-    const photo = await cameraRef.takePictureAsync({ quality: 0.3 })
-    setPicPreview(photo.uri)
-  }
 
-  //Ajout handleCameraButton
-  const handleCameraButton = () => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-      setCameraVisible(true)
-    })();
-  }
-
-  //console.log(cameraVisible)
-  //Ajout condition
+//Ajout condition caméra ou profileScreen
   if (!cameraVisible) return (
     <KeyboardAvoidingView
       style={styles.background}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-{/* Modal à ajouter */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -181,7 +198,6 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
       </Modal>
-{/* fin de l'ajout */}
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -229,7 +245,6 @@ export default function ProfileScreen() {
               {item.name}
               </RadioButton>
               ))} 
-              {/* Radio boutons */}
             </View>
             <TextInput
               style={[
@@ -296,6 +311,7 @@ export default function ProfileScreen() {
       </ScrollView>
     </KeyboardAvoidingView>
   );
+  // Afficher la camera
   if (hasPermission) return (
     <Camera type={type} flashMode={flashMode} ref={(ref)=>cameraRef=ref} style={styles.camera}>
       <View style={styles.cameraIconsDiv}>

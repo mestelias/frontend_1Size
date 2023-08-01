@@ -85,7 +85,7 @@ export default function SignInScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(addUserToStore(data));
+          dispatch(addUserToStore(data.token));
           navigation.navigate("AppDrawerNavigation", { screen: "Home" });
         } else {
           // User already exists in database
