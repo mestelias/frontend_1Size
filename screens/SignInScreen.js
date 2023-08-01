@@ -17,6 +17,8 @@ const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default function SignInScreen({ navigation }) {
+
+  const backendIp = process.env.EXPO_PUBLIC_IP
   // les états correspondants aux inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -68,7 +70,7 @@ export default function SignInScreen({ navigation }) {
     setErrorMsg('')
 
 
-    fetch(`http://192.168.220.101:3000/users/signin`, {
+    fetch(`${backendIp}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
