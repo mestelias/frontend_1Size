@@ -182,21 +182,27 @@ export default function ProfileScreen() {
         animationType="slide"
         transparent={true}
         visible={modalVisible}>
-        <View style={styles.modal}>
-          <TouchableOpacity
-            onPress={() => {
-              handleCameraButton();
-            }}>
-            <Ionicons name="camera-outline" size={32} color="#D95B33"/>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              pickImage()
-              setModalVisible(false)
-            }}>
-            <Ionicons name="folder-open-outline" size={32} color="#D95B33"/>
-          </TouchableOpacity>
-        </View>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+            <View style={styles.centeredView}>
+              <TouchableWithoutFeedback>  
+                <View style={styles.modal}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleCameraButton();
+                    }}>
+                    <Ionicons name="camera-outline" size={32} color="#D95B33"/>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      pickImage()
+                      setModalVisible(false)
+                    }}>
+                    <Ionicons name="folder-open-outline" size={32} color="#D95B33"/>
+                  </TouchableOpacity>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
       <SafeAreaView style={styles.container}>
@@ -336,6 +342,11 @@ const styles = StyleSheet.create({
   camera: {
     flex:1,
   }, 
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   cameraIconsDiv: {
     flex: 0.1,
     flexDirection: 'row',
@@ -356,9 +367,10 @@ const styles = StyleSheet.create({
   marginTop: 50,
   backgroundColor: "white",
   padding: 35,
-  justifyContent: "space-around",
-  alignItems: "space-around",
-  shadowColor: "#000"
+  shadowColor: "#000",
+  borderRadius: 10, 
+  borderWidth: 1,  
+  borderColor: '#D95B33',
   },  
   background: {
     flex: 1,
