@@ -119,7 +119,7 @@ export default function SignUpScreen({ navigation }) {
           // dispatch(login({ username: signUpUsername, token: data.token }));
           setUsername("");
           setPassword("");
-          navigation.navigate("Home");
+          navigation.navigate("HomeScreen");
         } else {
           // User already exists in database
           //TO DO : gérer l'affichage
@@ -139,7 +139,14 @@ export default function SignUpScreen({ navigation }) {
       >
         <Text style={styles.title}>Crée ton compte</Text>
         <Text style={styles.h3}>Pour commencer l'aventure OneSize</Text>
-        <TouchableOpacity onPressstyle={styles.header}>
+        <TouchableOpacity onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'AppDrawerNavigation' }],
+          });
+          navigation.navigate('HomeScreen');}} 
+          style={styles.header}>
+            
           <Text style={styles.color}>Retour</Text>
         </TouchableOpacity>
 

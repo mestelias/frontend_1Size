@@ -47,11 +47,12 @@ const AppDrawerNavigation = () => (
     })}
     drawerStyle={{
       backgroundColor: "#FCFAF1",
-      width: "80%", 
+      width: "80%",
     }}
   >
-    {/* <Drawer.Screen name="SignUp" component={SignUpScreen} /> */}
+    <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
+    <Drawer.Screen name="SignUp" component={SignUpScreen} />
   </Drawer.Navigator>
 );
 
@@ -87,10 +88,6 @@ export default function App() {
           name="AppDrawerNavigation"
           component={AppDrawerNavigation}
         />
-        {/* <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
