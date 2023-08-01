@@ -139,6 +139,7 @@ export default function SignUpScreen({ navigation }) {
       >
         <Text style={styles.title}>Crée ton compte</Text>
         <Text style={styles.h3}>Pour commencer l'aventure OneSize</Text>
+        {/* FIXME error lors de la navigation (même si ça fonctionne) */}
         <TouchableOpacity onPress={() => {
           navigation.reset({
             index: 0,
