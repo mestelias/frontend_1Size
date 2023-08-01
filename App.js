@@ -46,11 +46,13 @@ const AppDrawerNavigation = () => (
     })}
     drawerStyle={{
       backgroundColor: "#FCFAF1",
-      width: "80%", 
+      width: "80%",
     }}
   >
-    <Drawer.Screen name="SignUp" component={SignUpScreen} />
+    <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
+    <Drawer.Screen name="SignUp" component={SignUpScreen} />
+    <Drawer.Screen name="SignIn" component={SignInScreen} />
   </Drawer.Navigator>
 );
 
