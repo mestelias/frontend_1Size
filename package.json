@@ -26,6 +26,7 @@
     "expo": "^49.0.6",
     "expo-camera": "^13.4.2",
     "expo-font": "^11.4.0",
+    "expo-image-picker": "^14.3.2",
     "expo-status-bar": "~1.6.0",
     "install": "^0.13.0",
     "link": "^1.5.1",
