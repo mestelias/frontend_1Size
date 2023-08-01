@@ -16,6 +16,7 @@ import { useFonts } from "expo-font";
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SignUpScreen from "./screens/SignUpScreen";
+import SignInScreen from "./screens/SignInScreen";
 
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -53,6 +54,7 @@ const AppDrawerNavigation = () => (
     <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen name="SignUp" component={SignUpScreen} />
+    <Drawer.Screen name="SignIn" component={SignInScreen} />
   </Drawer.Navigator>
 );
 
