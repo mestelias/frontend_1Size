@@ -15,6 +15,8 @@ import { useFonts } from "expo-font";
 //Screens
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import SignInScreen from "./screens/SignInScreen"
 
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
