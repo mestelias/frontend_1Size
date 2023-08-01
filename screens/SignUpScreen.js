@@ -13,8 +13,6 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { checkbody } from "../modules/checkBody";
-import { useDispatch } from 'react-redux';
-import { addUserToStore } from '../reducers/user';
 
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -33,9 +31,6 @@ export default function SignUpScreen({navigation}) {
   const [userGender, setUserGender] = useState(null)
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-
-  const dispatch = useDispatch();
 
   //l'état pour afficher le messsage d'erreur 
   const [errors, setErrors] = useState({
@@ -103,7 +98,7 @@ export default function SignUpScreen({navigation}) {
   setErrorMsg('')
 
     // On requête la route sign up
-    fetch(`${backendIp}/users/signup`, {
+    fetch("http://192.168.10.164:3000/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
