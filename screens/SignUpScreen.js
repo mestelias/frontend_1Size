@@ -19,6 +19,9 @@ const EMAIL_REGEX =
 
 
 export default function SignUpScreen() {
+
+  const backendIp = process.env.EXPO_PUBLIC_IP
+
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -101,7 +104,7 @@ export default function SignUpScreen() {
 
   
     // On requête la route sign up
-    fetch("http://192.168.10.164:3000/users/signup", {
+    fetch(`${backendIp}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
