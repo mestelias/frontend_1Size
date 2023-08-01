@@ -17,6 +17,22 @@ export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const handleSubmit = () => {
+    
+    fetch("http://192.168.10.164:3000/users/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        motdepasse: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+      })
+
+  }
+
   return (
     <View style={styles.background}>
       <View style={styles.header}>
