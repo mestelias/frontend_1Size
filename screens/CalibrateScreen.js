@@ -60,9 +60,17 @@ const PremierRoute = ({ onSubmit }) => {
 
 const SecondRoute = ({ onSubmit }) => {
     const poitrineRef = React.useRef(null);
-    const tourtailleRef = React.useRef(null);
+    const tourTailleRef = React.useRef(null);
     const hancheRef = React.useRef(null)
     
+    // Fonction pour vérifier si le formulaire est valide
+  const isFormValid = () => {
+    return (
+      poitrineRef.current.value &&
+      tourTailleRef.current.value &&
+      hancheRef.current.value
+    );
+  };
  
     return (
         <KeyboardAvoidingView
@@ -95,7 +103,7 @@ const SecondRoute = ({ onSubmit }) => {
                 </View>
                 <View style={styles.inputBox}>
                 <Text style={styles.texte}>Tour de taille</Text>
-                <MensurationsInput ref={tourtailleRef} placeholder="cm" />                 
+                <MensurationsInput ref={tourTailleRef} placeholder="cm" />                 
                 </View>
                 <View style={styles.inputBox}>
                 <Text style={styles.texte}>Tour de hanches</Text>
@@ -106,13 +114,18 @@ const SecondRoute = ({ onSubmit }) => {
                 <TouchableOpacity
                   style={styles.button}
                   activeOpacity={0.8}
-                  onPress={() =>
+                  onPress={() =>  {
+                    if (isFormValid()) {
                     onSubmit(
                       poitrineRef.current.value,
-                      tourtailleRef.current.value,
+                      tourTailleRef.current.value,
                       hancheRef.current.value,
-                    )
+                    );
+                  } else {
+                    console.log("Veuillez remplir tous les champs.");
                   }
+                  }
+                }
                 >
                   <Text style={styles.textButton}>Valider</Text>
                 </TouchableOpacity>
@@ -155,15 +168,15 @@ export default function CalibrateScreen({ navigation }) {
     { key: "first", title: "Tailles" },
     { key: "second", title: "Mensuration" },
   ]);
-
-  const onSubmit = (marque, type, coupe, taille) => {
+  
+  const onSubmit = (poitrine, tourTaille, hanches) => {
     // Traiter les valeurs ici, comme les enregistrer dans une base de données, etc.
-    console.log(marque, type, coupe, taille);
+    console.log(poitrine, tourTaille, hanches);
   };
 
   const renderScene = SceneMap({
     first: () => <PremierRoute onSubmit={onSubmit} />,
-    second: SecondRoute,
+    second: () => <SecondRoute onSubmit={onSubmit} />, 
   });
 
   const initialLayout = { width: Dimensions.get("window").width };
