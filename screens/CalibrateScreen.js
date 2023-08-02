@@ -36,7 +36,25 @@ const FirstRoute = () => (
 );
 
 const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#FCFAF1" }} />
+  <View style={{ flex: 1, backgroundColor: "#FCFAF1" }}>
+        <View>
+      <Text style={styles.h3}>Ajouter une taille</Text>
+    </View>
+    <View></View>
+    <View>
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.8}
+        //AJOUTER LA FONCTIONNALITE POUR PASSER A L'ETAPE SUIVANTE
+        // onPress={()=> }
+      >
+        <Text style={styles.textButton}>Suivant</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+
+
+  
 );
 
 const renderScene = SceneMap({
