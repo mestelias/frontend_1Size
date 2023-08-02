@@ -21,7 +21,20 @@ const FirstRoute = () => (
     <View>
       <Text style={styles.h3}>Ajouter une taille</Text>
     </View>
-    <View></View>
+    <View>
+      Counter
+    </View>
+    <View style={styles.inputContainer}>
+      <TextInput
+            placeholder="Marque" 
+            style={[
+              styles.input,
+              (errors.firstname) ? styles.inputError : null
+            ]}
+            onChangeText={(value) => setFirstname(value)}
+            value={firstname}
+          />  
+    </View>
     <View>
       <TouchableOpacity
         style={styles.button}
@@ -149,5 +162,39 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
     fontFamily: "Outfit",
+  },
+  inputError: {
+    borderColor: "#DF1C28",
+    borderWidth: 1,
+  },
+  error: {
+    color: "#DF1C28",
+    fontFamily: "Outfit",
+  },
+  h3: {
+    fontSize: 20,
+    fontWeight: "600",
+    fontFamily: "Outfit",
+    textAlign: "center"
+  },
+  inputContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '80%',
+    backgroundColor: '#fcfaf1',
+    borderRadius: 10,
+  },
+  input: {
+    alignItems: 'flex-start',
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#D6D1BD",
+    padding: 5,
+    marginTop: 10,
+    marginBottom: 10, 
+    width: "100%",
+    fontFamily: 'Outfit',
+    borderRadius: 5,
+    backgroundColor: '#ffffff'
   },
 });
