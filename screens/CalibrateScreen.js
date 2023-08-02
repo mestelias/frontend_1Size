@@ -30,26 +30,15 @@ const PremierRoute = ({ onSubmit }) => {
     {key:'7', value:'Drinks'},
   ]
 
-// Références pour les champs de saisie de texte
-  const marqueRef = React.useRef("");
-  const typeRef = React.useRef("");
-  const coupeRef = React.useRef("");
-  const tailleRef = React.useRef("");
-
   const [marque, setMarque] = useState();
   const [type, setType] = useState();
   const [categorie, setCoupe] = useState();
   const [taille, setTaille] = useState();
 
-// Fonction pour vérifier si le formulaire est valide
-  const isFormValid = () => {
-    return (
-      marqueRef.current.trim() !== "" &&
-      typeRef.current.trim() !== "" &&
-      coupeRef.current.trim() !== "" &&
-      tailleRef.current.trim() !== ""
-    );
-  };
+// TODO Fonction pour vérifier si le formulaire est valide
+  /*const isFormValid = () => {
+    return ();
+  };*/
 
   return (
     <KeyboardAvoidingView
@@ -89,18 +78,17 @@ const PremierRoute = ({ onSubmit }) => {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.8}
-              onPress={() => {
-                if (isFormValid()) {
-                  onSubmit(
-                    marqueRef.current,
-                    typeRef.current,
-                    coupeRef.current,
-                    tailleRef.current
-                  );
-                } else {
-                  console.log("Veuillez remplir tous les champs.");
-                }
-              }}
+              //
+              //  TODO vérification et envoi du formulaire
+              //
+              //   onPress={() => {
+              //   if (isFormValid()) {
+              //     onSubmit(
+              //     );
+              //   } else {
+              //     console.log("Veuillez remplir tous les champs.");
+              //   }
+              // }}
             >
               <Text style={styles.textButton}>
                 Suivant
@@ -116,11 +104,6 @@ const PremierRoute = ({ onSubmit }) => {
 const SecondRoute = () => (
   <View style={{ flex: 1, backgroundColor: "#FCFAF1" }} />
 );
-
-// Composant ChampInput pour les champs de saisie de texte
-const ChampInput = React.forwardRef((props, ref) => (
-  <TextInput {...props} ref={ref} style={styles.input} />
-));
 
 // Composant principal CalibrateScreen
 export default function CalibrateScreen({ navigation }) {
