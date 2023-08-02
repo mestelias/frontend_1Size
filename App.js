@@ -16,7 +16,8 @@ import { useFonts } from "expo-font";
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SignUpScreen from "./screens/SignUpScreen";
-import SignInScreen from "./screens/SignInScreen"
+import SignInScreen from "./screens/SignInScreen";
+import CalibrateScreen from "./screens/CalibrateScreen"
 
 //Store
 import { Provider } from 'react-redux';
@@ -79,6 +80,7 @@ const AppDrawerNavigation = () => (
     <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen name="SignUp" component={SignUpScreen} />
     <Drawer.Screen name="SignIn" component={SignInScreen} />
+    <Drawer.Screen name="Calibrate" component={CalibrateScreen} />
   </Drawer.Navigator>
 );
 
