@@ -77,31 +77,32 @@ export default function ProfileScreen() {
       type: 'image/jpeg',
     });
   
-    fetch(`${backendIp}/users/upload`, {
-      method: 'POST',
-      body: formData,
+  //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
+  fetch(`${backendIp}/users/upload`, {
+    method: 'POST',
+    body: formData,
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      fetch(`${backendIp}/users/update`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: userToken,
+          image: data.url
+        })
       })
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
-        fetch(`${backendIp}/users/update`, {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token: userToken,
-            image: data.url
-          })
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          if (data.result === true) {
-            console.log("Youpi !")
-          } else {
-            console.log("Moins youpi...")
-          }
-        })
+        if (data.result === true) {
+          console.log("Youpi !")
+        } else {
+          console.log("Moins youpi...")
+        }
       })
+    })
   }
 
   // Choisir une image dans le dossier
@@ -120,15 +121,6 @@ export default function ProfileScreen() {
       setPicPreview(result.assets[0].uri);
     }
   };
-
-//Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
-
-
-/*useEffect(
-    fetch(`${BACKEND_ADRESS}/userdata:${usertoken}`)
-    .then(response =>response.json())
-    .then(data => {setFirstname(data.nom), setName(data.prenom), setUsername(data.username), setEmail(data.email)})
-    )*/
 
 // Prise de photo
     let cameraRef = useRef(null);
