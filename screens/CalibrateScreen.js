@@ -13,16 +13,33 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { SelectList } from 'react-native-dropdown-select-list'
+import { useState } from "react";
 
 
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
+
+  const data = [
+    {key:'1', value:'Mobiles', disabled:true},
+    {key:'2', value:'Appliances'},
+    {key:'3', value:'Cameras'},
+    {key:'4', value:'Computers', disabled:true},
+    {key:'5', value:'Vegetables'},
+    {key:'6', value:'Diary Products'},
+    {key:'7', value:'Drinks'},
+  ]
 
 // Références pour les champs de saisie de texte
   const marqueRef = React.useRef("");
   const typeRef = React.useRef("");
   const coupeRef = React.useRef("");
   const tailleRef = React.useRef("");
+
+  const [marque, setMarque] = useState();
+  const [type, setType] = useState();
+  const [categorie, setCoupe] = useState();
+  const [taille, setTaille] = useState();
 
 // Fonction pour vérifier si le formulaire est valide
   const isFormValid = () => {
@@ -42,31 +59,30 @@ const PremierRoute = ({ onSubmit }) => {
       <ScrollView keyboardShouldPersistTaps="always">
         <View style={styles.premierRoute}>
           <View style={styles.containerInput}>
-            {/* Composant ChampInput pour chaque champ de saisie */}
-            <ChampInput
-              placeholder="Marque"
-              onChangeText={(text) => {
-                marqueRef.current = text;
-              }}
-            />
-            <ChampInput
-              placeholder="Type"
-              onChangeText={(text) => {
-                typeRef.current = text;
-              }}
-            />
-            <ChampInput
-              placeholder="Coupe"
-              onChangeText={(text) => {
-                coupeRef.current = text;
-              }}
-            />
-            <ChampInput
-              placeholder="Taille"
-              onChangeText={(text) => {
-                tailleRef.current = text;
-              }}
-            />
+          <SelectList 
+              setSelected={(val) => setMarque(val)} 
+              data={data} 
+              save="value"
+              placeholder="marque"
+          />
+          <SelectList 
+              setSelected={(val) => setType(val)} 
+              data={data} 
+              save="value"
+              placeholder="type"
+          />
+          <SelectList 
+              setSelected={(val) => setCoupe(val)} 
+              data={data} 
+              save="value"
+              placeholder="coupe"
+          />
+          <SelectList 
+              setSelected={(val) => setTaille(val)} 
+              data={data} 
+              save="value"
+              placeholder="taille"
+          />
           </View>
           <View>
             {/* Bouton Suivant */}
@@ -241,5 +257,9 @@ const styles = StyleSheet.create({
     height: 30,
     fontWeight: "600",
     fontSize: 16,
+  },
+  picker: {
+    height: 50,
+    width: "100%",
   },
 });
