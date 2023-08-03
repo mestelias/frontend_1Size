@@ -41,10 +41,17 @@ const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment d
 const [typesDispo, setTypesDispo] = useState([]); // récupéré au moment de la sélection de la marque
 const [taillesDispo, setTaillesDispo] = useState([]); // récupéré au moment de la sélection du type
 
+
+//Marques qui ne sont pas désactivées après utilisation
+const[marquesActives, setMarquesActives] = useState([])
+
+//Etat pour gérer la marque enregistré précédemment afin d'éviter la sélection de la même marque deux fois de suite (la marque est toujours affichée même quand elle est désactivée)
+const [oldMarque, setOldMarque] = useState('neutral')
+
 useEffect(()=>{
 
   fetch(`${url}/marques/names?sexe=${sexe}&categorie=haut`)
-  .then((response)=>response.json())
+  .then((response)=> response.json())
   .then((marques) => setMarquesDispo(marques))
 
 }, [])
@@ -82,20 +89,16 @@ if (mensurations.length > 2){
   setMensurations([])
   setMensurationsCreees(calculerMoyenne(mensurations))
 }
-console.log('mensurations',mensurations)
+//console.log('mensurations',mensurations)
 
 console.log("nouvelles mensu algo",mensurationsCreees)
-/*useEffect(()=>{
 
-setTypesDispo([]);
-setTaillesDispo([]);
-setCoupe('');
-console.log(marque)
-
-}, [marque]);*/
-
-const newDataMarques = marquesDispo.map((name, i) => {
-  return {key:i, value:name, disabled:false}
+newDataMarques = marquesDispo.map((name, i) => {
+  if(!marquesActives.includes(name)){
+  return {key:i, value:name, disabled:false}}
+  else {
+  return {key:i, value:name, disabled:true}  
+  }
 })
 
 function displayType(marque) {
@@ -127,7 +130,9 @@ const newDataTailles = taillesDispo.map((types, i) => {
   return {key:i, value:types, disabled:false}
 })
 
-const handleSubmit = () => {
+//reste à traiter l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
+const handleSubmit = () => {    
+if (!(marque === oldMarque)){  
 if (taille){
     fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
     .then((response)=>response.json())
@@ -143,10 +148,21 @@ if (taille){
       }),
     })
     .then((response)=>response.json())
-    .then((vetement)=>{console.log(vetement)});
-    }
+    .then((vetement)=>{console.log(vetement);
+      (() => {
+        setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]);
+      })();
+      console.log("marque enregistrée");
+      setOldMarque(marque);
+  });
+};
+    
     })
   }
+}
+else {
+  console.log("marque déjà utilisée")
+}
 }
 
 
