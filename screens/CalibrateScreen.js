@@ -27,37 +27,84 @@ const url = process.env.EXPO_PUBLIC_IP
 
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
+ 
+const userToken = useSelector((state) => state.user.value);
 
 //TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
 const sexe = "homme"
 
+//Etats pour stocker les valeurs choisies par l'utilisateur
 const [marque, setMarque] = useState();
-
-const [marquesDispo, setMarquesDispo] = useState([]);
-const [typesDispo, setTypesDispo] = useState([]);
-const [taillesDispo, setTaillesDispo] = useState([]);
-
-const [coupe, setCoupe] = useState();
+const [coupe, setCoupe] = useState(); // en local uniquement (pas de coupes en bdd)
 const [taille, setTaille] = useState();
+const [type, setType] = useState();
+
+const [mensurations, setMensurations] = useState([])
+const [mensurationsCreees, setMensurationsCreees] = useState({})
+
+//Etats pour stocker l'ensemble des éléments récupérés en BDD 
+const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
+const [typesDispo, setTypesDispo] = useState([]); // récupéré au moment de la sélection de la marque
+const [taillesDispo, setTaillesDispo] = useState([]); // récupéré au moment de la sélection du type
+
+
+//Marques qui ne sont pas désactivées après utilisation
+const[marquesActives, setMarquesActives] = useState([])
+
+//Etat pour gérer la marque enregistré précédemment afin d'éviter la sélection de la même marque deux fois de suite (la marque est toujours affichée même quand elle est désactivée)
+const [oldMarque, setOldMarque] = useState('neutral')
 
 useEffect(()=>{
 
   fetch(`${url}/marques/names?sexe=${sexe}&categorie=haut`)
-  .then((response)=>response.json())
+  .then((response)=> response.json())
   .then((marques) => setMarquesDispo(marques))
 
 }, [])
 
-useEffect(()=>{
+// Fonction pour générer le tableau de mensurations
+const calculerMoyenne = (tableau) => {
+  // Initialisation de l'objet contenant la somme de chaque propriété
+  const somme = {};
+  // Initialisation du compteur du nombre de propriété similaire à objet
+  const compteur = {};
 
-setTypesDispo([]);
-setTaillesDispo([]);
-setCoupe('');
+  tableau.forEach(obj => {
+    // Création d'un tableau de propriété sur lequel boucler
+    Object.keys(obj).forEach(key => {
+      // on incrémente la valeur des clées (si la clée n'existait pas on initialise à 0)
+      somme[key] = (somme[key] || 0) + obj[key];
+      // on compte le nombre de fois où la clée apparaît dans les objets
+      compteur[key] = (compteur[key] || 0) + 1;
+    });
+  });
 
-}, [marque]);
+  const moyenne = {};
 
-const newDataMarques = marquesDispo.map((name, i) => {
-  return {key:i, value:name, disabled:false}
+  Object.keys(somme).forEach(key => {
+    // on moyenne par rapport au nombre de fois où les clées apparaissent
+    moyenne[key] = somme[key] / compteur[key];
+  });
+
+  return moyenne;
+}
+
+
+
+if (mensurations.length > 2){
+  setMensurations([])
+  setMensurationsCreees(calculerMoyenne(mensurations))
+}
+//console.log('mensurations',mensurations)
+
+console.log("nouvelles mensu algo",mensurationsCreees)
+
+newDataMarques = marquesDispo.map((name, i) => {
+  if(!marquesActives.includes(name)){
+  return {key:i, value:name, disabled:false}}
+  else {
+  return {key:i, value:name, disabled:true}  
+  }
 })
 
 function displayType(marque) {
@@ -82,12 +129,47 @@ function displayTailles(type) {
   fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut`)
   .then((response)=>response.json())
   .then((tailles) => setTaillesDispo(tailles));
+  setType(type);
 }
 
 const newDataTailles = taillesDispo.map((types, i) => {
   return {key:i, value:types, disabled:false}
 })
 
+//reste à traiter l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
+const handleSubmit = () => {    
+if (!(marque === oldMarque)){  
+if (taille){
+    fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
+    .then((response)=>response.json())
+    .then((mensurations) => {setMensurations(prevMensurations => [...prevMensurations, mensurations]);
+    if(mensurations){fetch(`${url}/users/vetements/haut/${userToken}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      marque: marque,
+      type: type,
+      coupe: coupe,
+      taille: taille  
+      }),
+    })
+    .then((response)=>response.json())
+    .then((vetement)=>{console.log(vetement);
+      (() => {
+        setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]);
+      })();
+      console.log("marque enregistrée");
+      setOldMarque(marque);
+  });
+};
+    
+    })
+  }
+}
+else {
+  console.log("marque déjà utilisée")
+}
+}
 
 
 // TODO Fonction pour vérifier si le formulaire est valide //
@@ -133,6 +215,7 @@ const newDataTailles = taillesDispo.map((types, i) => {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.8}
+              onPress={handleSubmit}
               //
               //  TODO vérification et envoi du formulaire
               //
