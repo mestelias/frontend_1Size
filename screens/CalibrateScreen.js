@@ -254,15 +254,15 @@ export default function CalibrateScreen({ navigation }) {
   ]);
   
   // Fonction de soumission du formulaire
-  const onSubmit = (poitrine, tourTaille, hanches) => {
+  const mensurationsSubmit = (poitrine, tourTaille, hanches) => {
     // Traiter les valeurs ici, comme les enregistrer dans une base de données, etc.
     console.log(poitrine, tourTaille, hanches);
   };
 
     // Fonction pour rendre les scènes des onglets
   const renderScene = SceneMap({
-    first: () => <PremierRoute onSubmit={onSubmit} />,
-    second: () => <SecondRoute onSubmit={onSubmit} />, 
+    first: () => <PremierRoute />,
+    second: () => <SecondRoute />, 
   });
 
   // Obtenir la largeur initiale de l'écran
