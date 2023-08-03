@@ -84,7 +84,7 @@ const newDataTailles = taillesDispo.map((types, i) => {
 
 
 
-// TODO Fonction pour vérifier si le formulaire est valide
+// TODO Fonction pour vérifier si le formulaire est valide //
   /*const isFormValid = () => {
     return ();
   };*/
