@@ -48,6 +48,11 @@ useEffect(()=>{
 
 }, [])
 
+
+if (mensurations.length === 3){
+  
+}
+console.log(mensurations)
 /*useEffect(()=>{
 
 setTypesDispo([]);
@@ -94,7 +99,7 @@ const handleSubmit = () => {
 if (taille){
     fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
     .then((response)=>response.json())
-    .then((mensurations) => {setMensurations(mensurations);
+    .then((mensurations) => {setMensurations(prevMensurations => [...prevMensurations, mensurations]);
     if(mensurations){fetch(`${url}/users/vetements/haut/${userToken}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
