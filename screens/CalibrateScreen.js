@@ -34,6 +34,7 @@ const [taille, setTaille] = useState();
 const [type, setType] = useState();
 
 const [mensurations, setMensurations] = useState([])
+const [mensurationsCreees, setMensurationsCreees] = useState({})
 
 //Etats pour stocker l'ensemble des éléments récupérés en BDD 
 const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
@@ -48,11 +49,42 @@ useEffect(()=>{
 
 }, [])
 
+// Fonction pour générer le tableau de mensurations
+const calculerMoyenne = (tableau) => {
+  // Initialisation de l'objet contenant la somme de chaque propriété
+  const somme = {};
+  // Initialisation du compteur du nombre de propriété similaire à objet
+  const compteur = {};
 
-if (mensurations.length === 3){
-  
+  tableau.forEach(obj => {
+    // Création d'un tableau de propriété sur lequel boucler
+    Object.keys(obj).forEach(key => {
+      // on incrémente la valeur des clées (si la clée n'existait pas on initialise à 0)
+      somme[key] = (somme[key] || 0) + obj[key];
+      // on compte le nombre de fois où la clée apparaît dans les objets
+      compteur[key] = (compteur[key] || 0) + 1;
+    });
+  });
+
+  const moyenne = {};
+
+  Object.keys(somme).forEach(key => {
+    // on moyenne par rapport au nombre de fois où les clées apparaissent
+    moyenne[key] = somme[key] / compteur[key];
+  });
+
+  return moyenne;
 }
-console.log(mensurations)
+
+
+
+if (mensurations.length > 2){
+  setMensurations([])
+  setMensurationsCreees(calculerMoyenne(mensurations))
+}
+console.log('mensurations',mensurations)
+
+console.log("nouvelles mensu algo",mensurationsCreees)
 /*useEffect(()=>{
 
 setTypesDispo([]);
