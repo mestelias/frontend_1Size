@@ -8,15 +8,22 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { addUserToStore } from "../reducers/user";
+import { useNavigation } from "@react-navigation/native";
+
 
 const url = process.env.EXPO_PUBLIC_IP 
+
 
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
@@ -46,7 +53,6 @@ useEffect(()=>{
 setTypesDispo([]);
 setTaillesDispo([]);
 setCoupe('');
-console.log(marque)
 
 }, [marque]);
 
@@ -150,13 +156,23 @@ const newDataTailles = taillesDispo.map((types, i) => {
   );
 };
 
+// Tab Mensurations
 
-const SecondRoute = ({ onSubmit }) => {
+const SecondRoute = ({}) => {
+
+  // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
     const poitrineRef = React.useRef(null);
     const tourTailleRef = React.useRef(null);
     const hancheRef = React.useRef(null)
+
+  // On déclare un état pour afficher un message d'erreur
+    const [errorMsg, setErrorMsg] = useState("");
+  // On déclare un état pour afficher la modal de validation des mensurations
+    const [modalVisible, setModalVisible] = useState(false);
+
+
     
-    // Fonction pour vérifier si le formulaire est valide
+  // Fonction pour vérifier si le formulaire est valide
   const isFormValid = () => {
     return (
       poitrineRef.current.value &&
@@ -164,12 +180,75 @@ const SecondRoute = ({ onSubmit }) => {
       hancheRef.current.value
     );
   };
- 
-    return (
+
+  const token = useSelector((state) => state.user.value);
+  const backendIp = process.env.EXPO_PUBLIC_IP
+  const navigation = useNavigation();
+
+  
+  const mensurationsSubmit = () => {
+    if (!isFormValid()){
+      setErrorMsg("Merci de remplir le(s) champ(s) manquant(s)");
+      return;
+    }
+
+    setErrorMsg('')
+
+
+    if (isFormValid()){
+      console.log(token)
+      fetch(`http://192.168.10.163:3000/users/mensurations/haut/${token}`, {
+      // fetch(`${backendIp}/users/mensurations/haut/${token}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tourDePoitrine: poitrineRef.current.value,
+          tourDeTaille: tourTailleRef.current.value,
+          tourDeHanches: hancheRef.current.value,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if(!data){
+            setErrorMsg(data.message)
+          } else {
+            setModalVisible(true);
+          }
+        }) 
+    }
+  }
+  
+  navigateToHome = () =>{
+    setModalVisible(false)
+    navigation.navigate('Home')
+  }
+
+  return (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === "ios" ? "padding" : null}
         >
+        <Modal visible={modalVisible} animationType="fade" transparent>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+
+          <View style={styles.centeredView}>
+          <TouchableWithoutFeedback>  
+            <View style={styles.modalView}>
+              <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+                <Text style={styles.textButton}>Calibrer le reste</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+              style={styles.button} 
+              activeOpacity={0.8}
+              onPress={navigateToHome}
+              >
+                <Text style={styles.textButton}>Rechercher un vêtement</Text>
+              </TouchableOpacity>
+            </View>
+            </TouchableWithoutFeedback>  
+          </View>
+          </TouchableWithoutFeedback>
+        </Modal>
           <ScrollView 
             contentContainerStyle={{flexGrow: 1}}
             keyboardShouldPersistTaps='never'>
@@ -203,21 +282,12 @@ const SecondRoute = ({ onSubmit }) => {
                 <MensurationsInput ref={hancheRef} placeholder="cm" />                    
                 </View>
               </View>
+              { errorMsg !== '' && (<Text style={styles.error}>{errorMsg}</Text>)}
               <View>
                 <TouchableOpacity
                   style={styles.button}
                   activeOpacity={0.8}
-                  onPress={() =>  {
-                    if (isFormValid()) {
-                    onSubmit(
-                      poitrineRef.current.value,
-                      tourTailleRef.current.value,
-                      hancheRef.current.value,
-                    );
-                  } else {
-                    console.log("Veuillez remplir tous les champs.");
-                  }
-                  }
+                  onPress={() =>  {mensurationsSubmit()}
                 }
                 >
                   <Text style={styles.textButton}>Valider</Text>
@@ -247,22 +317,17 @@ export default function CalibrateScreen({ navigation }) {
   // État pour gérer l'onglet actif
   const [index, setIndex] = React.useState(0);
 
+
   // Définir les routes pour les onglets
   const [routes] = React.useState([
     { key: "first", title: "Tailles" },
     { key: "second", title: "Mensuration" },
   ]);
-  
-  // Fonction de soumission du formulaire
-  const onSubmit = (poitrine, tourTaille, hanches) => {
-    // Traiter les valeurs ici, comme les enregistrer dans une base de données, etc.
-    console.log(poitrine, tourTaille, hanches);
-  };
 
     // Fonction pour rendre les scènes des onglets
   const renderScene = SceneMap({
-    first: () => <PremierRoute onSubmit={onSubmit} />,
-    second: () => <SecondRoute onSubmit={onSubmit} />, 
+    first: () => <PremierRoute />,
+    second: () => <SecondRoute />, 
   });
 
   // Obtenir la largeur initiale de l'écran
@@ -319,6 +384,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   H1: {
     fontSize: 24,
@@ -407,5 +491,10 @@ const styles = StyleSheet.create({
   },
   texte: {
     fontFamily: "Outfit",
+  },
+  error: {
+    color: "#DF1C28",
+    fontFamily: "Outfit",
+    fontSize: 16,
   },
 });
