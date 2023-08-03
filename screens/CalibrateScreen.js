@@ -15,23 +15,30 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 
 const url = process.env.EXPO_PUBLIC_IP 
 
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
+ 
+const userToken = useSelector((state) => state.user.value);
 
 //TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
 const sexe = "homme"
 
+//Etats pour stocker les valeurs choisies par l'utilisateur
 const [marque, setMarque] = useState();
-
-const [marquesDispo, setMarquesDispo] = useState([]);
-const [typesDispo, setTypesDispo] = useState([]);
-const [taillesDispo, setTaillesDispo] = useState([]);
-
-const [coupe, setCoupe] = useState();
+const [coupe, setCoupe] = useState(); // en local uniquement (pas de coupes en bdd)
 const [taille, setTaille] = useState();
+const [type, setType] = useState();
+
+const [mensurations, setMensurations] = useState([])
+
+//Etats pour stocker l'ensemble des éléments récupérés en BDD 
+const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
+const [typesDispo, setTypesDispo] = useState([]); // récupéré au moment de la sélection de la marque
+const [taillesDispo, setTaillesDispo] = useState([]); // récupéré au moment de la sélection du type
 
 useEffect(()=>{
 
@@ -41,14 +48,14 @@ useEffect(()=>{
 
 }, [])
 
-useEffect(()=>{
+/*useEffect(()=>{
 
 setTypesDispo([]);
 setTaillesDispo([]);
 setCoupe('');
 console.log(marque)
 
-}, [marque]);
+}, [marque]);*/
 
 const newDataMarques = marquesDispo.map((name, i) => {
   return {key:i, value:name, disabled:false}
@@ -76,12 +83,34 @@ function displayTailles(type) {
   fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut`)
   .then((response)=>response.json())
   .then((tailles) => setTaillesDispo(tailles));
+  setType(type);
 }
 
 const newDataTailles = taillesDispo.map((types, i) => {
   return {key:i, value:types, disabled:false}
 })
 
+const handleSubmit = () => {
+if (taille){
+    fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
+    .then((response)=>response.json())
+    .then((mensurations) => {setMensurations(mensurations);
+    if(mensurations){fetch(`${url}/users/vetements/haut/${userToken}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      marque: marque,
+      type: type,
+      coupe: coupe,
+      taille: taille  
+      }),
+    })
+    .then((response)=>response.json())
+    .then((vetement)=>{console.log(vetement)});
+    }
+    })
+  }
+}
 
 
 // TODO Fonction pour vérifier si le formulaire est valide //
@@ -127,6 +156,7 @@ const newDataTailles = taillesDispo.map((types, i) => {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.8}
+              onPress={handleSubmit}
               //
               //  TODO vérification et envoi du formulaire
               //
