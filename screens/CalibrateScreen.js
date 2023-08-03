@@ -169,7 +169,8 @@ const SecondRoute = ({}) => {
     const [errorMsg, setErrorMsg] = useState("");
   // On déclare un état pour afficher la modal de validation des mensurations
     const [modalVisible, setModalVisible] = useState(false);
-
+  // Changer le système de mesure (EU, CM, US)
+    const [convertLong, setConvertLong] = useState('CM');
 
     
   // Fonction pour vérifier si le formulaire est valide
@@ -218,10 +219,13 @@ const SecondRoute = ({}) => {
     }
   }
   
+  // La fonction permet de fermer la modal et rediriger l'utilisateur vers la Home
   navigateToHome = () =>{
     setModalVisible(false)
     navigation.navigate('Home')
   }
+
+
 
   return (
         <KeyboardAvoidingView
@@ -256,14 +260,20 @@ const SecondRoute = ({}) => {
                 <Text style={styles.h3}>Renseigner vos mensurations</Text>
             </View>
             <View style={styles.tailleSwitch}>
-                <TouchableOpacity activeOpacity={0.5}>
+            {/* <TouchableOpacity >
                     <Text style={styles.taille}>EU</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity >
                     <Text style={styles.taille}>US</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity >
                  <Text style={styles.taille}>UK</Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity onPress={() => setConvertLong('CM')} activeOpacity={0.5}>
+                { convertLong == 'CM' ? <Text style={styles.tailleBold}>CM</Text>  : <Text style={styles.taille}>CM</Text> }
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setConvertLong('Inch')}>
+                { convertLong == 'Inch' ? <Text style={styles.tailleBold}>INCH</Text>  : <Text style={styles.taille}>INCH</Text> }
                 </TouchableOpacity>
             </View>
             <View style={styles.secondRoute}>
@@ -271,15 +281,25 @@ const SecondRoute = ({}) => {
               <View style={styles.containerInput}>
                 <View style={styles.inputBox}>
                 <Text style={styles.texte}>Tour de poitrine</Text>
-                <MensurationsInput ref={poitrineRef} placeholder="cm" />
+                 <View style={styles.inputBoxRow}>
+                    <MensurationsInput ref={poitrineRef} placeholder="exemple : 90" />
+                    <Text style={styles.inputTexte}>{convertLong}</Text>
+                 </View>
+
                 </View>
                 <View style={styles.inputBox}>
-                <Text style={styles.texte}>Tour de taille</Text>
-                <MensurationsInput ref={tourTailleRef} placeholder="cm" />                 
+                  <Text style={styles.texte}>Tour de taille</Text>
+                  <View style={styles.inputBoxRow}>
+                    <MensurationsInput ref={tourTailleRef} placeholder="exemple : 60" />  
+                    <Text style={styles.inputTexte}>{convertLong}</Text>                   
+                  </View>
                 </View>
                 <View style={styles.inputBox}>
-                <Text style={styles.texte}>Tour de hanches</Text>
-                <MensurationsInput ref={hancheRef} placeholder="cm" />                    
+                  <Text style={styles.texte}>Tour de hanches</Text>
+                  <View style={styles.inputBoxRow}>
+                    <MensurationsInput ref={hancheRef} placeholder="exemple : 90" />    
+                    <Text style={styles.inputTexte}>{convertLong}</Text>  
+                  </View>                                 
                 </View>
               </View>
               { errorMsg !== '' && (<Text style={styles.error}>{errorMsg}</Text>)}
@@ -440,6 +460,13 @@ const styles = StyleSheet.create({
   inputBox : {
     width : '100%'
   },
+  inputBoxRow : {
+    flexDirection : "row",
+    alignItems : "center"
+  },
+  inputTexte: {
+    marginLeft : -40,
+  },
   input: {
     alignItems: 'flex-start',
     height: 40,
@@ -482,6 +509,11 @@ const styles = StyleSheet.create({
   taille: {
     color: "#707B81",
     padding: 15,
+  },
+  tailleBold:{
+    color: "#707B81",
+    padding: 15,
+    fontWeight: "bold",
   },
   h3: {
     color: "#000000",
