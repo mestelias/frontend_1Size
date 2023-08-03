@@ -35,7 +35,7 @@ const PremierRoute = ({ onSubmit }) => {
   const [categorie, setCoupe] = useState();
   const [taille, setTaille] = useState();
 
-// TODO Fonction pour vérifier si le formulaire est valide
+// TODO Fonction pour vérifier si le formulaire est valide //
   /*const isFormValid = () => {
     return ();
   };*/
