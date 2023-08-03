@@ -14,26 +14,75 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SelectList } from 'react-native-dropdown-select-list'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+const url = process.env.EXPO_PUBLIC_IP 
 
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
 
-  const data = [
-    {key:'1', value:'Mobiles', disabled:true},
-    {key:'2', value:'Appliances'},
-    {key:'3', value:'Cameras'},
-    {key:'4', value:'Computers', disabled:true},
-    {key:'5', value:'Vegetables'},
-    {key:'6', value:'Diary Products'},
-    {key:'7', value:'Drinks'},
-  ]
+//TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
+const sexe = "homme"
 
-  const [marque, setMarque] = useState();
-  const [type, setType] = useState();
-  const [categorie, setCoupe] = useState();
-  const [taille, setTaille] = useState();
+const [marque, setMarque] = useState();
+
+const [marquesDispo, setMarquesDispo] = useState([]);
+const [typesDispo, setTypesDispo] = useState([]);
+const [taillesDispo, setTaillesDispo] = useState([]);
+
+const [coupe, setCoupe] = useState();
+const [taille, setTaille] = useState();
+
+useEffect(()=>{
+
+  fetch(`${url}/marques/names?sexe=${sexe}&categorie=haut`)
+  .then((response)=>response.json())
+  .then((marques) => setMarquesDispo(marques))
+
+}, [])
+
+useEffect(()=>{
+
+setTypesDispo([]);
+setTaillesDispo([]);
+setCoupe('');
+console.log(marque)
+
+}, [marque]);
+
+const newDataMarques = marquesDispo.map((name, i) => {
+  return {key:i, value:name, disabled:false}
+})
+
+function displayType(marque) {
+  fetch(`${url}/marques/types?marque=${marque}&sexe=${sexe}&categorie=haut`)
+  .then((response)=>response.json())
+  .then((types) => setTypesDispo(types));
+  setMarque(marque);
+}
+
+const newDataTypes = typesDispo.map((types, i) => {
+  return {key:i, value:types, disabled:false}
+})
+
+const coupes = [
+  {key:'1', value : 'Regular/Classic', disabled:false},
+  {key:'1', value : 'Broad', disabled:false},
+  {key:'1', value : 'Slim', disabled:false},
+  {key:'1', value : 'Skinny/ExtraSlim', disabled:false}
+]
+
+function displayTailles(type) {
+  fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut`)
+  .then((response)=>response.json())
+  .then((tailles) => setTaillesDispo(tailles));
+}
+
+const newDataTailles = taillesDispo.map((types, i) => {
+  return {key:i, value:types, disabled:false}
+})
+
+
 
 // TODO Fonction pour vérifier si le formulaire est valide
   /*const isFormValid = () => {
@@ -49,26 +98,26 @@ const PremierRoute = ({ onSubmit }) => {
         <View style={styles.premierRoute}>
           <View style={styles.containerInput}>
           <SelectList 
-              setSelected={(val) => setMarque(val)} 
-              data={data} 
+              setSelected={(val) => displayType(val)} 
+              data={newDataMarques} 
               save="value"
               placeholder="marque"
           />
           <SelectList 
-              setSelected={(val) => setType(val)} 
-              data={data} 
+              setSelected={(val) => displayTailles(val)} 
+              data={newDataTypes} 
               save="value"
               placeholder="type"
           />
           <SelectList 
               setSelected={(val) => setCoupe(val)} 
-              data={data} 
+              data={coupes} 
               save="value"
               placeholder="coupe"
           />
           <SelectList 
               setSelected={(val) => setTaille(val)} 
-              data={data} 
+              data={newDataTailles} 
               save="value"
               placeholder="taille"
           />
