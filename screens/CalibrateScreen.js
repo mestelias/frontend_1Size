@@ -188,7 +188,7 @@ else {
     >
       <ScrollView keyboardShouldPersistTaps="always">
         <View style={styles.premierRoute}>
-          <Text>Counter</Text>
+          <Text>Counter{mensurations.length}/3</Text>
           <View style={styles.containerInput}>
           <SelectList 
               setSelected={(val) => displayType(val)} 
