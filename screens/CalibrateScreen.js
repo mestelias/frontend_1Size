@@ -336,8 +336,8 @@ const SecondRoute = ({}) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
         >
         <Modal visible={modalVisible} animationType="fade" transparent>
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
-
+        <View style={styles.modalContainer}>
+          <TouchableWithoutFeedback style={styles.modalContainer} onPress={() => setModalVisible(false)}> 
           <View style={styles.centeredView}>
           <TouchableWithoutFeedback>  
             <View style={styles.modalView}>
@@ -359,6 +359,7 @@ const SecondRoute = ({}) => {
             </TouchableWithoutFeedback>  
           </View>
           </TouchableWithoutFeedback>
+          </View>
         </Modal>
           <ScrollView 
             contentContainerStyle={{flexGrow: 1}}
@@ -481,7 +482,9 @@ export default function CalibrateScreen({ navigation }) {
             indicatorStyle={{
             backgroundColor: '#d95b33',
             height: '80%',
-            width: '50%',
+            marginBottom : 5,
+            marginHorizontal : 5,
+            width: '47%',
             opacity: 0.8,
             borderRadius: 10,
             // marginLeft : -8,
