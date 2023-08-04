@@ -11,6 +11,7 @@ import {
   ScrollView,
   Modal,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
@@ -53,12 +54,20 @@ const [typesDispo, setTypesDispo] = useState([]); // récupéré au moment de la
 const [taillesDispo, setTaillesDispo] = useState([]); // récupéré au moment de la sélection du type
 
 
+//Etat pour acitver l'update d'un vêtement affiché
+const [updateOn, setUpdateOne] = useState([])
+
 //Marques qui ne sont pas désactivées après utilisation
 const[marquesActives, setMarquesActives] = useState([])
 
 //Etat pour gérer la marque enregistré précédemment afin d'éviter la sélection de la même marque deux fois de suite (la marque est toujours affichée même quand elle est désactivée)
 const [oldMarque, setOldMarque] = useState('neutral')
 
+//Etats pour gérer la suppression des vêtements calibrés
+const [vetementToDelete, setVetementToDelete] = useState(null);
+const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
+
+//Va chercher tous les marques des hauts en BDD
 useEffect(()=>{
 
   fetch(`${url}/marques/names?sexe=${sexe}&categorie=haut`)
@@ -67,6 +76,7 @@ useEffect(()=>{
 
 }, [])
 
+//Va chercher l'ensemble des vêtements hauts dans la BDD
 useEffect(()=>{
   fetch(`${url}/users/userclothes?token=WeoG9kKWGakkWr8gWcbmi3zhttkBanva&categorie=haut`) // rendre dynamique (token)
       .then((response)=>response.json())
@@ -74,7 +84,7 @@ useEffect(()=>{
         setVetements(vetements);
         setAlreadyCalculated(false)
       }); 
-}, [counterChanged])
+}, [counterChanged]) // se réinitialise à chaque fois que le compteur change pour que le compteur soit toujours d'actualité
 
 // Fonction pour générer le tableau de mensurations
 const calculerMoyenne = (tableau) => {
@@ -145,6 +155,7 @@ function displayTailles(type) {
   setType(type);
 }
 
+//
 const newDataTailles = taillesDispo.map((types, i) => {
   return {key:i, value:types, disabled:false}
 })
@@ -197,11 +208,34 @@ else {
     return ();
   };*/
 
-  console.log(vetements)
+  //console.log(vetements)
 
-  const vetementsEcran = vetements.slice(0, 2);
 
-  console.log(vetementsEcran)
+  const handleDeleteConfirmation = (vetementId) => {
+    setVetementToDelete(vetementId);
+    setModalDeleteVisible(true);
+  };
+
+  const handleDelete = () => {
+    if (vetementToDelete){
+    fetch(`${url}/users/vetements/haut/WeoG9kKWGakkWr8gWcbmi3zhttkBanva/${vetementToDelete}`, { // rendre dynamique (token)
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert('Suppression réussie', 'Le vêtement a été supprimé avec succès.');
+        } else {
+          Alert.alert('Erreur', data.error);
+        }
+      })
+      .catch((error) => {
+        Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression.');
+      });
+      setModalDeleteVisible(false);
+      setCounterChanged(!counterChanged);
+    };
+  } 
 
   return (
     <KeyboardAvoidingView
@@ -211,7 +245,7 @@ else {
       <ScrollView keyboardShouldPersistTaps="always">
         <View style={styles.premierRoute}>
         {vetements.length >= 3 ? null : (
-        <Text>Counter: {vetements.length+1}/3</Text>
+        <Text>Vêtement {vetements.length+1}/3</Text>
         )}
           <View style={styles.containerInput}>
           <SelectList 
@@ -259,14 +293,27 @@ else {
               </Text>
             </TouchableOpacity>
           </View>
-          {vetementsEcran.map((vetement) => (
-        <View key={vetement._id}>
-          <Text>{vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}</Text>
-          <TouchableOpacity>
-          <Ionicons name="pencil-outline" color="#D95B33"/>
-          </TouchableOpacity>
+          {vetements.map((vetement) => (
+            <View key={vetement._id}>
+              <Text>{vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}</Text>
+              <TouchableOpacity onPress={() => handleDeleteConfirmation(vetement._id)}>
+                <Ionicons size={32} name="trash-bin-outline" color="#D95B33" />
+              </TouchableOpacity>
+            </View>
+          ))}
+          <Modal visible={modalDeleteVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Voulez-vous vraiment supprimer ce vêtement ?</Text>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleDelete}>
+              <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, supprimer</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setModalDeleteVisible(false)}>
+              <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      ))}
+      </Modal>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -339,6 +386,13 @@ const SecondRoute = ({}) => {
   navigateToHome = () =>{
     setModalVisible(false)
     navigation.navigate('Home')
+    newDataMarques = marquesDispo.map((name, i) => {
+      if(!marquesActives.includes(name)){
+      return {key:i, value:name, disabled:false}}
+      else {
+      return {key:i, value:name, disabled:true}  
+      }
+    })
   }
 
 
@@ -647,5 +701,21 @@ const styles = StyleSheet.create({
     color: "#DF1C28",
     fontFamily: "Outfit",
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
   },
 });
