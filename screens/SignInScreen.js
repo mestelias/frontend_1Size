@@ -100,6 +100,11 @@ export default function SignInScreen({ navigation }) {
       });
   };
 
+    // Fonction pour empêcher l'utilisateur de faire la saisie en majuscule
+    const updateEmail = (value) => {
+      setEmail(value.toLowerCase()); 
+    };
+
   return (
     <ScrollView style={styles.background} > 
       <KeyboardAvoidingView
@@ -118,7 +123,7 @@ export default function SignInScreen({ navigation }) {
               (errors.email || !emailValid) ? styles.inputError : null
               
             ]}
-            onChangeText={(value) => setEmail(value)}
+            onChangeText={(value) => updateEmail(value)}
             value={email}
           />
           <Text style={styles.texte}>Mot de passe</Text>

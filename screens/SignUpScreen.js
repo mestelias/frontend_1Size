@@ -143,6 +143,11 @@ export default function SignUpScreen({navigation}) {
       });
   };
 
+   // Fonction pour empêcher l'utilisateur de saisir son email en majuscule
+   const updateEmail = (value) => {
+    setEmail(value.toLowerCase()); 
+  };
+
   // Création des différents éléments pour chaque radiobouton qui sera map dans le return
   const RadioButton = ({ onPress, selected, children }) => {
     return (
@@ -224,7 +229,7 @@ export default function SignUpScreen({navigation}) {
               styles.input,
               (errors.email || !emailValid) ? styles.inputError : null
             ]}
-            onChangeText={(value) => setEmail(value)}
+            onChangeText={(value) => updateEmail(value)}
             value={email}
           />
           <TextInput
