@@ -11,6 +11,7 @@ import {
   ScrollView,
   Modal,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
@@ -19,6 +20,7 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 const url = process.env.EXPO_PUBLIC_IP 
@@ -53,12 +55,20 @@ const [typesDispo, setTypesDispo] = useState([]); // récupéré au moment de la
 const [taillesDispo, setTaillesDispo] = useState([]); // récupéré au moment de la sélection du type
 
 
+//Etat pour acitver l'update d'un vêtement affiché
+const [updateOn, setUpdateOne] = useState([])
+
 //Marques qui ne sont pas désactivées après utilisation
 const[marquesActives, setMarquesActives] = useState([])
 
 //Etat pour gérer la marque enregistré précédemment afin d'éviter la sélection de la même marque deux fois de suite (la marque est toujours affichée même quand elle est désactivée)
 const [oldMarque, setOldMarque] = useState('neutral')
 
+//Etats pour gérer la suppression des vêtements calibrés
+const [vetementToDelete, setVetementToDelete] = useState(null);
+const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
+
+//Va chercher tous les marques des hauts en BDD
 useEffect(()=>{
 
   fetch(`${url}/marques/names?sexe=${sexe}&categorie=haut`)
@@ -67,6 +77,7 @@ useEffect(()=>{
 
 }, [])
 
+//Va chercher l'ensemble des vêtements hauts dans la BDD
 useEffect(()=>{
   fetch(`${url}/users/userclothes?token=WeoG9kKWGakkWr8gWcbmi3zhttkBanva&categorie=haut`) // rendre dynamique (token)
       .then((response)=>response.json())
@@ -74,7 +85,7 @@ useEffect(()=>{
         setVetements(vetements);
         setAlreadyCalculated(false)
       }); 
-}, [counterChanged])
+}, [counterChanged]) // se réinitialise à chaque fois que le compteur change pour que le compteur soit toujours d'actualité
 
 // Fonction pour générer le tableau de mensurations
 const calculerMoyenne = (tableau) => {
@@ -142,10 +153,10 @@ const newDataTypes = typesDispo.map((types, i) => {
 })
 
 const coupes = [
-  {key:'1', value : 'Regular/Classic', disabled:false},
-  {key:'1', value : 'Broad', disabled:false},
+  {key:'1', value : 'Classic', disabled:false},
+  {key:'1', value : 'Ample', disabled:false},
   {key:'1', value : 'Slim', disabled:false},
-  {key:'1', value : 'Skinny/ExtraSlim', disabled:false}
+  {key:'1', value : 'Skinny', disabled:false}
 ]
 
 function displayTailles(type) {
@@ -155,6 +166,7 @@ function displayTailles(type) {
   setType(type);
 }
 
+//
 const newDataTailles = taillesDispo.map((types, i) => {
   return {key:i, value:types, disabled:false}
 })
@@ -202,11 +214,39 @@ else {
 }
 }
 
-
 // TODO Fonction pour vérifier si le formulaire est valide //
   /*const isFormValid = () => {
     return ();
   };*/
+
+  //console.log(vetements)
+
+
+  const handleDeleteConfirmation = (vetementId) => {
+    setVetementToDelete(vetementId);
+    setModalDeleteVisible(true);
+  };
+
+  const handleDelete = () => {
+    if (vetementToDelete){
+    fetch(`${url}/users/vetements/haut/WeoG9kKWGakkWr8gWcbmi3zhttkBanva/${vetementToDelete}`, { // rendre dynamique (token)
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert('Suppression réussie', 'Le vêtement a été supprimé avec succès.');
+        } else {
+          Alert.alert('Erreur', data.error);
+        }
+      })
+      .catch((error) => {
+        Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression.');
+      });
+      setModalDeleteVisible(false);
+      setCounterChanged(!counterChanged);
+    };
+  } 
 
   return (
     <KeyboardAvoidingView
@@ -215,7 +255,9 @@ else {
     >
       <ScrollView keyboardShouldPersistTaps="always">
         <View style={styles.premierRoute}>
-          <Text>Counter{vetements.length}/3</Text>
+        {vetements.length >= 3 ? null : (
+        <Text>Vêtement {vetements.length+1}/3</Text>
+        )}
           <View style={styles.containerInput}>
           <SelectList 
               setSelected={(val) => displayType(val)} 
@@ -245,15 +287,44 @@ else {
           <View>
             {/* Bouton Suivant */}
             <TouchableOpacity
-              style={styles.button}
+               style={
+                vetements.length >= 3
+                  ? { ...styles.button, backgroundColor: '#D95B33'}
+                  : styles.button
+              }
               activeOpacity={0.8}
               onPress={handleSubmit}
             >
-              <Text style={styles.textButton}>
+              <Text style={
+                vetements.length >= 3
+                  ? { ...styles.textButton, color: '#FFFF'}
+                  : styles.textButton
+              }>
                 Suivant
               </Text>
             </TouchableOpacity>
           </View>
+          {vetements.map((vetement) => (
+            <View key={vetement._id}>
+              <Text>{vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}</Text>
+              <TouchableOpacity onPress={() => handleDeleteConfirmation(vetement._id)}>
+                <Ionicons size={32} name="trash-bin-outline" color="#D95B33" />
+              </TouchableOpacity>
+            </View>
+          ))}
+          <Modal visible={modalDeleteVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Voulez-vous vraiment supprimer ce vêtement ?</Text>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleDelete}>
+              <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, supprimer</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setModalDeleteVisible(false)}>
+              <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -325,6 +396,13 @@ const SecondRoute = ({}) => {
   navigateToHome = () =>{
     setModalVisible(false)
     navigation.navigate('Home')
+    newDataMarques = marquesDispo.map((name, i) => {
+      if(!marquesActives.includes(name)){
+      return {key:i, value:name, disabled:false}}
+      else {
+      return {key:i, value:name, disabled:true}  
+      }
+    })
   }
 
 
@@ -633,5 +711,21 @@ const styles = StyleSheet.create({
     color: "#DF1C28",
     fontFamily: "Outfit",
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
   },
 });
