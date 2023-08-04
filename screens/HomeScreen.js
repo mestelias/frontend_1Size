@@ -20,8 +20,6 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
-
-
 const FirstRoute = () => (
   <View style={styles.firstRoute}>
     {/* <View>
@@ -56,6 +54,7 @@ const renderScene = SceneMap({
 // };
 
 export default function HomeScreen({ navigation }) {
+  const carouselRef = React.useRef(null);
   
   const initialLayout = Dimensions.get("window").width ;
   const [activeSlide, setActiveSlide] = React.useState(0);
@@ -100,10 +99,16 @@ export default function HomeScreen({ navigation }) {
         />
         <Text style={styles.h3}>Choisis ton type de vêtement</Text>
         <View style={styles.carou}>
+          {/* la fonction snapToPrev du carousel est appelée, ce qui fait défiler le carousel vers l'image précédente */}
+          <TouchableOpacity onPress={() => carouselRef.current.snapToPrev()}>
+          {/* Flèche gauche */}
+            <FontAwesome name={"chevron-left"} size={40} color={"#d95b33"} marginLeft={25}/>
+          </TouchableOpacity>
           <Carousel
+            ref={carouselRef}
             data={images}
             renderItem={({ item }) => (
-            <Image source={item} style={styles.image} />
+              <Image source={item} style={styles.image} />
             )}
             sliderWidth={initialLayout}
             itemWidth={initialLayout}
@@ -111,6 +116,11 @@ export default function HomeScreen({ navigation }) {
             contentContainerStyle={{height : 200}} // ajout du style du conteneur du contenu du carousel
             onSnapToItem={(index) => setActiveSlide(index)} // se déclenche lorsque l'utilisateur fait glisser le carousel
           />
+          {/* la fonction snapToNext du carousel est appelée, ce qui fait défiler le carousel vers l'image suivante */}
+          <TouchableOpacity onPress={() => carouselRef.current.snapToNext()}>
+            {/* Flèche droite */}
+            <FontAwesome name={"chevron-right"} size={40} color={"#d95b33"} marginRight={20}/>
+          </TouchableOpacity>
         </View>
         <Pagination
           dotsLength={images.length} // spécifie le nombre total d'indicateurs à afficher
@@ -119,6 +129,16 @@ export default function HomeScreen({ navigation }) {
           inactiveDotOpacity={0.4} // définit l'opacité des indicateurs inactifs 
           inactiveDotScale={0.6} // définit l'échelle des indicateurs inactifs par rapport à l'indicateur actif
         />
+      </View>
+      <View style={styles.btn}>
+        <TouchableOpacity
+          style={styles.button}
+          activeOpacity={0.8}
+          //AJOUTER LA FONCTIONNALITE POUR PASSER A L'ETAPE SUIVANTE
+          // onPress={()=> }
+        >
+          <Text style={styles.textButton}>Continuer</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -162,12 +182,12 @@ const styles = StyleSheet.create({
     maxHeight: 100
 
   },
-  firstRoute: {
-    flex: 1,
-    backgroundColor: "#FCFAF1",
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
+  // firstRoute: {
+  //   flex: 1,
+  //   backgroundColor: "#FCFAF1",
+  //   alignItems: "center",
+  //   justifyContent: "space-around",
+  // },
   button: {
     width: 150,
     alignItems: "center",
@@ -202,8 +222,8 @@ const styles = StyleSheet.create({
     height: 190,
   },
   image: {
-    marginLeft: '20%',
-    marginRight: '20%',
+    marginLeft: '8%',
+    marginRight: '8%',
     width: "60%",
     height: 200,
   },
@@ -223,4 +243,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     backgroundColor: '#d95b33',
   },
+  btn:{
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: '15%',
+  }
 });

@@ -25,6 +25,8 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@rneui/base": "^4.0.0-rc.8",
     "@rneui/themed": "^4.0.0-rc.8",
+    "@types/react-native-snap-carousel": "^3.8.5",
+    "@types/react-native-vector-icons": "^6.4.13",
     "expo": "^49.0.6",
     "expo-camera": "^13.4.2",
     "expo-constants": "^14.4.2",
@@ -51,7 +53,8 @@
     "react-native-web": "^0.19.7",
     "react-redux": "^8.1.2",
     "redux": "^4.2.1",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "typescript": "^5.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
