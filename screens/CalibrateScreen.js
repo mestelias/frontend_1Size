@@ -468,16 +468,24 @@ export default function CalibrateScreen({ navigation }) {
         </View>
       </SafeAreaView>
       {/* Onglets */}
+      <View style={styles.container}>
       <TabView
         navigationState={{ index, routes }}
         renderTabBar={(props) => (
           <TabBar
             {...props}
             renderLabel={({ route, color }) => (
-              
-              <Text style={{ color: "#FFFF", margin: 8, fontFamily: 'Outfit', fontSize: 15, }}>{route.title}</Text>
+              <Text style={{ color: "#FFFF", margin: 8, fontFamily: 'Outfit', fontSize: 15}}>{route.title}</Text>
             )}
-            style={{ backgroundColor: "#d6d1bd" }}
+            style={{ backgroundColor: "#d6d1bd", width:'100%', margin:5 }}
+            indicatorStyle={{
+            backgroundColor: '#d95b33',
+            height: '80%',
+            width: '50%',
+            opacity: 0.8,
+            borderRadius: 10,
+            // marginLeft : -8,
+            }}
           />
         )}
         renderScene={renderScene}
@@ -485,6 +493,7 @@ export default function CalibrateScreen({ navigation }) {
         initialLayout={initialLayout}
         style={styles.tabView}
       />
+      </View>
     </View>
   );
 }
@@ -497,9 +506,13 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  container: {
+    flex: 1,
+    alignItems: 'center', 
+    width: '100%'
+  },
   titleContainer: {
     alignItems: "center",
-    justifyContent: "flex-start",
     backgroundColor: "#fcfaf1",
     marginTop: 30,
   },
@@ -544,9 +557,10 @@ const styles = StyleSheet.create({
 
   },
   tabView: {
-    marginTop: 10,
-    width: "80%",
-    borderRadius: 10,
+    flex: 1,
+    width: "100%",
+    paddingHorizontal : 15,
+    borderRadius: 20,
   },
   premierRoute: {
     flex: 1,
@@ -556,7 +570,7 @@ const styles = StyleSheet.create({
   },
   secondRoute: {
     flex: 1,
-    width: "100%",
+    width: "90%",
     backgroundColor: "#FCFAF1",
     justifyContent: "space-between",
     alignItems: "center",
@@ -564,7 +578,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   containerInput: {
-    flexDirection: 'column',
     alignItems: 'flex-start',
     width: '100%',
     backgroundColor: '#fcfaf1',
@@ -612,6 +625,7 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: "#ffffff",
+    fontFamily: 'Outfit',
     height: 30,
     fontWeight: "600",
     fontSize: 16,
