@@ -273,10 +273,29 @@ const SecondRoute = ({}) => {
 
     setErrorMsg('')
 
+    // Fonction pour convertir une valeur de inch en cm
+    function inchToCm(valueInInch) {
+      return valueInInch * 2.54;
+    }
 
     if (isFormValid()){
+        // On stocke les valeurs d'origine avant la conversion
+      const originalPoitrineValue = poitrineRef.current.value;
+      const originalTourTailleValue = tourTailleRef.current.value;
+      const originalHancheValue = hancheRef.current.value;
+
+      // On vérifie le système métrique utilisé et fais la conversion si nécessaire
+      if (convertLong == 'Inch'){
+        poitrineRef.current.value = inchToCm(poitrineRef.current.value);
+        tourTailleRef.current.value = inchToCm(tourTailleRef.current.value);
+        hancheRef.current.value = inchToCm(hancheRef.current.value);
+      }
+      console.log(poitrineRef.current.value)
+      console.log(token)
+
+
+      //J'appelle la route pour mettre à jour les mensurations Haut
       fetch(`${backendIp}/users/mensurations/haut/${token}`, {
-      // fetch(`${backendIp}/users/mensurations/haut/${token}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -291,6 +310,11 @@ const SecondRoute = ({}) => {
             setErrorMsg(data.message)
           } else {
             setModalVisible(true);
+            // On réinitialise les valeurs après validation
+            poitrineRef.current.value = originalPoitrineValue;
+            tourTailleRef.current.value = originalTourTailleValue;
+            hancheRef.current.value = originalHancheValue;
+
           }
         }) 
     }
@@ -332,20 +356,12 @@ const SecondRoute = ({}) => {
         </Modal>
           <ScrollView 
             contentContainerStyle={{flexGrow: 1}}
-            keyboardShouldPersistTaps='never'>
-            <View>
+            keyboardShouldPersistTaps='never'
+            style={styles.scrollView}
+            >
+            <View style={styles.mensurationHeader}>
                 <Text style={styles.h3}>Renseigner vos mensurations</Text>
-            </View>
             <View style={styles.tailleSwitch}>
-            {/* <TouchableOpacity >
-                    <Text style={styles.taille}>EU</Text>
-                </TouchableOpacity>
-                <TouchableOpacity >
-                    <Text style={styles.taille}>US</Text>
-                </TouchableOpacity>
-                <TouchableOpacity >
-                 <Text style={styles.taille}>UK</Text>
-                </TouchableOpacity> */}
                 <TouchableOpacity onPress={() => setConvertLong('CM')} activeOpacity={0.5}>
                 { convertLong == 'CM' ? <Text style={styles.tailleBold}>CM</Text>  : <Text style={styles.taille}>CM</Text> }
                 </TouchableOpacity>
@@ -353,6 +369,8 @@ const SecondRoute = ({}) => {
                 { convertLong == 'Inch' ? <Text style={styles.tailleBold}>INCH</Text>  : <Text style={styles.taille}>INCH</Text> }
                 </TouchableOpacity>
             </View>
+            </View>
+
             <View style={styles.secondRoute}>
               {/* ... */}
               <View style={styles.containerInput}>
@@ -526,8 +544,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FCFAF1",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingBottom: 30,
-    paddingTop: 30,
+    paddingBottom: 40,
+    paddingTop: 20,
   },
   containerInput: {
     flexDirection: 'column',
@@ -565,7 +583,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingTop: 8,
     marginBottom: 30,
-    backgroundColor: "#D6D1BD",
+    backgroundColor: "#d95b33",
     borderRadius: 30,
     shadowOpacity: 1,
     elevation: 4,
@@ -577,7 +595,7 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(0, 0, 0, 0.25)",
   },
   textButton: {
-    color: "#707B81",
+    color: "#ffffff",
     height: 30,
     fontWeight: "600",
     fontSize: 16,
@@ -591,14 +609,14 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   tailleBold:{
-    color: "#707B81",
+    color: "#1a2530",
     padding: 15,
     fontWeight: "bold",
   },
   h3: {
     color: "#000000",
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: 'bold',
     fontFamily: "Outfit",
   },
   texte: {
@@ -609,4 +627,11 @@ const styles = StyleSheet.create({
     fontFamily: "Outfit",
     fontSize: 16,
   },
+  scrollView:{
+    flex: 1,
+  },
+  mensurationHeader : {
+    marginTop: 20,
+    alignItems: "center",
+  }
 });
