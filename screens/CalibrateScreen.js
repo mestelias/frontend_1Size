@@ -39,7 +39,8 @@ const [taille, setTaille] = useState();
 const [type, setType] = useState();
 
 const [mensurations, setMensurations] = useState([])
-const [mensurationsCreees, setMensurationsCreees] = useState({})
+const [mensurationsExistent, setMensurationsExistent] = useState(false)
+const [mensurationsCreees, setMensurationsCreees] = useState(null)
 
 //Etats pour stocker l'ensemble des éléments récupérés en BDD 
 const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
@@ -136,7 +137,13 @@ const newDataTailles = taillesDispo.map((types, i) => {
 })
 
 //reste à traiter l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
-const handleSubmit = () => {    
+const handleSubmit = () => { 
+//Condition d'envoi du tableau de mensuration
+if (mensurationsCreees && !mensurationsExistent) {
+
+}
+
+
 if (!(marque === oldMarque)){  
 if (taille){
     fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
