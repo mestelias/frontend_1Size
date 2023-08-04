@@ -18,7 +18,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { addUserToStore } from "../reducers/user";
 import { useNavigation } from "@react-navigation/native";
 
 
@@ -223,17 +222,6 @@ else {
               style={styles.button}
               activeOpacity={0.8}
               onPress={handleSubmit}
-              //
-              //  TODO vérification et envoi du formulaire
-              //
-              //   onPress={() => {
-              //   if (isFormValid()) {
-              //     onSubmit(
-              //     );
-              //   } else {
-              //     console.log("Veuillez remplir tous les champs.");
-              //   }
-              // }}
             >
               <Text style={styles.textButton}>
                 Suivant
@@ -287,8 +275,7 @@ const SecondRoute = ({}) => {
 
 
     if (isFormValid()){
-      console.log(token)
-      fetch(`http://192.168.10.163:3000/users/mensurations/haut/${token}`, {
+      fetch(`${backendIp}/users/mensurations/haut/${token}`, {
       // fetch(`${backendIp}/users/mensurations/haut/${token}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -445,18 +432,16 @@ export default function CalibrateScreen({ navigation }) {
 
   return (
     <View style={styles.background}>
-      <View style={styles.container}>
-        <SafeAreaView style={styles.header}>
-          {/* Icône de menu pour ouvrir le menu latéral */}
+      <SafeAreaView style={styles.header}>
+        <View style={styles.burgerIcon}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
-          <Text>CalibrateScreen</Text>
-        </SafeAreaView>
-        <View style={styles.titleBox}>
+        </View>
+        <View style={styles.titleContainer}>
           <Text style={styles.H1}>Calibrage Haut</Text>
         </View>
-      </View>
+      </SafeAreaView>
       {/* Onglets */}
       <TabView
         navigationState={{ index, routes }}
@@ -483,16 +468,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FCFAF1",
     alignItems: "center",
+    width: "100%",
+    height: "100%",
   },
-  container: {
-    flex: 0.4,
+  titleContainer: {
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
+    backgroundColor: "#fcfaf1",
+    marginTop: 30,
+  },
+  burgerIcon:{
+    paddingLeft: 30,
+    paddingTop: 15,
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    justifyContent: "flex-start",
     width: "100%",
   },
   centeredView: {

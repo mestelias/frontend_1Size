@@ -13,6 +13,10 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { checkbody } from "../modules/checkBody";
+import { addUserToStore } from "../reducers/user";
+import { useDispatch } from 'react-redux';
+
+
 
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -21,6 +25,8 @@ const EMAIL_REGEX =
 export default function SignUpScreen({navigation}) {
 
   const backendIp = process.env.EXPO_PUBLIC_IP
+  const dispatch = useDispatch();
+
 
   const [firstname, setFirstname] = useState("");
   const [name, setName] = useState("");
@@ -50,6 +56,7 @@ export default function SignUpScreen({navigation}) {
 
   //Enregistrement d'un nouvel utilisateur
   const handleRegister = () => {
+
     // Reset error message and error inputs
   
   let errors = {};
@@ -63,6 +70,8 @@ export default function SignUpScreen({navigation}) {
   errors.confirmPassword = (confirmPassword === "")
   
   setErrors(errors)
+
+
 
   // Vérifie si email valide
   const emailValid = (EMAIL_REGEX.test(email))
@@ -97,8 +106,9 @@ export default function SignUpScreen({navigation}) {
 
   setErrorMsg('')
 
+
     // On requête la route sign up
-    fetch("http://192.168.10.164:3000/users/signup", {
+    fetch(`http://192.168.10.170:3000/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -112,7 +122,9 @@ export default function SignUpScreen({navigation}) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         if (data.result) {
+          console.log('ttt')
           dispatch(addUserToStore({data}));
           setFirstname("")
           setName("")
@@ -156,21 +168,7 @@ export default function SignUpScreen({navigation}) {
     setUserGender(item.name)
   };
   return (
-    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
-    <View style={styles.background}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'AppDrawerNavigation' }],
-          });
-          navigation.navigate('HomeScreen');}} 
-          activeOpacity={0.8}>
-            
-          <Text style={styles.color}>Retour</Text>
-        </TouchableOpacity>
-      </View>
-      
+    <ScrollView style={styles.background} showsVerticalScrollIndicator={false} >
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
         <Text style={styles.title}>Crée ton compte</Text>
         <View style={styles.onesize}>
@@ -257,13 +255,17 @@ export default function SignUpScreen({navigation}) {
             <Text style={styles.textButton}>S'inscrire</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleSubmit()} style={styles.google} activeOpacity={0.8}>
+          <TouchableOpacity
+          // TO DO : INSCRIPTION AVEC GOOGLE
+          onPress={() => navigation.navigate('Home')}
+          style={styles.google} 
+          activeOpacity={0.8}>
             <Text style={styles.textGoogle}>S'inscrire avec Google</Text>
           </TouchableOpacity>
           
           <View style={styles.connect}>
             <Text style={styles.textCompte}>Tu as déjà un compte ?</Text>
-            <TouchableOpacity onPress={() => handleSubmit()} activeOpacity={0.8}>
+            <TouchableOpacity onPress={() => navigation.navigate('SignIn')} activeOpacity={0.8}>
               <Text style={styles.textConnexion}> Connecte-toi</Text>
             </TouchableOpacity>
           </View>
@@ -274,40 +276,25 @@ export default function SignUpScreen({navigation}) {
           </TouchableOpacity> */}
         </View>
       </KeyboardAvoidingView>
-    </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#fcfaf1',
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#fcfaf1",
   },
   scrollView: {
     flex: 1,
-  },
-  header: {
-    flex: 0.1,
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    paddingTop: 60,
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  color: {
-    // FIX ME : LA POLICE N'EST PAS LA BONNE, PAS COMPATIBLE AVEC LE BOLD
-    color: '#d95b33',
-    //fontFamily: 'Outfit',
-    fontSize: 20,
-    fontWeight: "bold",
   },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    marginTop: 25,
+    marginTop: 80,
   },
   title: {
     fontSize: 30,
