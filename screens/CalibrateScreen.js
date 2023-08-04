@@ -27,7 +27,7 @@ const url = process.env.EXPO_PUBLIC_IP
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
  
-const userToken = useSelector((state) => state.user.value);
+const userToken = useSelector((state) => state.user.value.token);
 
 //TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
 const sexe = "homme"
@@ -37,6 +37,8 @@ const [marque, setMarque] = useState();
 const [coupe, setCoupe] = useState(); // en local uniquement (pas de coupes en bdd)
 const [taille, setTaille] = useState();
 const [type, setType] = useState();
+
+const [vetements, setVetements] = useState([]);
 
 const [mensurations, setMensurations] = useState([])
 const [mensurationsExistent, setMensurationsExistent] = useState(false)
@@ -60,6 +62,15 @@ useEffect(()=>{
   .then((response)=> response.json())
   .then((marques) => setMarquesDispo(marques))
 
+}, [])
+
+useEffect(()=>{
+  fetch(`${url}/users/userclothes?token=WeoG9kKWGakkWr8gWcbmi3zhttkBanva&categorie=haut`) // rendre dynamique (token)
+      .then((response)=>response.json())
+      .then((vetements) => {
+        setVetements(vetements);
+        console.log(vetements)
+      }); 
 }, [])
 
 // Fonction pour générer le tableau de mensurations
@@ -143,20 +154,22 @@ if (mensurationsCreees && !mensurationsExistent) {
   
 }
 
+// console.log(userToken)
 
 if (!(marque === oldMarque)){  
 if (taille){
     fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
     .then((response)=>response.json())
-    .then((mensurations) => {setMensurations(prevMensurations => [...prevMensurations, mensurations]);
-    if(mensurations){fetch(`${url}/users/vetements/haut/${userToken}`, {
+    .then((mensurations) => {
+    if(mensurations){fetch(`${url}/users/vetements/haut/WeoG9kKWGakkWr8gWcbmi3zhttkBanva`, { // rendre dynamique (token)
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
       marque: marque,
       type: type,
       coupe: coupe,
-      taille: taille  
+      taille: taille,
+      mensurations: mensurations
       }),
     })
     .then((response)=>response.json())
@@ -190,7 +203,7 @@ else {
     >
       <ScrollView keyboardShouldPersistTaps="always">
         <View style={styles.premierRoute}>
-          <Text>Counter{mensurations.length}/3</Text>
+          <Text>Counter{vetements.length}/3</Text>
           <View style={styles.containerInput}>
           <SelectList 
               setSelected={(val) => displayType(val)} 
