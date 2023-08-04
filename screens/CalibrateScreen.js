@@ -474,9 +474,10 @@ export default function CalibrateScreen({ navigation }) {
           <TabBar
             {...props}
             renderLabel={({ route, color }) => (
-              <Text style={{ color: "#FFFF", margin: 8, fontFamily: 'Outfit' }}>{route.title}</Text>
+              
+              <Text style={{ color: "#FFFF", margin: 8, fontFamily: 'Outfit', fontSize: 15, }}>{route.title}</Text>
             )}
-            style={{ backgroundColor: "#d95b33" }}
+            style={{ backgroundColor: "#d6d1bd" }}
           />
         )}
         renderScene={renderScene}

@@ -74,6 +74,7 @@ const AppDrawerNavigation = () => (
     drawerStyle={{
       backgroundColor: "#FCFAF1",
       width: "80%",
+      borderRadius: 75,
     }}
   >
     <Drawer.Screen name="Home" component={HomeScreen} />
