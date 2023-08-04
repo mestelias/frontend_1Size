@@ -27,7 +27,8 @@ const url = process.env.EXPO_PUBLIC_IP
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
  
-const userToken = useSelector((state) => state.user.value.token);
+const userToken = useSelector((state) => state.user.value);
+console.log('ceci est le token',userToken)
 
 //TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
 const sexe = "homme"
@@ -103,10 +104,20 @@ const calculerMoyenne = (tableau) => {
   return moyenne;
 }
 
-
 if (vetements.length > 2 && !alreadyCalculated){
   setAlreadyCalculated(true)
   setMensurationsCreees(calculerMoyenne(vetements))
+}
+
+if (mensurationsCreees) {
+  console.log('TOKEEEEEEEEN',userToken)
+  fetch(`${url}/users/mensurations/haut/${userToken}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(mensurationsCreees),
+    })
+      .then((response) => response.json())
+      .then((data) => { console.log(data)})
 }
 
 console.log("nouvelles mensu algo",mensurationsCreees)
@@ -276,7 +287,6 @@ const SecondRoute = ({}) => {
   };
 
   const token = useSelector((state) => state.user.value);
-  const backendIp = process.env.EXPO_PUBLIC_IP
   const navigation = useNavigation();
 
   
@@ -290,7 +300,7 @@ const SecondRoute = ({}) => {
 
 
     if (isFormValid()){
-      fetch(`${backendIp}/users/mensurations/haut/${token}`, {
+      fetch(`${url}/users/mensurations/haut/${token}`, {
       // fetch(`${backendIp}/users/mensurations/haut/${token}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
