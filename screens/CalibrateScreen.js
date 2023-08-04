@@ -19,6 +19,7 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 const url = process.env.EXPO_PUBLIC_IP 
@@ -70,7 +71,7 @@ useEffect(()=>{
       .then((response)=>response.json())
       .then((vetements) => {
         setVetements(vetements);
-        console.log(vetements)
+        //console.log(vetements)
       }); 
 }, [counterChanged])
 
@@ -109,7 +110,7 @@ if (mensurations.length > 2){
 }
 //console.log('mensurations',mensurations)
 
-console.log("nouvelles mensu algo",mensurationsCreees)
+//console.log("nouvelles mensu algo",mensurationsCreees)
 
 newDataMarques = marquesDispo.map((name, i) => {
   if(!marquesActives.includes(name)){
@@ -131,10 +132,10 @@ const newDataTypes = typesDispo.map((types, i) => {
 })
 
 const coupes = [
-  {key:'1', value : 'Regular/Classic', disabled:false},
-  {key:'1', value : 'Broad', disabled:false},
+  {key:'1', value : 'Classic', disabled:false},
+  {key:'1', value : 'Ample', disabled:false},
   {key:'1', value : 'Slim', disabled:false},
-  {key:'1', value : 'Skinny/ExtraSlim', disabled:false}
+  {key:'1', value : 'Skinny', disabled:false}
 ]
 
 function displayTailles(type) {
@@ -191,11 +192,16 @@ else {
 }
 }
 
-
 // TODO Fonction pour vérifier si le formulaire est valide //
   /*const isFormValid = () => {
     return ();
   };*/
+
+  console.log(vetements)
+
+  const vetementsEcran = vetements.slice(0, 2);
+
+  console.log(vetementsEcran)
 
   return (
     <KeyboardAvoidingView
@@ -204,7 +210,9 @@ else {
     >
       <ScrollView keyboardShouldPersistTaps="always">
         <View style={styles.premierRoute}>
-          <Text>Counter{vetements.length}/3</Text>
+        {vetements.length >= 3 ? null : (
+        <Text>Counter: {vetements.length+1}/3</Text>
+        )}
           <View style={styles.containerInput}>
           <SelectList 
               setSelected={(val) => displayType(val)} 
@@ -234,15 +242,31 @@ else {
           <View>
             {/* Bouton Suivant */}
             <TouchableOpacity
-              style={styles.button}
+               style={
+                vetements.length >= 3
+                  ? { ...styles.button, backgroundColor: '#D95B33'}
+                  : styles.button
+              }
               activeOpacity={0.8}
               onPress={handleSubmit}
             >
-              <Text style={styles.textButton}>
+              <Text style={
+                vetements.length >= 3
+                  ? { ...styles.textButton, color: '#FFFF'}
+                  : styles.textButton
+              }>
                 Suivant
               </Text>
             </TouchableOpacity>
           </View>
+          {vetementsEcran.map((vetement) => (
+        <View key={vetement._id}>
+          <Text>{vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}</Text>
+          <TouchableOpacity>
+          <Ionicons name="pencil-outline" color="#D95B33"/>
+          </TouchableOpacity>
+        </View>
+      ))}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
