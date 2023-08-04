@@ -151,10 +151,9 @@ const newDataTailles = taillesDispo.map((types, i) => {
 const handleSubmit = () => { 
 //Condition d'envoi du tableau de mensuration
 if (mensurationsCreees && !mensurationsExistent) {
-  
+
 }
 
-// console.log(userToken)
 
 if (!(marque === oldMarque)){  
 if (taille){
