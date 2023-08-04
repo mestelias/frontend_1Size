@@ -11,6 +11,7 @@ import {
   ScrollView,
   Modal,
   TouchableWithoutFeedback,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
@@ -310,6 +311,7 @@ const SecondRoute = ({}) => {
             setErrorMsg(data.message)
           } else {
             setModalVisible(true);
+
             // On réinitialise les valeurs après validation
             poitrineRef.current.value = originalPoitrineValue;
             tourTailleRef.current.value = originalTourTailleValue;
@@ -339,6 +341,10 @@ const SecondRoute = ({}) => {
           <View style={styles.centeredView}>
           <TouchableWithoutFeedback>  
             <View style={styles.modalView}>
+              <Image
+              source={require('../assets/messi.jpg')}
+              style={styles.roundedImage}
+              />
               <TouchableOpacity style={styles.button} activeOpacity={0.8}>
                 <Text style={styles.textButton}>Calibrer le reste</Text>
               </TouchableOpacity>
@@ -458,6 +464,7 @@ export default function CalibrateScreen({ navigation }) {
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.H1}>Calibrage Haut</Text>
+          <View style={styles.border}></View>
         </View>
       </SafeAreaView>
       {/* Onglets */}
@@ -467,7 +474,7 @@ export default function CalibrateScreen({ navigation }) {
           <TabBar
             {...props}
             renderLabel={({ route, color }) => (
-              <Text style={{ color: "#FFFF", margin: 8 }}>{route.title}</Text>
+              <Text style={{ color: "#FFFF", margin: 8, fontFamily: 'Outfit' }}>{route.title}</Text>
             )}
             style={{ backgroundColor: "#d95b33" }}
           />
@@ -494,6 +501,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: "#fcfaf1",
     marginTop: 30,
+  },
+  border: {
+    // paddingVertical: 10, // Ajoute un padding vertical de 10 pixels autour du texte
+    paddingHorizontal: 35, // Ajoute un padding horizontal de 20 pixels autour du texte
+    borderBottomWidth: 3, // Ajoute une bordure sous le texte
+    borderBottomColor: '#d95b33', // Couleur de la bordure sous le texte
+    borderRadius: 50,
   },
   burgerIcon:{
     paddingLeft: 30,
@@ -526,6 +540,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "600",
     marginBottom: 20,
+
   },
   tabView: {
     marginTop: 10,
@@ -633,5 +648,10 @@ const styles = StyleSheet.create({
   mensurationHeader : {
     marginTop: 20,
     alignItems: "center",
-  }
+  },
+  roundedImage: {
+    width: 150, 
+    height: 150,
+    borderRadius: 75, 
+  },
 });
