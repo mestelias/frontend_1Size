@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
-  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -22,9 +21,10 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const FirstRoute = () => (
   <View style={styles.firstRoute}>
-    {/* <View>
-      <Text style={styles.h3}>Choisis ton type de vêtement</Text>
+    <View>
+      <Text style={styles.h3}>Choisis ton vêtement</Text>
     </View>
+    <View></View>
     <View>
       <TouchableOpacity
         style={styles.button}
@@ -34,7 +34,7 @@ const FirstRoute = () => (
       >
         <Text style={styles.textButton}>Continuer</Text>
       </TouchableOpacity>
-    </View> */}
+    </View>
   </View>
 );
 
@@ -47,30 +47,16 @@ const renderScene = SceneMap({
   second: SecondRoute,
 });
 
-// const fetchFonts = () => {
-//   return Font.loadAsync({
-//     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-//   });
-// };
-
 export default function HomeScreen({ navigation }) {
   const carouselRef = React.useRef(null);
   
-  const initialLayout = Dimensions.get("window").width ;
-  const [activeSlide, setActiveSlide] = React.useState(0);
-  
+  const initialLayout = { width: Dimensions.get("window").width };
+
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: "first", title: "Pour moi" },
     { key: "second", title: "Pour un ami" },
   ]);
-
-  const images = [
-    require("../assets/vetements/basket.png"),
-    require("../assets/vetements/pantalon.jpeg"),
-    require("../assets/vetements/teeshirt.jpeg"),
-    require("../assets/vetements/cr7.jpeg")
-  ];
 
   return (
     <View style={styles.background}>
@@ -147,40 +133,30 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "#fcfaf1",
+    backgroundColor: "#FCFAF1",
+    alignItems: 'center'
+  },
+  container: {
+    flex: 0.4,
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   header: {
-    alignItems: "flex-start",
-    paddingTop: 30,
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  // container: {
-  //   flex: 0.2,
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  //   backgroundColor: 'red'
-  // },
-  container: {
-    height: "50%",
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
     alignItems: "center",
+    width: "100%",
   },
-  titleBox: {},
   H1: {
-    textAlign: "center",
     fontSize: 24,
     fontWeight: "600",
-    //marginBottom: 20,
+    marginBottom: 20,
     fontFamily: "Outfit",
-    color: 'black'
   },
   tabView: {
-    marginTop: 20,
+    marginTop: 10,
     width: "80%",
     borderRadius: 10,
-    maxHeight: 100
-
   },
   // firstRoute: {
   //   flex: 1,
@@ -193,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
     paddingTop: 8,
-    backgroundColor: "#d95b33",
+    backgroundColor: "#D6D1BD",
     borderRadius: 30,
     shadowOpacity: 1,
     elevation: 4,
@@ -208,10 +184,9 @@ const styles = StyleSheet.create({
     color: "#707B81",
     fontSize: 20,
     fontFamily: "Outfit",
-    marginBottom: 20
   },
   textButton: {
-    color: "#ffffff",
+    color: "#707B81",
     height: 30,
     fontWeight: "600",
     fontSize: 16,

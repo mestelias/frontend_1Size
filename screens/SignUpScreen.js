@@ -108,7 +108,7 @@ export default function SignUpScreen({navigation}) {
 
 
     // On requête la route sign up
-    fetch(`http://192.168.10.170:3000/users/signup`, {
+    fetch(`${backendIp}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -125,7 +125,7 @@ export default function SignUpScreen({navigation}) {
         console.log(data)
         if (data.result) {
           console.log('ttt')
-          dispatch(addUserToStore({data}));
+          dispatch(addUserToStore(data.token));
           setFirstname("")
           setName("")
           setUsername("")

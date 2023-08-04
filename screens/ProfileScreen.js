@@ -71,8 +71,8 @@ export default function ProfileScreen() {
 
   //TODO Sauvegarder ses données de profil 
   const handleSaveButton = () => {
-
-    if (picPreview) {
+  
+  if (picPreview){
       formData.append('profilePic', {
         uri: picPreview,
         name: 'photo.jpg',
@@ -106,7 +106,6 @@ export default function ProfileScreen() {
         })
       })
     }
-  }
 
     // Choisir une image dans le dossier
     const pickImage = async () => {
@@ -123,7 +122,8 @@ export default function ProfileScreen() {
       if (!result.canceled) {
         setPicPreview(result.assets[0].uri);
       }
-    };
+  };
+}
 
 // Prise de photo
     let cameraRef = useRef(null);
@@ -212,14 +212,14 @@ export default function ProfileScreen() {
               setModalVisible(!modalVisible);
             }}>
           <Image
-            source={picPreview != null ? { uri: picPreview } : require('../assets/Nelson.jpg')}
+            source={picPreview != null ? { uri: picPreview } : require('../assets/messi.jpg')}
             style={styles.roundedImage}
           />
           <View style={styles.iconContainer}>
            <Ionicons name="camera-outline" size={23} color="#fff"/>
           </View>
           </TouchableOpacity>
-          <Text>@Samy</Text>
+          <Text>@GOAT</Text>
           <TouchableOpacity
             style={styles.classicbutton}
             activeOpacity={0.8}
