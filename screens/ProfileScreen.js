@@ -212,14 +212,14 @@ export default function ProfileScreen() {
               setModalVisible(!modalVisible);
             }}>
           <Image
-            source={picPreview != null ? { uri: picPreview } : require('../assets/Nelson.jpg')}
+            source={picPreview != null ? { uri: picPreview } : require('../assets/messi.jpg')}
             style={styles.roundedImage}
           />
           <View style={styles.iconContainer}>
            <Ionicons name="camera-outline" size={23} color="#fff"/>
           </View>
           </TouchableOpacity>
-          <Text>@Samy</Text>
+          <Text>@GOAT</Text>
           <TouchableOpacity
             style={styles.classicbutton}
             activeOpacity={0.8}
