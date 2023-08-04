@@ -71,8 +71,8 @@ export default function ProfileScreen() {
 
   //TODO Sauvegarder ses données de profil 
   const handleSaveButton = () => {
-  
-  if (picPreview){
+
+    if (picPreview) {
       formData.append('profilePic', {
         uri: picPreview,
         name: 'photo.jpg',
@@ -106,6 +106,7 @@ export default function ProfileScreen() {
         })
       })
     }
+  }
 
     // Choisir une image dans le dossier
     const pickImage = async () => {
@@ -122,8 +123,7 @@ export default function ProfileScreen() {
       if (!result.canceled) {
         setPicPreview(result.assets[0].uri);
       }
-  };
-}
+    };
 
 // Prise de photo
     let cameraRef = useRef(null);
