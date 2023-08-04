@@ -102,10 +102,9 @@ const calculerMoyenne = (tableau) => {
 }
 
 
-
-if (mensurations.length > 2){
+if (vetements.length > 2){
   setMensurations([])
-  setMensurationsCreees(calculerMoyenne(mensurations))
+  setMensurationsCreees(calculerMoyenne(vetements.mensurations))
 }
 //console.log('mensurations',mensurations)
 
