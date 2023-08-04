@@ -106,6 +106,7 @@ export default function ProfileScreen() {
         })
       })
     }
+  }
 
     // Choisir une image dans le dossier
     const pickImage = async () => {
@@ -123,7 +124,7 @@ export default function ProfileScreen() {
         setPicPreview(result.assets[0].uri);
       }
   };
-}
+
 
 // Prise de photo
     let cameraRef = useRef(null);
