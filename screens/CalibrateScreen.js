@@ -8,16 +8,22 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
+import { addUserToStore } from "../reducers/user";
+import { useNavigation } from "@react-navigation/native";
+
 
 const url = process.env.EXPO_PUBLIC_IP 
+
 
 // Composant Tailles
 const PremierRoute = ({ onSubmit }) => {
@@ -34,6 +40,8 @@ const [taille, setTaille] = useState();
 const [type, setType] = useState();
 
 const [mensurations, setMensurations] = useState([])
+const [mensurationsReelles, setMensurationsReelles] = useState(false)
+const [mensurationsCreees, setMensurationsCreees] = useState(null)
 
 //Etats pour stocker l'ensemble des éléments récupérés en BDD 
 const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
@@ -55,11 +63,42 @@ useEffect(()=>{
 
 }, [])
 
+// Fonction pour générer le tableau de mensurations
+const calculerMoyenne = (tableau) => {
+  // Initialisation de l'objet contenant la somme de chaque propriété
+  const somme = {};
+  // Initialisation du compteur du nombre de propriété similaire à objet
+  const compteur = {};
 
-if (mensurations.length === 3){
-  
+  tableau.forEach(obj => {
+    // Création d'un tableau de propriété sur lequel boucler
+    Object.keys(obj).forEach(key => {
+      // on incrémente la valeur des clées (si la clée n'existait pas on initialise à 0)
+      somme[key] = (somme[key] || 0) + obj[key];
+      // on compte le nombre de fois où la clée apparaît dans les objets
+      compteur[key] = (compteur[key] || 0) + 1;
+    });
+  });
+
+  const moyenne = {};
+
+  Object.keys(somme).forEach(key => {
+    // on moyenne par rapport au nombre de fois où les clées apparaissent
+    moyenne[key] = somme[key] / compteur[key];
+  });
+
+  return moyenne;
 }
-//console.log(mensurations)
+
+
+
+if (mensurations.length > 2){
+  setMensurations([])
+  setMensurationsCreees(calculerMoyenne(mensurations))
+}
+//console.log('mensurations',mensurations)
+
+console.log("nouvelles mensu algo",mensurationsCreees)
 
 newDataMarques = marquesDispo.map((name, i) => {
   if(!marquesActives.includes(name)){
@@ -99,7 +138,10 @@ const newDataTailles = taillesDispo.map((types, i) => {
 })
 
 //reste à traiter l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
-const handleSubmit = () => {    
+const handleSubmit = () => { 
+//Condition d'envoi du tableau de mensuration
+
+
 if (!(marque === oldMarque)){  
 if (taille){
     fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
@@ -202,13 +244,24 @@ else {
   );
 };
 
+// Tab Mensurations
 
-const SecondRoute = ({ onSubmit }) => {
+const SecondRoute = ({}) => {
+
+  // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
     const poitrineRef = React.useRef(null);
     const tourTailleRef = React.useRef(null);
     const hancheRef = React.useRef(null)
+
+  // On déclare un état pour afficher un message d'erreur
+    const [errorMsg, setErrorMsg] = useState("");
+  // On déclare un état pour afficher la modal de validation des mensurations
+    const [modalVisible, setModalVisible] = useState(false);
+  // Changer le système de mesure (EU, CM, US)
+    const [convertLong, setConvertLong] = useState('CM');
+
     
-    // Fonction pour vérifier si le formulaire est valide
+  // Fonction pour vérifier si le formulaire est valide
   const isFormValid = () => {
     return (
       poitrineRef.current.value &&
@@ -216,12 +269,78 @@ const SecondRoute = ({ onSubmit }) => {
       hancheRef.current.value
     );
   };
- 
-    return (
+
+  const token = useSelector((state) => state.user.value);
+  const backendIp = process.env.EXPO_PUBLIC_IP
+  const navigation = useNavigation();
+
+  
+  const mensurationsSubmit = () => {
+    if (!isFormValid()){
+      setErrorMsg("Merci de remplir le(s) champ(s) manquant(s)");
+      return;
+    }
+
+    setErrorMsg('')
+
+
+    if (isFormValid()){
+      console.log(token)
+      fetch(`http://192.168.10.163:3000/users/mensurations/haut/${token}`, {
+      // fetch(`${backendIp}/users/mensurations/haut/${token}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tourDePoitrine: poitrineRef.current.value,
+          tourDeTaille: tourTailleRef.current.value,
+          tourDeHanches: hancheRef.current.value,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if(!data){
+            setErrorMsg(data.message)
+          } else {
+            setModalVisible(true);
+          }
+        }) 
+    }
+  }
+  
+  // La fonction permet de fermer la modal et rediriger l'utilisateur vers la Home
+  navigateToHome = () =>{
+    setModalVisible(false)
+    navigation.navigate('Home')
+  }
+
+
+
+  return (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === "ios" ? "padding" : null}
         >
+        <Modal visible={modalVisible} animationType="fade" transparent>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+
+          <View style={styles.centeredView}>
+          <TouchableWithoutFeedback>  
+            <View style={styles.modalView}>
+              <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+                <Text style={styles.textButton}>Calibrer le reste</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+              style={styles.button} 
+              activeOpacity={0.8}
+              onPress={navigateToHome}
+              >
+                <Text style={styles.textButton}>Rechercher un vêtement</Text>
+              </TouchableOpacity>
+            </View>
+            </TouchableWithoutFeedback>  
+          </View>
+          </TouchableWithoutFeedback>
+        </Modal>
           <ScrollView 
             contentContainerStyle={{flexGrow: 1}}
             keyboardShouldPersistTaps='never'>
@@ -229,14 +348,20 @@ const SecondRoute = ({ onSubmit }) => {
                 <Text style={styles.h3}>Renseigner vos mensurations</Text>
             </View>
             <View style={styles.tailleSwitch}>
-                <TouchableOpacity activeOpacity={0.5}>
+            {/* <TouchableOpacity >
                     <Text style={styles.taille}>EU</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity >
                     <Text style={styles.taille}>US</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity >
                  <Text style={styles.taille}>UK</Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity onPress={() => setConvertLong('CM')} activeOpacity={0.5}>
+                { convertLong == 'CM' ? <Text style={styles.tailleBold}>CM</Text>  : <Text style={styles.taille}>CM</Text> }
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setConvertLong('Inch')}>
+                { convertLong == 'Inch' ? <Text style={styles.tailleBold}>INCH</Text>  : <Text style={styles.taille}>INCH</Text> }
                 </TouchableOpacity>
             </View>
             <View style={styles.secondRoute}>
@@ -244,32 +369,33 @@ const SecondRoute = ({ onSubmit }) => {
               <View style={styles.containerInput}>
                 <View style={styles.inputBox}>
                 <Text style={styles.texte}>Tour de poitrine</Text>
-                <MensurationsInput ref={poitrineRef} placeholder="cm" />
+                 <View style={styles.inputBoxRow}>
+                    <MensurationsInput ref={poitrineRef} placeholder="exemple : 90" />
+                    <Text style={styles.inputTexte}>{convertLong}</Text>
+                 </View>
+
                 </View>
                 <View style={styles.inputBox}>
-                <Text style={styles.texte}>Tour de taille</Text>
-                <MensurationsInput ref={tourTailleRef} placeholder="cm" />                 
+                  <Text style={styles.texte}>Tour de taille</Text>
+                  <View style={styles.inputBoxRow}>
+                    <MensurationsInput ref={tourTailleRef} placeholder="exemple : 60" />  
+                    <Text style={styles.inputTexte}>{convertLong}</Text>                   
+                  </View>
                 </View>
                 <View style={styles.inputBox}>
-                <Text style={styles.texte}>Tour de hanches</Text>
-                <MensurationsInput ref={hancheRef} placeholder="cm" />                    
+                  <Text style={styles.texte}>Tour de hanches</Text>
+                  <View style={styles.inputBoxRow}>
+                    <MensurationsInput ref={hancheRef} placeholder="exemple : 90" />    
+                    <Text style={styles.inputTexte}>{convertLong}</Text>  
+                  </View>                                 
                 </View>
               </View>
+              { errorMsg !== '' && (<Text style={styles.error}>{errorMsg}</Text>)}
               <View>
                 <TouchableOpacity
                   style={styles.button}
                   activeOpacity={0.8}
-                  onPress={() =>  {
-                    if (isFormValid()) {
-                    onSubmit(
-                      poitrineRef.current.value,
-                      tourTailleRef.current.value,
-                      hancheRef.current.value,
-                    );
-                  } else {
-                    console.log("Veuillez remplir tous les champs.");
-                  }
-                  }
+                  onPress={() =>  {mensurationsSubmit()}
                 }
                 >
                   <Text style={styles.textButton}>Valider</Text>
@@ -299,17 +425,12 @@ export default function CalibrateScreen({ navigation }) {
   // État pour gérer l'onglet actif
   const [index, setIndex] = React.useState(0);
 
+
   // Définir les routes pour les onglets
   const [routes] = React.useState([
     { key: "first", title: "Tailles" },
     { key: "second", title: "Mensuration" },
   ]);
-  
-  // Fonction de soumission du formulaire
-  const mensurationsSubmit = (poitrine, tourTaille, hanches) => {
-    // Traiter les valeurs ici, comme les enregistrer dans une base de données, etc.
-    console.log(poitrine, tourTaille, hanches);
-  };
 
     // Fonction pour rendre les scènes des onglets
   const renderScene = SceneMap({
@@ -372,6 +493,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   H1: {
     fontSize: 24,
     fontWeight: "600",
@@ -407,6 +547,13 @@ const styles = StyleSheet.create({
   },
   inputBox : {
     width : '100%'
+  },
+  inputBoxRow : {
+    flexDirection : "row",
+    alignItems : "center"
+  },
+  inputTexte: {
+    marginLeft : -40,
   },
   input: {
     alignItems: 'flex-start',
@@ -451,6 +598,11 @@ const styles = StyleSheet.create({
     color: "#707B81",
     padding: 15,
   },
+  tailleBold:{
+    color: "#707B81",
+    padding: 15,
+    fontWeight: "bold",
+  },
   h3: {
     color: "#000000",
     fontSize: 20,
@@ -459,5 +611,10 @@ const styles = StyleSheet.create({
   },
   texte: {
     fontFamily: "Outfit",
+  },
+  error: {
+    color: "#DF1C28",
+    fontFamily: "Outfit",
+    fontSize: 16,
   },
 });
