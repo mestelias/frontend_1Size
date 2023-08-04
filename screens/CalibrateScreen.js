@@ -41,6 +41,7 @@ const [type, setType] = useState();
 
 const [vetements, setVetements] = useState([]);
 const [counterChanged, setCounterChanged] = useState(false);
+const [alreadyCalculated, setAlreadyCalculated] = useState(false)
 
 const [mensurations, setMensurations] = useState([])
 const [mensurationsExistent, setMensurationsExistent] = useState(false)
@@ -71,18 +72,19 @@ useEffect(()=>{
       .then((response)=>response.json())
       .then((vetements) => {
         setVetements(vetements);
-        //console.log(vetements)
+        setAlreadyCalculated(false)
       }); 
 }, [counterChanged])
 
 // Fonction pour générer le tableau de mensurations
 const calculerMoyenne = (tableau) => {
+  const array = tableau.map(e => e.mensurations)
   // Initialisation de l'objet contenant la somme de chaque propriété
   const somme = {};
   // Initialisation du compteur du nombre de propriété similaire à objet
   const compteur = {};
 
-  tableau.forEach(obj => {
+  array.forEach(obj => {
     // Création d'un tableau de propriété sur lequel boucler
     Object.keys(obj).forEach(key => {
       // on incrémente la valeur des clées (si la clée n'existait pas on initialise à 0)
@@ -103,12 +105,10 @@ const calculerMoyenne = (tableau) => {
 }
 
 
-
-if (mensurations.length > 2){
-  setMensurations([])
-  setMensurationsCreees(calculerMoyenne(mensurations))
+if (vetements.length > 2 && !alreadyCalculated){
+  setAlreadyCalculated(true)
+  setMensurationsCreees(calculerMoyenne(vetements))
 }
-//console.log('mensurations',mensurations)
 
 //console.log("nouvelles mensu algo",mensurationsCreees)
 
