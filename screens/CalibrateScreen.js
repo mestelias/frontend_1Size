@@ -39,6 +39,7 @@ const [taille, setTaille] = useState();
 const [type, setType] = useState();
 
 const [vetements, setVetements] = useState([]);
+const [counterChanged, setCounterChanged] = useState(false);
 
 const [mensurations, setMensurations] = useState([])
 const [mensurationsExistent, setMensurationsExistent] = useState(false)
@@ -71,7 +72,7 @@ useEffect(()=>{
         setVetements(vetements);
         console.log(vetements)
       }); 
-}, [])
+}, [counterChanged])
 
 // Fonction pour générer le tableau de mensurations
 const calculerMoyenne = (tableau) => {
@@ -174,10 +175,11 @@ if (taille){
     .then((response)=>response.json())
     .then((vetement)=>{console.log(vetement);
       (() => {
-        setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]);
+        setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]); // fetch les marques en bdd
       })();
       console.log("marque enregistrée");
       setOldMarque(marque);
+      setCounterChanged(!counterChanged);
   });
 };
     
