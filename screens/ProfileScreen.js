@@ -71,56 +71,59 @@ export default function ProfileScreen() {
 
   //TODO Sauvegarder ses données de profil 
   const handleSaveButton = () => {
-    formData.append('profilePic', {
-      uri: picPreview,
-      name: 'photo.jpg',
-      type: 'image/jpeg',
-    });
   
-  //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
-  fetch(`${backendIp}/users/upload`, {
-    method: 'POST',
-    body: formData,
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data)
-      fetch(`${backendIp}/users/update`, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token: userToken,
-          image: data.url
-        })
+  if (picPreview){
+      formData.append('profilePic', {
+        uri: picPreview,
+        name: 'photo.jpg',
+        type: 'image/jpeg',
+      });
+    
+    //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
+    fetch(`${backendIp}/users/upload`, {
+      method: 'POST',
+      body: formData,
       })
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
-        if (data.result === true) {
-          console.log("Youpi !")
-        } else {
-          console.log("Moins youpi...")
-        }
+        fetch(`${backendIp}/users/update`, {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token: userToken,
+            image: data.url
+          })
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          if (data.result === true) {
+            console.log("Youpi !")
+          } else {
+            console.log("Moins youpi...")
+          }
+        })
       })
-    })
-  }
-
-  // Choisir une image dans le dossier
-  const pickImage = async () => {
-    // Pas de permission nécessaire pour l'accès à la Galerie
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setPicPreview(result.assets[0].uri);
     }
+
+    // Choisir une image dans le dossier
+    const pickImage = async () => {
+      // Pas de permission nécessaire pour l'accès à la Galerie
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      console.log(result);
+
+      if (!result.canceled) {
+        setPicPreview(result.assets[0].uri);
+      }
   };
+}
 
 // Prise de photo
     let cameraRef = useRef(null);
