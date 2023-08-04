@@ -167,6 +167,11 @@ export default function ProfileScreen() {
     setGender(updatedState);
   };
 
+   // Fonction pour empêcher l'utilisateur de faire la saisie en majuscule
+   const updateEmail = (value) => {
+    setEmail(value.toLowerCase()); 
+  };
+
 
 //Ajout condition caméra ou profileScreen
   if (!cameraVisible) return (
@@ -287,7 +292,7 @@ export default function ProfileScreen() {
               ]}
               onFocus={()=> setIsFocused4(true)}
               onBlur={()=> setIsFocused4(false)}
-              onChangeText={setEmail}
+              onChangeText={updateEmail}
               value={email}
               placeholder="Email"
             ></TextInput>
