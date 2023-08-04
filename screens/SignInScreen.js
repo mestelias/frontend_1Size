@@ -84,14 +84,15 @@ export default function SignInScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
+        // On vérifie si l'utilisateur a bien été trouvé en BDD
         if (data.result) {
+          // On stocke le token utilisateur dans le reducer user
           dispatch(addUserToStore(data.token));
+          //on redirige l'utilisateur vers la Home
           navigation.navigate("AppDrawerNavigation", { screen: "Home" });
         } else {
           // User already exists in database
-          //TO DO : gérer l'affichage
           setErrorMsg(data.error);
-          console.log(data)
         }
         // dispatch(login(signInUsername));
         setEmail("");
@@ -100,14 +101,7 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.scrollView} > 
-    <View style={styles.background}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => handleSubmit()} activeOpacity={0.8}>
-          <Text style={styles.color}>Retour</Text>
-        </TouchableOpacity>
-      </View>
-
+    <ScrollView style={styles.background} > 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -153,7 +147,8 @@ export default function SignInScreen({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleSubmit()}
+            // TO DO : INSCRIPTION AVEC GOOGLE
+            onPress={() => navigation.navigate('Home')}
             style={styles.google}
             activeOpacity={0.8}
           >
@@ -163,10 +158,10 @@ export default function SignInScreen({ navigation }) {
           <View style={styles.creation}>
             <Text style={styles.textCompte}>Tu n'as pas de compte ?</Text>
             <TouchableOpacity
-              onPress={() => handleSubmit()}
+              onPress={() => navigation.navigate('SignUp')}
               activeOpacity={0.8}
             >
-              <Text style={styles.textCreation}> Crée un compte</Text>
+              <Text style={styles.textCreation}>Créer un compte</Text>
             </TouchableOpacity>
           </View>
 
@@ -176,42 +171,24 @@ export default function SignInScreen({ navigation }) {
           </TouchableOpacity> */}
         </View>
       </KeyboardAvoidingView>
-    </View>
+    {/* </View> */}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
+    flex: 1,
     width: "100%",
     height: "100%",
     backgroundColor: "#fcfaf1",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  header: {
-    flex: 0.1,
-    alignItems: "flex-end",
-    justifyContent: "space-between",
-    paddingTop: 60,
-    paddingLeft: 20,
-    paddingRight: 20,
-    // backgroundColor: "#fcfaf1",
-  },
-  color: {
-    // LA POLICE N'EST PAS LA BONNE, PAS COMPATIBLE AVEC LE BOLD
-    color: "#d95b33",
-    //fontFamily: 'Outfit',
-    fontSize: 20,
-    fontWeight: "bold",
   },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    // backgroundColor: "#fcfaf1",
-    marginTop: 25,
+    backgroundColor: "#fcfaf1",
+    marginTop: 80,
   },
   title: {
     fontSize: 30,
