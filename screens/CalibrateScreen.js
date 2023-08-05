@@ -27,7 +27,9 @@ const url = process.env.EXPO_PUBLIC_IP
 
 
 // Composant Tailles
-const PremierRoute = ({ navigation }) => {
+const PremierRoute = ({ navigation, categorie }) => {
+
+const categorieLC = categorie.toLowerCase()
  
 const userToken = useSelector((state) => state.user.value);
 
@@ -69,7 +71,7 @@ console.log(marquesDispo)
 //Va chercher tous les marques des hauts en BDD
 useEffect(()=>{
 
-  fetch(`${url}/marques/names?sexe=${sexe}&categorie=haut`)
+  fetch(`${url}/marques/names?sexe=${sexe}&categorie=${categorieLC}`)
   .then((response)=> response.json())
   .then((marques) => setMarquesDispo(marques))
 
@@ -78,7 +80,7 @@ useEffect(()=>{
 //Va chercher l'ensemble des vêtements hauts dans la BDD
 useEffect(()=>{
 
-  fetch(`${url}/users/userclothes?token=${userToken}&categorie=haut`)
+  fetch(`${url}/users/userclothes?token=${userToken}&categorie=${categorieLC}`)
       .then((response)=>response.json())
       .then((vetements) => {
         setVetements(vetements);
@@ -122,7 +124,7 @@ if (vetements.length > 2 && !alreadyCalculated){
 }
 
 if (mensurationsCreees) {
-  fetch(`${url}/users/mensurations/haut/${userToken}`, {
+  fetch(`${url}/users/mensurations/${categorieLC}/${userToken}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(mensurationsCreees),
@@ -140,7 +142,7 @@ newDataMarques = marquesDispo.map((name, i) => {
 })
 
 function displayType(marque) {
-  fetch(`${url}/marques/types?marque=${marque}&sexe=${sexe}&categorie=haut`)
+  fetch(`${url}/marques/types?marque=${marque}&sexe=${sexe}&categorie=${categorieLC}`)
   .then((response)=>response.json())
   .then((types) => setTypesDispo(types));
   setMarque(marque);
@@ -158,7 +160,7 @@ const coupes = [
 ]
 
 function displayTailles(type) {
-  fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut`)
+  fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexe}&categorie=${categorieLC}`)
   .then((response)=>response.json())
   .then((tailles) => setTaillesDispo(tailles));
   setType(type);
@@ -174,7 +176,7 @@ const handleSubmit = () => {
 //Condition d'envoi du tableau de mensuration
   if (!(marque === oldMarque)){  
     if (taille) {
-        fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
+        fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=${categorieLC}&taille=${taille}`)
         .then((response)=>response.json())
         .then((mensurations) => {
           if (mensurations) {
@@ -215,7 +217,7 @@ const handleSubmit = () => {
 
   const handleDelete = () => {
     if (vetementToDelete){
-    fetch(`${url}/users/vetements/haut/${userToken}/${vetementToDelete}`, {
+    fetch(`${url}/users/vetements/${categorieLC}/${userToken}/${vetementToDelete}`, {
       method: 'DELETE',
     })
       .then((response) => response.json())
@@ -508,8 +510,12 @@ const MensurationsInput = React.forwardRef((props, ref) => (
       }}
     />
   ));
+// Lors de la navigation de CalibrateHomeScreen à ici, on envoie en props la categorie haut/bas/chaussure
+// qu'on récupère ici avec "route" en plus de navigation
+export default function CalibrateScreen({ navigation, route }) {
 
-export default function CalibrateScreen({ navigation }) {
+  // destructuraction des props, pour récupérer la valeur de la categorie envoyée depuis CalibrateHomeScreen
+  const { categorie } = route.params
 
   // État pour gérer l'onglet actif
   const [index, setIndex] = React.useState(0);
@@ -523,8 +529,9 @@ export default function CalibrateScreen({ navigation }) {
 
     // Fonction pour rendre les scènes des onglets
   const renderScene = SceneMap({
-    first: () => <PremierRoute navigation={navigation}/>,
-    second: () => <SecondRoute navigation={navigation}/>, 
+    // Envoie ici aussi des props navigation & categorie, qu'on récupère dans premier & secondroute
+    first: () => <PremierRoute navigation={navigation} categorie={categorie} />,
+    second: () => <SecondRoute navigation={navigation} categorie={categorie} />, 
   });
 
   // Obtenir la largeur initiale de l'écran
@@ -539,7 +546,7 @@ export default function CalibrateScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.titleContainer}>
-          <Text style={styles.H1}>Calibrage Haut</Text>
+          <Text style={styles.H1}>Calibrage {categorie}</Text>
           <View style={styles.border}></View>
         </View>
       </SafeAreaView>

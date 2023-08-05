@@ -22,7 +22,7 @@ export default function CalibrateHomeScreen({ navigation }) {
   // paramètre clée qui défini sur quel image on s'est arrêté
   const [activeSlide, setActiveSlide] = useState(0);
   // tableau qui sert à envoyer la bonne props au CalibrateScreen par rapport à activeSlide
-  const categorie = ["bas","chaussure","haut"]
+  const categorie = ["Chaussures","Bas","Haut"]
 
   const handleContinueButton = () => {
     navigation.navigate('CalibrateScreen', { categorie: categorie[activeSlide] })
