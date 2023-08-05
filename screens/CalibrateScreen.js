@@ -337,7 +337,7 @@ else {
 const SecondRoute = ({}) => {
 
   // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
-    const poitrineRef = React.useRef(null);
+  const poitrineRef = React.useRef(null);
     const tourTailleRef = React.useRef(null);
     const hancheRef = React.useRef(null)
 
@@ -445,18 +445,21 @@ const SecondRoute = ({}) => {
           <TouchableWithoutFeedback>  
             <View style={styles.modalView}>
               <Image
-              source={require('../assets/messi.jpg')}
-              style={styles.roundedImage}
+              source={require('../assets/t-shirt.png')}
+              style={styles.image}
               />
+              <Text style={styles.h3}>
+                Félicitations ! Votre calibrage Haut est enregistré.
+              </Text>
               <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-                <Text style={styles.textButton}>Calibrer le reste</Text>
+                <Text style={styles.textButton}>Continuer le calibrage</Text>
               </TouchableOpacity>
               <TouchableOpacity
-              style={styles.button} 
+              style={styles.button2} 
               activeOpacity={0.8}
               onPress={navigateToHome}
               >
-                <Text style={styles.textButton}>Rechercher un vêtement</Text>
+                <Text style={styles.textButton2}>Rechercher un vêtement</Text>
               </TouchableOpacity>
             </View>
             </TouchableWithoutFeedback>  
@@ -546,7 +549,7 @@ export default function CalibrateScreen({ navigation }) {
   // Définir les routes pour les onglets
   const [routes] = React.useState([
     { key: "first", title: "Tailles" },
-    { key: "second", title: "Mensuration" },
+    { key: "second", title: "Mensurations" },
   ]);
 
     // Fonction pour rendre les scènes des onglets
@@ -588,7 +591,7 @@ export default function CalibrateScreen({ navigation }) {
             marginBottom : 5,
             marginHorizontal : 5,
             width: '47%',
-            opacity: 0.8,
+            opacity: 0.9,
             borderRadius: 10,
             // marginLeft : -8,
             }}
@@ -644,6 +647,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: 'white',
+    width: '90%',
     borderRadius: 20,
     padding: 30,
     alignItems: 'center',
@@ -660,7 +664,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "600",
     marginBottom: 20,
-
   },
   tabView: {
     flex: 1,
@@ -713,12 +716,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff'
   },
   button: {
-    width: 150,
+    width: 200,
     alignItems: "center",
     marginTop: 20,
     paddingTop: 8,
-    marginBottom: 30,
+    marginBottom: 15,
     backgroundColor: "#d95b33",
+    borderRadius: 30,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "rgba(0, 0, 0, 0.25)",
+  },
+  button2: {
+    width: 200,
+    alignItems: "center",
+    marginTop: 20,
+    paddingTop: 8,
+    marginBottom: 15,
+    backgroundColor: "#d6d1bd",
     borderRadius: 30,
     shadowOpacity: 1,
     elevation: 4,
@@ -731,6 +751,13 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: "#ffffff",
+    fontFamily: 'Outfit',
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  textButton2: {
+    color: "#707b81",
     fontFamily: 'Outfit',
     height: 30,
     fontWeight: "600",
@@ -786,9 +813,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: "center",
   },
-  roundedImage: {
-    width: 150, 
-    height: 150,
-    borderRadius: 75, 
+  image: {
+    width: 100, 
+    height: 110,
+    borderRadius: 50,
+    marginBottom: 15,
   },
 });

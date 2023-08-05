@@ -18,6 +18,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
 import CalibrateScreen from "./screens/CalibrateScreen"
+import CalibrateHomeScreen from "./screens/CalibrateHomeScreen";
 
 //Store
 import { Provider } from 'react-redux';
@@ -81,6 +82,7 @@ const AppDrawerNavigation = () => (
     <Drawer.Screen name="SignUp" component={SignUpScreen} />
     <Drawer.Screen name="SignIn" component={SignInScreen} />
     <Drawer.Screen name="Calibrate" component={CalibrateScreen} />
+    <Drawer.Screen name="CalibrateHome" component={CalibrateHomeScreen}/>
   </Drawer.Navigator>
 );
 
