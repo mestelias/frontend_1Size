@@ -163,7 +163,7 @@ export default function SignInScreen({ navigation }) {
           <View style={styles.creation}>
             <Text style={styles.textCompte}>Tu n'as pas de compte ?</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SignUp')}
+              onPress={() => navigation.navigate('Inscription')}
               activeOpacity={0.8}
             >
               <Text style={styles.textCreation}>Créer un compte</Text>

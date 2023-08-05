@@ -269,7 +269,7 @@ export default function SignUpScreen({navigation}) {
           
           <View style={styles.connect}>
             <Text style={styles.textCompte}>Tu as déjà un compte ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignIn')} activeOpacity={0.8}>
+            <TouchableOpacity onPress={() => navigation.navigate('Connexion')} activeOpacity={0.8}>
               <Text style={styles.textConnexion}> Connecte-toi</Text>
             </TouchableOpacity>
           </View>

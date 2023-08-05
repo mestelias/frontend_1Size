@@ -31,6 +31,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import ContactScreen from "./screens/ContactScreen";
 
 
 const reducers=combineReducers({user});
@@ -50,6 +51,7 @@ const persistor = persistStore(store);
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+
 const AppDrawerNavigation = () => (
   <Drawer.Navigator
     screenOptions={({ route }) => ({
@@ -61,9 +63,26 @@ const AppDrawerNavigation = () => (
         let iconName;
         if (route.name === "Home") {
           iconName = focused ? "home" : "home"; // Nom de l'icône FontAwesome pour "Home"
-        } else if (route.name === "Profile") {
+        } else if (route.name === "Profil") {
           iconName = focused ? "user" : "user"; // Nom de l'icône FontAwesome pour "Profile"
+        } else if (route.name === "Inscription") {
+          iconName = focused ? "user-plus" : "user-plus"; // Nom de l'icône FontAwesome pour "SignUp"
+        } else if (route.name === "Connexion") {
+          iconName = focused ? "sign-in" : "sign-in"; // Nom de l'icône FontAwesome pour "SignIn"
+        } else if (route.name === "Calibrage") {
+          iconName = focused ? "bullseye" : "bullseye"; // Nom de l'icône FontAwesome pour "Calibrate"
+        } else if (route.name === "Mes vêtements") {
+          iconName = focused ? "suitcase" : "suitcase"; // Nom de l'icône FontAwesome pour "Mes vêtements" 
+        } else if (route.name === "Mes amis") {
+          iconName = focused ? "users" : "users"; // Nom de l'icône FontAwesome pour "Mes amis" 
+        } else if (route.name === "Nous contacter") {
+          iconName = focused ? "envelope" : "envelope"; // Nom de l'icône FontAwesome pour "Nous contacter"
+        } else if (route.name === "Aide") {
+          iconName = focused ? "question" : "question"; // Nom de l'icône FontAwesome pour "Aide"
+        } else if (route.name === "Deconnexion") {
+          iconName = focused ? "signout" : "sign-out"; // Nom de l'icône FontAwesome pour "Deconnexion"
         }
+        
         // Définis la couleur en fonction de la variable 'iconColor'
         iconColor = focused ? "#D95B33" : "#000"; 
 
@@ -77,10 +96,15 @@ const AppDrawerNavigation = () => (
     }}
   >
     <Drawer.Screen name="Home" component={HomeScreen} />
-    <Drawer.Screen name="Profile" component={ProfileScreen} />
-    <Drawer.Screen name="SignUp" component={SignUpScreen} />
-    <Drawer.Screen name="SignIn" component={SignInScreen} />
-    <Drawer.Screen name="Calibrate" component={CalibrateScreen} />
+    <Drawer.Screen name="Profil" component={ProfileScreen} />
+    <Drawer.Screen name="Inscription" component={SignUpScreen} />
+    <Drawer.Screen name="Connexion" component={SignInScreen} />
+    <Drawer.Screen name="Calibrage" component={CalibrateScreen} />
+    <Drawer.Screen name="Mes vêtements" component={CalibrateScreen} />
+    <Drawer.Screen name="Mes amis" component={CalibrateScreen} />
+    <Drawer.Screen name="Nous contacter" component={ContactScreen} />
+    <Drawer.Screen name="Aide" component={CalibrateScreen} />
+    <Drawer.Screen name="Deconnexion" component={CalibrateScreen} />
   </Drawer.Navigator>
 );
 
