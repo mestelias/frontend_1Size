@@ -17,15 +17,17 @@ import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
+import LoadingScreen from "./screens/LoadingScreen";
+import CalibrateHomeScreen from "./screens/CalibrateHomeScreen";
 import CalibrateScreen from "./screens/CalibrateScreen"
 
 //Store
 import { Provider } from 'react-redux';
-import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import user from './reducers/user';
 
 //Persistance du Store
-import {persistStore, persistReducer} from "redux-persist"
+import { persistStore, persistReducer } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -80,7 +82,7 @@ const AppDrawerNavigation = () => (
     <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen name="SignUp" component={SignUpScreen} />
     <Drawer.Screen name="SignIn" component={SignInScreen} />
-    <Drawer.Screen name="Calibrate" component={CalibrateScreen} />
+    <Drawer.Screen name="CalibrateHome" component={CalibrateHomeScreen} />
   </Drawer.Navigator>
 );
 
@@ -113,11 +115,13 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NavigationContainer>
-         <Stack.Navigator screenOptions={{ headerShown: false }}>
+         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Loading">
+           <Stack.Screen name="Loading" component={LoadingScreen} />
             <Stack.Screen
             name="AppDrawerNavigation"
             component={AppDrawerNavigation}
             />
+            <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

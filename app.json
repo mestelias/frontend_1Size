@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash-nico.png",
+      "image": "./assets/logoAnimation.gif",
       "resizeMode": "",
       "backgroundColor": "#25958a"
     },

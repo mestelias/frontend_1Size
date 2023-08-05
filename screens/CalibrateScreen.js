@@ -20,7 +20,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
@@ -28,10 +27,9 @@ const url = process.env.EXPO_PUBLIC_IP
 
 
 // Composant Tailles
-const PremierRoute = ({ onSubmit }) => {
+const PremierRoute = ({ navigation }) => {
  
 const userToken = useSelector((state) => state.user.value);
-console.log('ceci est le token',userToken)
 
 //TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
 const sexe = "homme"
@@ -44,20 +42,17 @@ const [type, setType] = useState();
 
 const [vetements, setVetements] = useState([]);
 const [counterChanged, setCounterChanged] = useState(false);
+
+// pour ne pas lancer l'algo de moyenne si l'utilisateur a déjà renseigné ses mensurations lui même
 const [alreadyCalculated, setAlreadyCalculated] = useState(false)
 
-const [mensurations, setMensurations] = useState([])
-const [mensurationsExistent, setMensurationsExistent] = useState(false)
+// mensurations créées via l'algo de moyenne
 const [mensurationsCreees, setMensurationsCreees] = useState(null)
 
 //Etats pour stocker l'ensemble des éléments récupérés en BDD 
 const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
 const [typesDispo, setTypesDispo] = useState([]); // récupéré au moment de la sélection de la marque
 const [taillesDispo, setTaillesDispo] = useState([]); // récupéré au moment de la sélection du type
-
-
-//Etat pour acitver l'update d'un vêtement affiché
-const [updateOn, setUpdateOne] = useState([])
 
 //Marques qui ne sont pas désactivées après utilisation
 const[marquesActives, setMarquesActives] = useState([])
@@ -68,6 +63,8 @@ const [oldMarque, setOldMarque] = useState('neutral')
 //Etats pour gérer la suppression des vêtements calibrés
 const [vetementToDelete, setVetementToDelete] = useState(null);
 const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
+
+console.log(marquesDispo)
 
 //Va chercher tous les marques des hauts en BDD
 useEffect(()=>{
@@ -80,16 +77,19 @@ useEffect(()=>{
 
 //Va chercher l'ensemble des vêtements hauts dans la BDD
 useEffect(()=>{
-  fetch(`${url}/users/userclothes?token=WeoG9kKWGakkWr8gWcbmi3zhttkBanva&categorie=haut`) // rendre dynamique (token)
+
+  fetch(`${url}/users/userclothes?token=${userToken}&categorie=haut`)
       .then((response)=>response.json())
       .then((vetements) => {
         setVetements(vetements);
         setAlreadyCalculated(false)
       }); 
+
 }, [counterChanged]) // se réinitialise à chaque fois que le compteur change pour que le compteur soit toujours d'actualité
 
 // Fonction pour générer le tableau de mensurations
 const calculerMoyenne = (tableau) => {
+
   const array = tableau.map(e => e.mensurations)
   // Initialisation de l'objet contenant la somme de chaque propriété
   const somme = {};
@@ -122,7 +122,6 @@ if (vetements.length > 2 && !alreadyCalculated){
 }
 
 if (mensurationsCreees) {
-  console.log('TOKEEEEEEEEN',userToken)
   fetch(`${url}/users/mensurations/haut/${userToken}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -131,8 +130,6 @@ if (mensurationsCreees) {
       .then((response) => response.json())
       .then((data) => { console.log(data)})
 }
-
-console.log("nouvelles mensu algo",mensurationsCreees)
 
 newDataMarques = marquesDispo.map((name, i) => {
   if(!marquesActives.includes(name)){
@@ -175,53 +172,41 @@ const newDataTailles = taillesDispo.map((types, i) => {
 //reste à traiter l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
 const handleSubmit = () => { 
 //Condition d'envoi du tableau de mensuration
-if (mensurationsCreees && !mensurationsExistent) {
-
-}
-
-
-if (!(marque === oldMarque)){  
-if (taille){
-    fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
-    .then((response)=>response.json())
-    .then((mensurations) => {
-    if(mensurations){fetch(`${url}/users/vetements/haut/WeoG9kKWGakkWr8gWcbmi3zhttkBanva`, { // rendre dynamique (token)
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-      marque: marque,
-      type: type,
-      coupe: coupe,
-      taille: taille,
-      mensurations: mensurations
-      }),
-    })
-    .then((response)=>response.json())
-    .then((vetement)=>{console.log(vetement);
-      (() => {
-        setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]); // fetch les marques en bdd
-      })();
-      console.log("marque enregistrée");
-      setOldMarque(marque);
-      setCounterChanged(!counterChanged);
-  });
-};
-    
-    })
+  if (!(marque === oldMarque)){  
+    if (taille) {
+        fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=haut&taille=${taille}`)
+        .then((response)=>response.json())
+        .then((mensurations) => {
+          if (mensurations) {
+            fetch(`${url}/users/vetements/haut/${userToken}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                marque: marque,
+                type: type,
+                coupe: coupe,
+                taille: taille,
+                mensurations: mensurations
+              }),
+            })
+            .then((response) => response.json())
+            .then((vetement) => {
+              console.log(vetement);
+              (() => {
+              setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]); // fetch les marques en bdd
+              })();
+              console.log("marque enregistrée");
+              setOldMarque(marque);
+              setCounterChanged(!counterChanged);
+            });
+          };    
+        })
+    }
+  }
+  else {
+    console.log("marque déjà utilisée")
   }
 }
-else {
-  console.log("marque déjà utilisée")
-}
-}
-
-// TODO Fonction pour vérifier si le formulaire est valide //
-  /*const isFormValid = () => {
-    return ();
-  };*/
-
-  //console.log(vetements)
-
 
   const handleDeleteConfirmation = (vetementId) => {
     setVetementToDelete(vetementId);
@@ -230,7 +215,7 @@ else {
 
   const handleDelete = () => {
     if (vetementToDelete){
-    fetch(`${url}/users/vetements/haut/WeoG9kKWGakkWr8gWcbmi3zhttkBanva/${vetementToDelete}`, { // rendre dynamique (token)
+    fetch(`${url}/users/vetements/haut/${userToken}/${vetementToDelete}`, {
       method: 'DELETE',
     })
       .then((response) => response.json())
@@ -334,8 +319,7 @@ else {
 
 // Tab Mensurations
 
-const SecondRoute = ({}) => {
-
+const SecondRoute = ({navigation}) => {
   // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
     const poitrineRef = React.useRef(null);
     const tourTailleRef = React.useRef(null);
@@ -359,8 +343,6 @@ const SecondRoute = ({}) => {
   };
 
   const token = useSelector((state) => state.user.value);
-  const navigation = useNavigation();
-
   
   const mensurationsSubmit = () => {
     if (!isFormValid()){
@@ -387,9 +369,6 @@ const SecondRoute = ({}) => {
         tourTailleRef.current.value = inchToCm(tourTailleRef.current.value);
         hancheRef.current.value = inchToCm(hancheRef.current.value);
       }
-      console.log(poitrineRef.current.value)
-      console.log(token)
-
 
       //J'appelle la route pour mettre à jour les mensurations Haut
       fetch(`${url}/users/mensurations/haut/${token}`, {
@@ -419,16 +398,9 @@ const SecondRoute = ({}) => {
   }
   
   // La fonction permet de fermer la modal et rediriger l'utilisateur vers la Home
-  navigateToHome = () =>{
+  navigateToHome = () => {
     setModalVisible(false)
     navigation.navigate('Home')
-    newDataMarques = marquesDispo.map((name, i) => {
-      if(!marquesActives.includes(name)){
-      return {key:i, value:name, disabled:false}}
-      else {
-      return {key:i, value:name, disabled:true}  
-      }
-    })
   }
 
 
@@ -551,8 +523,8 @@ export default function CalibrateScreen({ navigation }) {
 
     // Fonction pour rendre les scènes des onglets
   const renderScene = SceneMap({
-    first: () => <PremierRoute />,
-    second: () => <SecondRoute />, 
+    first: () => <PremierRoute navigation={navigation}/>,
+    second: () => <SecondRoute navigation={navigation}/>, 
   });
 
   // Obtenir la largeur initiale de l'écran

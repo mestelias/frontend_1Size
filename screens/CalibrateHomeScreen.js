@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState, useRef } from "react";
 
 import {
   StyleSheet,
@@ -9,68 +8,31 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-
-//font
-import { useFonts } from "expo-font";
-import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { useRef, useState } from "react"
 
 
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
+export default function CalibrateHomeScreen({ navigation }) {
 
-
-const FirstRoute = () => (
-  <View style={styles.firstRoute}>
-    {/* <View>
-      <Text style={styles.h3}>Choisis ton type de vêtement</Text>
-    </View>
-    <View>
-      <TouchableOpacity
-        style={styles.button}
-        activeOpacity={0.8}
-        //AJOUTER LA FONCTIONNALITE POUR PASSER A L'ETAPE SUIVANTE
-        // onPress={()=> }
-      >
-        <Text style={styles.textButton}>Continuer</Text>
-      </TouchableOpacity>
-    </View> */}
-  </View>
-);
-
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#FCFAF1" }} />
-);
-
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
-
-// const fetchFonts = () => {
-//   return Font.loadAsync({
-//     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-//   });
-// };
-
-export default function HomeScreen({ navigation }) {
-  const carouselRef = React.useRef(null);
+  const carouselRef = useRef(null);
   const initialLayout = Dimensions.get("window").width ;
-  const [activeSlide, setActiveSlide] = React.useState(0);
-  
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: "first", title: "Pour moi" },
-    { key: "second", title: "Pour un ami" },
-  ]);
+  // paramètre clée qui défini sur quel image on s'est arrêté
+  const [activeSlide, setActiveSlide] = useState(0);
+  // tableau qui sert à envoyer la bonne props au CalibrateScreen par rapport à activeSlide
+  const categorie = ["bas","chaussure","haut"]
 
+  const handleContinueButton = () => {
+    navigation.navigate('CalibrateScreen', { categorie: categorie[activeSlide] })
+  }
+  
+  console.log(activeSlide)
   const images = [
     require("../assets/vetements/basket.png"),
     require("../assets/vetements/pantalon.jpeg"),
     require("../assets/vetements/teeshirt.jpeg"),
-    require("../assets/vetements/cr7.jpeg")
   ];
 
   return (
@@ -80,25 +42,9 @@ export default function HomeScreen({ navigation }) {
           <FontAwesome name={"bars"} size={40} color={"#25958A"} />
         </TouchableOpacity>
       </SafeAreaView>
-      <Text style={styles.H1}>Recherche ton vêtement</Text>
+      <Text style={styles.H1}>Calibrage</Text>
       <View style={styles.container}>
-        <TabView
-          navigationState={{ index, routes }} 
-          renderTabBar={(props) => (
-            <TabBar
-              {...props}
-              renderLabel={({ route, color }) => (
-                <Text style={{ color: "#FFFF", margin: 8 }}>{route.title}</Text>
-              )}
-              style={{ backgroundColor: "#d95b33", fontFamily: "Outfit" }}
-            />
-          )}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={initialLayout}
-          style={styles.tabView}
-        />
-        <Text style={styles.h3}>Choisis ton type de vêtement</Text>
+        <Text style={styles.h3}>Choisis ton type de vêtement à calibrer</Text>
         <View style={styles.carou}>
           {/* la fonction snapToPrev du carousel est appelée, ce qui fait défiler le carousel vers l'image précédente */}
           <TouchableOpacity onPress={() => carouselRef.current.snapToPrev()}>
@@ -135,8 +81,7 @@ export default function HomeScreen({ navigation }) {
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.8}
-          //AJOUTER LA FONCTIONNALITE POUR PASSER A L'ETAPE SUIVANTE
-          // onPress={()=> }
+          onPress={handleContinueButton}
         >
           <Text style={styles.textButton}>Continuer</Text>
         </TouchableOpacity>
