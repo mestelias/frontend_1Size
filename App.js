@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 //Navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 
 //fonts
 import { useFonts } from "expo-font";
@@ -51,10 +51,16 @@ const persistor = persistStore(store);
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+const CustomDrawer = (props) => {
+  return <DrawerContentScrollView {...props}>
+    <DrawerItemList {...props}/>
+  </DrawerContentScrollView>
+}
+
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="Loading"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
@@ -67,11 +73,12 @@ const StackNavigator = () => {
 
 const AppDrawerNavigation = () => (
   <Drawer.Navigator
+    drawerContent = {(props) => <CustomDrawer {...props} />}
     screenOptions={({ route }) => ({
-      headerShown: false,
       drawerActiveTintColor: "#25958A",
       drawerInactiveTintColor: "#d95b33",
       drawerType: "front",
+      drawerHeader: 'none',
       drawerIcon: ({ focused, color, size }) => {
         let iconName;
         if (route.name === "Home") {
@@ -91,8 +98,7 @@ const AppDrawerNavigation = () => (
       width: "80%",
     }}
   >
-    <Drawer.Screen name="Main" component={StackNavigator} />
-    <Drawer.Screen name="Home" component={HomeScreen} />
+    <Drawer.Screen name="Home" component={StackNavigator} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen name="SignUp" component={SignUpScreen} />
     <Drawer.Screen name="SignIn" component={SignInScreen} />
