@@ -14,6 +14,7 @@ import { useState } from "react";
 import CalibrateTailles from "./CalibrateTailles";
 import CalibrateMensurations from "./CalibrateMensurations"
 
+
 // Lors de la navigation de CalibrateHomeScreen à ici, on envoie en props la categorie haut/bas/chaussure
 // qu'on récupère ici avec "route" en plus de navigation
 export default function CalibrateScreen({ navigation, route }) {

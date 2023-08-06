@@ -34,7 +34,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
 const reducers=combineReducers({user});
 const persistConfig = {
   key: "1size",
@@ -115,14 +114,14 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NavigationContainer>
-         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Loading">
-           <Stack.Screen name="Loading" component={LoadingScreen} />
-            <Stack.Screen
-            name="AppDrawerNavigation"
-            component={AppDrawerNavigation}
-            />
-            <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
-          </Stack.Navigator>
+          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Loading">
+            <Stack.Screen name="Loading" component={LoadingScreen} />
+              <Stack.Screen
+              name="AppDrawerNavigation"
+              component={AppDrawerNavigation}
+              />
+              <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
+            </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
     </Provider>
