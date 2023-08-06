@@ -56,7 +56,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
     const [vetementToDelete, setVetementToDelete] = useState(null);
     const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
     
-    //Va chercher tous les marques des hauts en BDD
+    //Va chercher tous les marques de la categorie en BDD
     useEffect(()=>{
     
       fetch(`${url}/marques/names?sexe=${sexe}&categorie=${categorieLC}`)
@@ -65,7 +65,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
     
     }, [])
     
-    //Va chercher l'ensemble des vêtements hauts dans la BDD
+    //Va chercher l'ensemble des vêtements de la categorie dans la BDD
     useEffect(()=>{
     
       fetch(`${url}/users/userclothes?token=${userToken}&categorie=${categorieLC}`)
@@ -168,7 +168,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
             .then((response)=>response.json())
             .then((mensurations) => {
               if (mensurations) {
-                fetch(`${url}/users/vetements/haut/${userToken}`, {
+                fetch(`${url}/users/vetements/${categorieLC}/${userToken}`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
