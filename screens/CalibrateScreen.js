@@ -107,10 +107,9 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   border: {
-    // paddingVertical: 10, // Ajoute un padding vertical de 10 pixels autour du texte
-    paddingHorizontal: 35, // Ajoute un padding horizontal de 20 pixels autour du texte
-    borderBottomWidth: 3, // Ajoute une bordure sous le texte
-    borderBottomColor: '#d95b33', // Couleur de la bordure sous le texte
+    paddingHorizontal: 35, 
+    borderBottomWidth: 3,
+    borderBottomColor: '#d95b33', 
     borderRadius: 50,
   },
   burgerIcon:{
@@ -121,158 +120,15 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalView: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 30,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
   H1: {
     fontSize: 24,
     fontWeight: "600",
     marginBottom: 20,
-
   },
   tabView: {
     flex: 1,
     width: "100%",
     paddingHorizontal : 15,
     borderRadius: 20,
-  },
-  premierRoute: {
-    flex: 1,
-    backgroundColor: "#FCFAF1",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  secondRoute: {
-    flex: 1,
-    width: "90%",
-    backgroundColor: "#FCFAF1",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingBottom: 40,
-    paddingTop: 20,
-  },
-  containerInput: {
-    alignItems: 'flex-start',
-    width: '100%',
-    backgroundColor: '#fcfaf1',
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  inputBox : {
-    width : '100%'
-  },
-  inputBoxRow : {
-    flexDirection : "row",
-    alignItems : "center"
-  },
-  inputTexte: {
-    marginLeft : -40,
-  },
-  input: {
-    alignItems: 'flex-start',
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#D6D1BD",
-    padding: 5,
-    marginTop: 10,
-    marginBottom: 10, 
-    width: "100%",
-    borderRadius: 5,
-    backgroundColor: '#ffffff'
-  },
-  button: {
-    width: 150,
-    alignItems: "center",
-    marginTop: 20,
-    paddingTop: 8,
-    marginBottom: 30,
-    backgroundColor: "#d95b33",
-    borderRadius: 30,
-    shadowOpacity: 1,
-    elevation: 4,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
-  },
-  textButton: {
-    color: "#ffffff",
-    fontFamily: 'Outfit',
-    height: 30,
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  tailleSwitch: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  taille: {
-    color: "#707B81",
-    padding: 15,
-  },
-  tailleBold:{
-    color: "#1a2530",
-    padding: 15,
-    fontWeight: "bold",
-  },
-  h3: {
-    color: "#000000",
-    fontSize: 20,
-    fontWeight: 'bold',
-    fontFamily: "Outfit",
-  },
-  texte: {
-    fontFamily: "Outfit",
-  },
-  error: {
-    color: "#DF1C28",
-    fontFamily: "Outfit",
-    fontSize: 16,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  scrollView:{
-    flex: 1,
-  },
-  mensurationHeader : {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  roundedImage: {
-    width: 150, 
-    height: 150,
-    borderRadius: 75, 
   },
 });
