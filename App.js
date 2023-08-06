@@ -51,6 +51,20 @@ const persistor = persistStore(store);
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+const StackNavigator = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="Loading" component={LoadingScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
+      {/* Vous pouvez ajouter ici tous les autres écrans du Stack */}
+    </Stack.Navigator>
+  );
+};
+
 const AppDrawerNavigation = () => (
   <Drawer.Navigator
     screenOptions={({ route }) => ({
@@ -77,6 +91,7 @@ const AppDrawerNavigation = () => (
       width: "80%",
     }}
   >
+    <Drawer.Screen name="Main" component={StackNavigator} />
     <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen name="SignUp" component={SignUpScreen} />
@@ -114,14 +129,7 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Loading">
-            <Stack.Screen name="Loading" component={LoadingScreen} />
-              <Stack.Screen
-              name="AppDrawerNavigation"
-              component={AppDrawerNavigation}
-              />
-              <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
-            </Stack.Navigator>
+          <AppDrawerNavigation/>
         </NavigationContainer>
       </PersistGate>
     </Provider>
