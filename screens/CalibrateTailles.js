@@ -21,7 +21,7 @@ const url = process.env.EXPO_PUBLIC_IP
 export default function CalibrateTailles({ navigation, categorie }) {
 
     const categorieLC = categorie.toLowerCase()
-    const userToken = useSelector((state) => state.user.value);
+    const userToken = useSelector((state) => state.user.value.token);
     
     //TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
     const sexe = "homme"

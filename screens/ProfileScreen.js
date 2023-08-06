@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect} from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from "@react-navigation/native";
 import {
   Modal, 
@@ -20,16 +20,19 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker'; 
+import {updatePicture} from '../reducers/user'
 
 const backendIp = process.env.EXPO_PUBLIC_IP
 
 
 
 export default function ProfileScreen() {
-
+  
+  const userToken = useSelector((state) => state.user.value.token);
+  
   const navigation = useNavigation();
-
-//états pour gérer les focus des champs inputs 
+  const dispatch = useDispatch()
+  //états pour gérer les focus des champs inputs 
   const [isFocused, setIsFocused] = useState(false);
   const [isFocused2, setIsFocused2] = useState(false);
   const [isFocused3, setIsFocused3] = useState(false);
@@ -45,19 +48,6 @@ export default function ProfileScreen() {
     { id: 2, value: false, name: "Femme", selected: false }
   ]);
 
-/* Afin d'éviter de faire plein de fetchs vers la BDD, l'ensemble des infos du user doivent être mis dans un seul état - à faire
-  const [userData, setUserData] = useState({
-    firstname: "",
-    name: "",
-    username: "",
-    email: "",
-    gender: [
-      { id: 1, value: true, name: "Homme", selected: false },
-      { id: 2, value: false, name: "Femme", selected: false }
-    ],
-  })
-  */
-
   const [modalVisible, setModalVisible] = useState(false);
 
   const [cameraVisible, setCameraVisible] = useState(false);
@@ -65,7 +55,6 @@ export default function ProfileScreen() {
   const [type, setType] = useState(CameraType.front);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
   const [picPreview, setPicPreview] = useState(null)
-  const userToken = useSelector((state) => state.user.value);
 
   const formData = new FormData();
 
@@ -97,8 +86,9 @@ export default function ProfileScreen() {
         })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
+          console.log('DATA',data)
           if (data.result === true) {
+            dispatch(updatePicture(data.user.image))
             console.log("Youpi !")
           } else {
             console.log("Moins youpi...")

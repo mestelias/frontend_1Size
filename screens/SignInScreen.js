@@ -87,9 +87,9 @@ export default function SignInScreen({ navigation }) {
         // On vérifie si l'utilisateur a bien été trouvé en BDD
         if (data.result) {
           // On stocke le token utilisateur dans le reducer user
-          dispatch(addUserToStore(data.token));
+          dispatch(addUserToStore({username : data.data.username, token:data.data.token, image:data.data.image}));
           //on redirige l'utilisateur vers la Home
-          navigation.navigate("AppDrawerNavigation", { screen: "Home" });
+          navigation.navigate("HomeStack");
         } else {
           // User already exists in database
           setErrorMsg(data.error);

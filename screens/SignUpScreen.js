@@ -124,7 +124,7 @@ export default function SignUpScreen({navigation}) {
       .then((data) => {
         console.log(data)
         if (data.result) {
-          dispatch(addUserToStore(data.token));
+          dispatch(addUserToStore({token:data.data.token, username:data.data.username}));
           setFirstname("")
           setName("")
           setUsername("")
@@ -132,7 +132,7 @@ export default function SignUpScreen({navigation}) {
           setPassword("")
           setConfirmPassword("")
 
-          navigation.navigate("AppDrawerNavigation", { screen: "Home" });
+          navigation.navigate("HomeStack");
 
         } else {
           // User already exists in database
@@ -261,7 +261,7 @@ export default function SignUpScreen({navigation}) {
 
           <TouchableOpacity
           // TO DO : INSCRIPTION AVEC GOOGLE
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate('HomeStack')}
           style={styles.google} 
           activeOpacity={0.8}>
             <Text style={styles.textGoogle}>S'inscrire avec Google</Text>

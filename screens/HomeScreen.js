@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-
+import {useSelector} from 'react-redux'
 
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
@@ -56,6 +56,10 @@ const renderScene = SceneMap({
 // };
 
 export default function HomeScreen({ navigation }) {
+
+  const userToken = useSelector((state) => state.user.value);
+  console.log(userToken)
+
   const carouselRef = React.useRef(null);
   const initialLayout = Dimensions.get("window").width ;
   const [activeSlide, setActiveSlide] = React.useState(0);

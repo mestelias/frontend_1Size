@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 
 //Sound
-import React, { useEffect } from "react";
+import React from "react";
 // import { Audio } from "expo-av";
 
 //Navigation
@@ -34,7 +34,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+//React
+import {Text, Image, View, StyleSheet, TouchableOpacity} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { emptyStore } from './reducers/user'
+
 const reducers=combineReducers({user});
+
 const persistConfig = {
   key: "1size",
   storage: AsyncStorage
@@ -52,10 +58,29 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const CustomDrawer = (props) => {
-  return <DrawerContentScrollView {...props}>
+
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.value)
+  const {image, username} = user
+
+  const handleSignOut = () => {
+    dispatch(emptyStore())
+    props.navigation.navigate('SignIn')
+  }
+
+  
+  return (
+  <DrawerContentScrollView {...props}>
+    <View style = {styles.profilView}>
+      <Image source={image ? { uri: image } : require('./assets/Nelson.jpg')} style={styles.profilpic}/>
+      <Text>@{username ? username : `username`}</Text>
+    </View>
     <DrawerItemList {...props}/>
+    <TouchableOpacity onPress={handleSignOut}>
+      <Text>SignOut</Text>
+    </TouchableOpacity>
   </DrawerContentScrollView>
-}
+)}
 
 const StackNavigator = () => {
   return (
@@ -64,7 +89,7 @@ const StackNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="HomeStack" component={HomeScreen} />
       <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
       {/* Vous pouvez ajouter ici tous les autres écrans du Stack */}
     </Stack.Navigator>
@@ -73,8 +98,9 @@ const StackNavigator = () => {
 
 const AppDrawerNavigation = () => (
   <Drawer.Navigator
-    drawerContent = {(props) => <CustomDrawer {...props} />}
-    screenOptions={({ route }) => ({
+  drawerContent = {(props) => <CustomDrawer {...props} />}
+  screenOptions={({ route }) => ({
+      headerShown: false,
       drawerActiveTintColor: "#25958A",
       drawerInactiveTintColor: "#d95b33",
       drawerType: "front",
@@ -141,3 +167,15 @@ export default function App() {
     </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  profilView: {
+    flexDirection:'row',
+    alignItems: 'center',
+  },
+  profilpic: {
+    width:60, 
+    height:60,
+    borderRadius:30,
+    margin:10}
+});

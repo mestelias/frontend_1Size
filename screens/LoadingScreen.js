@@ -5,7 +5,7 @@ export default function LoadingScreen({ navigation }) {
 
     useEffect(() => {
         setTimeout(() => {
-            navigation.navigate('Home');
+            navigation.navigate('HomeStack');
         }, 5000); // gérer le temps ici
         }, [navigation]);
 

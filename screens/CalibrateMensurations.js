@@ -41,7 +41,8 @@ export default function CalibrateMensurations ({navigation}){
         );
     };
 
-    const token = useSelector((state) => state.user.value);
+    const token = useSelector((state) => state.user.value.token);
+    console.log(token)
     
     const mensurationsSubmit = () => {
         if (!isFormValid()){
