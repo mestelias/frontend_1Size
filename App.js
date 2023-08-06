@@ -20,6 +20,9 @@ import SignInScreen from "./screens/SignInScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import CalibrateHomeScreen from "./screens/CalibrateHomeScreen";
 import CalibrateScreen from "./screens/CalibrateScreen"
+import FriendsScreen from "./screens/FriendsScreen";
+import ContactsScreen from "./screens/ContactsScreen";
+import HelpScreen from "./screens/HelpScreen";
 
 //Store
 import { Provider } from 'react-redux';
@@ -57,6 +60,16 @@ const persistor = persistStore(store);
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+//création d'un obj de correspondance nom de route/icon
+const routeIconMapping = {
+  "Home": "home",
+  "Profil": "user",
+  "Calibrage": "cog",
+  "Mes amis": "users",
+  "Nous contacter": "envelope",
+  "Aide": "question"
+};
+
 const CustomDrawer = (props) => {
 
   const dispatch = useDispatch()
@@ -64,7 +77,6 @@ const CustomDrawer = (props) => {
   const {image, username} = user
 
   const handleSignOut = () => {
-    console.log('je clique sur signout')
     dispatch(emptyStore())
     props.navigation.navigate('SignIn')
   }
@@ -72,8 +84,13 @@ const CustomDrawer = (props) => {
   
   return (
   <DrawerContentScrollView {...props}>
-    <View style = {styles.profilView}>
-      <Image source={image ? { uri: image } : require('./assets/Nelson.jpg')} style={styles.profilpic}/>
+    <View style = {styles.drawerHeader}>
+      <View style={styles.profilView}>
+        <Image source={image ? { uri: image } : require('./assets/Nelson.jpg')} style={styles.profilpic}/>
+        <TouchableOpacity onPress={()=> props.navigation.closeDrawer()}>
+          <FontAwesome name='times' size={30} color='#25958A' />
+        </TouchableOpacity>
+      </View>
       <Text>@{username ? username : `username`}</Text>
     </View>
     <DrawerItemList {...props}/>
@@ -91,6 +108,8 @@ const StackNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="HomeStack" component={HomeScreen} />
       <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
       {/* Vous pouvez ajouter ici tous les autres écrans du Stack */}
@@ -108,17 +127,10 @@ const AppDrawerNavigation = () => (
       drawerType: "front",
       drawerHeader: 'none',
       drawerIcon: ({ focused, color, size }) => {
-        let iconName;
-        if (route.name === "Home") {
-          iconName = focused ? "home" : "home"; // Nom de l'icône FontAwesome pour "Home"
-        } else if (route.name === "Profile") {
-          iconName = focused ? "user" : "user"; // Nom de l'icône FontAwesome pour "Profile"
-        }
-        // Définis la couleur en fonction de la variable 'iconColor'
-        iconColor = focused ? "#D95B33" : "#000"; 
-
-        // Retourne l'icône FontAwesome avec le nom calculé
-        return <FontAwesome name={iconName} size={size} color={color} />;
+        //utilisation de l'objet pour distribuer les icones
+        const iconName = routeIconMapping[route.name];
+        iconColor = focused ? "#D95B33" : "#000";
+        return <FontAwesome name={iconName} size={size} color={color} />;       
       },
     })}
     drawerStyle={{
@@ -127,10 +139,11 @@ const AppDrawerNavigation = () => (
     }}
   >
     <Drawer.Screen name="Home" component={StackNavigator} />
-    <Drawer.Screen name="Profile" component={ProfileScreen} />
-    <Drawer.Screen name="SignUp" component={SignUpScreen} />
-    <Drawer.Screen name="SignIn" component={SignInScreen} />
-    <Drawer.Screen name="CalibrateHome" component={CalibrateHomeScreen} />
+    <Drawer.Screen name="Profil" component={ProfileScreen} />
+    <Drawer.Screen name="Calibrage" component={CalibrateHomeScreen} />
+    <Drawer.Screen name="Mes amis" component={FriendsScreen} />
+    <Drawer.Screen name="Nous contacter" component={ContactsScreen} />
+    <Drawer.Screen name="Aide" component={HelpScreen} />
   </Drawer.Navigator>
 );
 
@@ -172,14 +185,18 @@ export default function App() {
 
 const styles = StyleSheet.create({
   profilView: {
-    flexDirection:'row',
+    paddingRight: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    width: '100%',
+    
   },
   profilpic: {
-    width:60, 
-    height:60,
-    borderRadius:30,
-    margin:10},
+    width:70, 
+    height:70,
+    borderRadius:50,
+  },
   signOutView: {
     flexDirection: 'row', 
     justifyContent: 'center',
@@ -188,5 +205,9 @@ const styles = StyleSheet.create({
   },
   signOutText: {
     color: '#d95b33'
+  },
+  drawerHeader: {
+    justifyContent: 'space-between',
+    paddingLeft: 20,
   }
 });

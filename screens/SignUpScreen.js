@@ -124,7 +124,7 @@ export default function SignUpScreen({navigation}) {
       .then((data) => {
         console.log(data)
         if (data.result) {
-          dispatch(addUserToStore({token:data.data.token, username:data.data.username}));
+          dispatch(addUserToStore({token:data.data.token, username:data.data.username, genre:data.data.genre}));
           setFirstname("")
           setName("")
           setUsername("")

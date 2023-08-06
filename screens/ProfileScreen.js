@@ -22,7 +22,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {updatePicture} from '../reducers/user'
 
 const backendIp = process.env.EXPO_PUBLIC_IP
-
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
 export default function ProfileScreen() {
@@ -44,10 +44,10 @@ export default function ProfileScreen() {
   const [userGender, setUserGender] = useState("")
   const [picPreview, setPicPreview] = useState(null)
 
-  console.log(userGender)
-
-  //vérifier si tous les champs sont pleins
-  const saveable = Boolean(firstname && name && username && email && userGender)
+  
+  //vérifier si tous les champs sont pleins et que l'email est correct
+  const emailValid = (EMAIL_REGEX.test(email))
+  const saveable = Boolean(emailValid && firstname && name && username && email && userGender)
   
   const [gender, setGender] = useState([
     { id: 1, value: true, name: "Homme", selected: false },
@@ -83,8 +83,9 @@ export default function ProfileScreen() {
       });
       setGender(updatedGender);
     })
-  },[])
-
+  },[userToken])
+//rajout du userToken dans le useEffect, car c'est l'indication qu'un utilisateur se connecte
+//donc il faut charger les données dans la page profil 
 
   
   const handleSaveButton = async () => {
@@ -277,7 +278,7 @@ export default function ProfileScreen() {
           <TouchableOpacity
             style={styles.classicbutton}
             activeOpacity={0.8}
-            onPress={()=> navigation.navigate('CalibrateHome')}
+            onPress={()=> navigation.navigate('Calibrage')}
           >
             <Text style={styles.textButtonactive}>Me re-calibrer</Text>
           </TouchableOpacity>

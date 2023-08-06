@@ -19,12 +19,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const url = process.env.EXPO_PUBLIC_IP 
 
 export default function CalibrateTailles({ navigation, categorie }) {
-
+    //cagtegorie vient des props de HomeCalibrateScreen => CalibrateScreen => CalibrateTailles
     const categorieLC = categorie.toLowerCase()
     const userToken = useSelector((state) => state.user.value.token);
-    
-    //TODO mettre le sexe de manière dynamique dans le store en fonction du user/ami sélectionné
-    const sexe = "homme"
+
+    const sexe = useSelector((state)=>state.user.value.genre)
+    const sexeLC = sexe && sexe.toLowerCase()
+
     
     //Etats pour stocker les valeurs choisies par l'utilisateur
     const [marque, setMarque] = useState();
@@ -59,7 +60,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
     //Va chercher tous les marques de la categorie en BDD
     useEffect(()=>{
     
-      fetch(`${url}/marques/names?sexe=${sexe}&categorie=${categorieLC}`)
+      fetch(`${url}/marques/names?sexe=${sexeLC}&categorie=${categorieLC}`)
       .then((response)=> response.json())
       .then((marques) => setMarquesDispo(marques))
     
@@ -105,12 +106,12 @@ export default function CalibrateTailles({ navigation, categorie }) {
     
       return moyenne;
     }
-    
+    // Lancer l'algo qu'à partir de 3 marques et si il n'a pas rentré lui même ses tailles
     if (vetements.length > 2 && !alreadyCalculated){
       setAlreadyCalculated(true)
       setMensurationsCreees(calculerMoyenne(vetements))
     }
-    
+    // Si l'algo est passé par là : on met en bdd
     if (mensurationsCreees) {
       fetch(`${url}/users/mensurations/${categorieLC}/${userToken}`, {
           method: "PUT",
@@ -130,7 +131,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
     })
     
     function displayType(marque) {
-      fetch(`${url}/marques/types?marque=${marque}&sexe=${sexe}&categorie=${categorieLC}`)
+      fetch(`${url}/marques/types?marque=${marque}&sexe=${sexeLC}&categorie=${categorieLC}`)
       .then((response)=>response.json())
       .then((types) => setTypesDispo(types));
       setMarque(marque);
@@ -148,7 +149,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
     ]
     
     function displayTailles(type) {
-      fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexe}&categorie=${categorieLC}`)
+      fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexeLC}&categorie=${categorieLC}`)
       .then((response)=>response.json())
       .then((tailles) => setTaillesDispo(tailles));
       setType(type);
@@ -164,7 +165,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
     //Condition d'envoi du tableau de mensuration
       if (!(marque === oldMarque)){  
         if (taille) {
-            fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexe}&categorie=${categorieLC}&taille=${taille}`)
+            fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexeLC}&categorie=${categorieLC}&taille=${taille}`)
             .then((response)=>response.json())
             .then((mensurations) => {
               if (mensurations) {
