@@ -261,7 +261,6 @@ export default function SignUpScreen({navigation}) {
 
           <TouchableOpacity
           // TO DO : INSCRIPTION AVEC GOOGLE
-          onPress={() => navigation.navigate('HomeStack')}
           style={styles.google} 
           activeOpacity={0.8}>
             <Text style={styles.textGoogle}>S'inscrire avec Google</Text>

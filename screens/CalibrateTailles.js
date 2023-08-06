@@ -289,18 +289,18 @@ export default function CalibrateTailles({ navigation, categorie }) {
                 </View>
               ))}
               <Modal visible={modalDeleteVisible} animationType="slide" transparent={true}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalText}>Voulez-vous vraiment supprimer ce vêtement ?</Text>
-                <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleDelete}>
-                  <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, supprimer</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setModalDeleteVisible(false)}>
-                  <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <Text style={styles.modalText}>Voulez-vous vraiment supprimer ce vêtement ?</Text>
+                    <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleDelete}>
+                      <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, supprimer</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setModalDeleteVisible(false)}>
+                      <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

@@ -64,6 +64,7 @@ const CustomDrawer = (props) => {
   const {image, username} = user
 
   const handleSignOut = () => {
+    console.log('je clique sur signout')
     dispatch(emptyStore())
     props.navigation.navigate('SignIn')
   }
@@ -76,8 +77,9 @@ const CustomDrawer = (props) => {
       <Text>@{username ? username : `username`}</Text>
     </View>
     <DrawerItemList {...props}/>
-    <TouchableOpacity onPress={handleSignOut}>
-      <Text>SignOut</Text>
+    <TouchableOpacity onPress={()=> handleSignOut()} style={styles.signOutView}>
+      <FontAwesome name='sign-out' color={"#d95b33"} />
+      <Text style={styles.signOutText}>Sign Out</Text>
     </TouchableOpacity>
   </DrawerContentScrollView>
 )}
@@ -177,5 +179,14 @@ const styles = StyleSheet.create({
     width:60, 
     height:60,
     borderRadius:30,
-    margin:10}
+    margin:10},
+  signOutView: {
+    flexDirection: 'row', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#d95b33',
+  },
+  signOutText: {
+    color: '#d95b33'
+  }
 });

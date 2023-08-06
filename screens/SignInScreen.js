@@ -153,7 +153,6 @@ export default function SignInScreen({ navigation }) {
 
           <TouchableOpacity
             // TO DO : INSCRIPTION AVEC GOOGLE
-            onPress={() => navigation.navigate('Home')}
             style={styles.google}
             activeOpacity={0.8}
           >
