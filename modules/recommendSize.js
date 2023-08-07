@@ -2,10 +2,16 @@ function recommendSize(userData, brandSizes, desiredFit = 'normale') {
     // Coefficients pour ajuster l'importance des mesures
     const coefficients = {
         "europe": 1,
-        "tourDePoitrine": desiredFit === 'slim' ? 12 : 1.5,
+        "tourDePoitrine": desiredFit === 'slim' ? 2 : 1.5,
         "tourDeTaille": 1,
-        "tourDeHanches":1
-    };
+        "tourDeHanches":1,
+        "tourDeHanches":1,
+        "tourDeBassin":1,
+        "tourDeTaille":1,
+        "longueurJambe":1,
+        "longueur":1,
+        "pointure":1,
+    }
     //on initialise bestFit en tableau au cas où il y ait deux tailles équivalentes
     let bestFit = [];
     let smallestDifference = Infinity;
