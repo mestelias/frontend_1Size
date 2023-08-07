@@ -1,32 +1,29 @@
-import * as React from "react";
-
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
+  Text,
   View,
   TouchableOpacity,
-  Text,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
-
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ContactsScreen({ navigation }) {
+
+
+export default function ContactScreen() {
+
+  
   return (
-    <View style={styles.background}>
-      <SafeAreaView style={styles.header}>
-        <View style={styles.burgerIcon}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-            </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-      <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Contactez nous</Text>
-        <View style={styles.border}></View>
-      <View style={styles.container}>
-      </View>
-      <Text style={styles.h3}>Envoyez nous votre demande en remplissant le formulaire ci-dessous</Text>
+    <ScrollView style={styles.background} > 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <Text style={styles.title}>Contactez nous !</Text>
+        <Text style={styles.h3}>Envoyez nous votre demande en remplissant le formulaire ci-dessous</Text>
         <View style={styles.inputContainer}>
           <Text style={styles.texte}>Votre message :</Text>
           <TextInput
@@ -49,48 +46,88 @@ export default function ContactsScreen({ navigation }) {
           </TouchableOpacity>     
          
         </View>
-        
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    {/* </View> */}
+    </ScrollView>
   );
 }
 
-
 const styles = StyleSheet.create({
-    background: {
-      flex: 1,
-      backgroundColor: "#FCFAF1",
-      alignItems: "center",
-      width: "100%",
-      height: "100%",
-    },
-    container: {
-      flex: 1,
-      alignItems: 'center', 
-      width: '100%'
-    },
-    titleContainer: {
-      alignItems: "center",
-      backgroundColor: "#fcfaf1",
-      marginTop: 30,
-    },
-    border: {
-      paddingHorizontal: 35, 
-      borderBottomWidth:3,
-      borderBottomColor: '#d95b33', 
-      borderRadius: 50,
-    },
-    burgerIcon:{
-      paddingLeft: 30,
-      paddingTop: 15,
-    },
-    header: {
-      justifyContent: "flex-start",
-      width: "100%",
-    },
-    H1: {
-      fontSize: 24,
-      fontWeight: "600",
-      marginBottom: 20,
-    },
-  });
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#fcfaf1",
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    backgroundColor: "#fcfaf1",
+    marginTop: 80,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "600",
+    fontFamily: "Outfit",
+    marginBottom: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  h3: {
+    width: "80%",
+    fontSize: 20,
+    fontWeight: "600",
+    fontFamily: "Outfit",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  inputContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "90%",
+    backgroundColor: "#fcfaf1",
+    padding: 20,
+    marginTop: 30,
+    borderRadius: 10,
+  },
+  texte: {
+    fontFamily: "Outfit",
+  },
+  input: {
+    alignItems: "flex-start",
+    height: 200,
+    borderWidth: 1,
+    borderColor: "#D6D1BD",
+    padding: 5,
+    marginTop: 10,
+    marginBottom: 20,
+    width: "100%",
+    fontFamily: "Outfit",
+    borderRadius: 5,
+    backgroundColor: '#ffffff'
+  },
+  pressBottom: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "90%",
+    backgroundColor: "#fcfaf1",
+    padding: 20,
+    marginTop: 30,
+    borderRadius: 10,
+  },
+  register: {
+    alignItems: "center",    
+    width: "100%",
+    height: "35%",
+    marginTop: 10,
+    backgroundColor: "#d95b33",
+    borderRadius: 30,
+  },
+  textButton: {
+    fontFamily: "Outfit",
+    color: "white",
+    padding: "5%",
+    fontSize: 20,
+  },
+});
