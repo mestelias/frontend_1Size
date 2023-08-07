@@ -7,7 +7,7 @@ import React from "react";
 //Navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from "@react-navigation/drawer";
 
 //fonts
 import { useFonts } from "expo-font";
@@ -80,31 +80,53 @@ const CustomDrawer = (props) => {
     dispatch(emptyStore())
     props.navigation.navigate('SignIn')
   }
+  //On filtre la route "main" du drawer, simplement à l'affichage, pour qu'elle reste en premier pour accéder à la stack
+  //navigation, mais sans apparaître dans le drawer
 
   
+  
   return (
-  <DrawerContentScrollView {...props}>
-    <View style = {styles.drawerHeader}>
-      <View style={styles.profilView}>
-        <Image source={image ? { uri: image } : require('./assets/Nelson.jpg')} style={styles.profilpic}/>
-        <TouchableOpacity onPress={()=> props.navigation.closeDrawer()}>
-          <FontAwesome name='times' size={30} color='#25958A' />
-        </TouchableOpacity>
+    <DrawerContentScrollView {...props}>
+      <View style={styles.drawerHeader}>
+        <View style={styles.profilView}>
+          <Image source={image ? { uri: image } : require('./assets/Nelson.jpg')} style={styles.profilpic} />
+          <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
+            <FontAwesome name='times' size={30} color='#25958A' />
+          </TouchableOpacity>
+        </View>
+        <Text>@{username ? username : `username`}</Text>
       </View>
-      <Text>@{username ? username : `username`}</Text>
-    </View>
-    <DrawerItemList {...props}/>
-    <TouchableOpacity onPress={()=> handleSignOut()} style={styles.signOutView}>
-      <FontAwesome name='sign-out' color={"#d95b33"} />
-      <Text style={styles.signOutText}>Sign Out</Text>
-    </TouchableOpacity>
-  </DrawerContentScrollView>
-)}
+      {props.state.routes.map((route, index) => {
+        //map pour créer tous les drawerItems avec les styles associés et icones associés
+         if (route.name === 'Main') return null; 
+
+         const isFocused = props.state.index === index;
+         const color = isFocused ? "#25958A" : "#d95b33";
+         const iconName = routeIconMapping[route.name];
+     
+         return (
+             <DrawerItem 
+                 key={route.key} 
+                 label={route.name}
+                 labelStyle={{ color: color }} // ici, nous utilisons le style pour la couleur du label
+                 focused={isFocused}
+                 onPress={() => props.navigation.navigate(route.name)}
+                 icon={({ size }) => <FontAwesome name={iconName} size={size} color={color} />}
+             />
+         );
+      })}
+      <TouchableOpacity onPress={() => handleSignOut()} style={styles.signOutView}>
+        <FontAwesome name='sign-out' color={"#d95b33"} />
+        <Text style={styles.signOutText}>Sign Out</Text>
+      </TouchableOpacity>
+    </DrawerContentScrollView>
+  );
+}
 
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Loading"
+      initialRouteName="SignIn"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
@@ -122,23 +144,15 @@ const AppDrawerNavigation = () => (
   drawerContent = {(props) => <CustomDrawer {...props} />}
   screenOptions={({ route }) => ({
       headerShown: false,
-      drawerActiveTintColor: "#25958A",
-      drawerInactiveTintColor: "#d95b33",
       drawerType: "front",
-      drawerHeader: 'none',
-      drawerIcon: ({ focused, color, size }) => {
-        //utilisation de l'objet pour distribuer les icones
-        const iconName = routeIconMapping[route.name];
-        iconColor = focused ? "#D95B33" : "#000";
-        return <FontAwesome name={iconName} size={size} color={color} />;       
-      },
     })}
     drawerStyle={{
       backgroundColor: "#FCFAF1",
       width: "80%",
     }}
   >
-    <Drawer.Screen name="Home" component={StackNavigator} />
+    <Drawer.Screen name="Main" component={StackNavigator} />
+    <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profil" component={ProfileScreen} />
     <Drawer.Screen name="Calibrage" component={CalibrateHomeScreen} />
     <Drawer.Screen name="Mes amis" component={FriendsScreen} />
