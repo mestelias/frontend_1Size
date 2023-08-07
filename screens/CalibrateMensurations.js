@@ -18,7 +18,9 @@ import { useSelector } from "react-redux";
 
 const url = process.env.EXPO_PUBLIC_IP 
 
-export default function CalibrateMensurations ({navigation}){
+export default function CalibrateMensurations ({navigation, categorie}){
+
+    const categorieLC = categorie.toLowerCase()
     // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
     const poitrineRef = useRef(null);
     const tourTailleRef = useRef(null);
@@ -71,7 +73,7 @@ export default function CalibrateMensurations ({navigation}){
         }
 
         //J'appelle la route pour mettre à jour les mensurations Haut
-        fetch(`${url}/users/mensurations/haut/${token}`, {
+        fetch(`${url}/users/mensurations/${categorieLC}/${token}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

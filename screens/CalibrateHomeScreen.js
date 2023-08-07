@@ -27,14 +27,17 @@ export default function CalibrateHomeScreen({ navigation }) {
   const width = Dimensions.get("window").width;
 
   const dataType = [
-    { image: require("../assets/t-shirt.png"), text: "haut" },
-    { image: require("../assets/pantalon.png"), text: "bas" },
-    { image: require("../assets/shoes.png"), text: "chaussures" },
+    { image: require("../assets/t-shirt.png"), text: "Haut" },
+    { image: require("../assets/pantalon.png"), text: "Bas" },
+    { image: require("../assets/shoes.png"), text: "Chaussures" },
   ];
 
+
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef(null);
-
+  
+  console.log(dataType[activeIndex])
 
   const _renderItem = ({ item, index }) => {
     return (
@@ -61,29 +64,21 @@ export default function CalibrateHomeScreen({ navigation }) {
     );
   };
   
-  const selectedItem = dataType[activeIndex].text;
-  console.log(selectedItem)
-
+  const selectedItem = dataType[activeIndex].text.toLowerCase();
   
   // Fonction qui permet d'accéder au calibrage d'un type (Haut, bas ou chaussures)
-  const submitCalidrage = () => {
-
-    console.log(selectedItem);
-
-    fetch(`${url}/users/mensurations/${selectedItem}/${userToken}`)
+  const submitCalibrage = () => {
+    fetch(`${url}/users/mensurations?categorie=${selectedItem}&token=${userToken}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        data.result && setModalVisible(true);
-
-        data.error && navigation.navigate("CalibrateScreen");
+        Object.keys(data).length != 0 ? setModalVisible(true) : navigation.navigate("CalibrateScreen", { categorie: selectedItem });
       });
   };
 
 // l'utilisateur souhaite modifier son calibrage malgré l'affichage de la modal indiquant que des mensurations existent
 const forceCalibrate = () => {
   setModalVisible(false)
-  navigation.navigate("CalibrateScreen")
+  navigation.navigate("CalibrateScreen", { categorie: selectedItem })
 }
 
   return (
@@ -97,7 +92,7 @@ const forceCalibrate = () => {
               <TouchableWithoutFeedback>
                 <View style={styles.modalView}>
                   <Image
-                    source={require(`../assets/t-shirt.png`)}
+                    source={dataType[activeIndex].image}
                     style={styles.image}
                   />
                   <Text style={styles.h3}>
@@ -192,7 +187,7 @@ const forceCalibrate = () => {
               style={styles.button}
               activeOpacity={0.8}
               //AJOUTER LA FONCTIONNALITE POUR PASSER A L'ETAPE SUIVANTE
-              onPress={() => submitCalidrage()}
+              onPress={() => submitCalibrage()}
             >
               <Text style={styles.textButton}>Valider</Text>
             </TouchableOpacity>
