@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect} from "react";
 
 import {
   StyleSheet,
@@ -55,7 +55,9 @@ const renderScene = SceneMap({
 //   });
 // };
 
-export default function HomeScreen({ navigation }) {
+const url = process.env.EXPO_PUBLIC_IP 
+
+export default function HomeScreen({ navigation, categorie }) {
 
   const userToken = useSelector((state) => state.user.value);
   console.log(userToken)
@@ -71,11 +73,26 @@ export default function HomeScreen({ navigation }) {
   ]);
 
   const images = [
-    require("../assets/vetements/basket.png"),
-    require("../assets/vetements/pantalon.jpeg"),
-    require("../assets/vetements/teeshirt.jpeg"),
-    require("../assets/vetements/cr7.jpeg")
+    {image: require("../assets/vetements/basket.png"), name: "chaussures"},
+    {image: require("../assets/vetements/pantalon.jpeg"), name: "bas"},
+    {image: require("../assets/vetements/teeshirt.jpeg"), name: "haut"},
   ];
+
+  // const categorieLC = categorie
+  // const sexe = useSelector((state)=>state.user.value.genre)
+  // const sexeLC = sexe && sexe.toLowerCase()
+  // const [categorieDispo, setCategorieDispo] = useState([]); // récupéré au moment de la sélection de la marque
+
+  // useEffect(()=>{
+    
+  //   fetch(`${url}/marques/names?sexe=${sexeLC}&categorie=${images[activeSlide].name}`)
+  //   .then((response)=> response.json())
+  //   .then((marques) => console.log(marques))
+  
+  // }, [activeSlide])
+
+  const selectedItem = images[activeSlide].name.toLowerCase();
+  console.log(selectedItem);
 
   return (
     <View style={styles.background}>
@@ -102,7 +119,8 @@ export default function HomeScreen({ navigation }) {
           initialLayout={initialLayout}
           style={styles.tabView}
         />
-        <Text style={styles.h3}>Choisis ton type de vêtement</Text>
+        {/* <Text style={styles.h3}>Choisis ton type de vêtement</Text> */}
+        <Text style={styles.h3}>Sélectionnes une catégorie de vêtement</Text>
         <View style={styles.carou}>
           {/* la fonction snapToPrev du carousel est appelée, ce qui fait défiler le carousel vers l'image précédente */}
           <TouchableOpacity onPress={() => carouselRef.current.snapToPrev()}>
@@ -113,7 +131,7 @@ export default function HomeScreen({ navigation }) {
             ref={carouselRef}
             data={images}
             renderItem={({ item }) => (
-              <Image source={item} style={styles.image} />
+              <Image source={item.image} style={styles.image}/>
             )}
             sliderWidth={initialLayout}
             itemWidth={initialLayout}
@@ -140,7 +158,7 @@ export default function HomeScreen({ navigation }) {
           style={styles.button}
           activeOpacity={0.8}
           //AJOUTER LA FONCTIONNALITE POUR PASSER A L'ETAPE SUIVANTE
-          // onPress={()=> }
+          onPress={() => navigation.navigate('MarqueScreen', { categorie: selectedItem })}
         >
           <Text style={styles.textButton}>Continuer</Text>
         </TouchableOpacity>
@@ -194,7 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   button: {
-    width: 150,
+    width: "80%",
     alignItems: "center",
     marginTop: 20,
     paddingTop: 8,
@@ -217,9 +235,9 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: "#ffffff",
-    height: 30,
+    height: 35,
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: "Outfit",
   },
   basket : {
