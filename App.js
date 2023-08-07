@@ -64,7 +64,7 @@ const Drawer = createDrawerNavigator();
 const routeIconMapping = {
   "Home": "home",
   "Profil": "user",
-  "Calibrage": "cog",
+  "Calibrage": "bullseye",
   "Mes amis": "users",
   "Nous contacter": "envelope",
   "Aide": "question"
