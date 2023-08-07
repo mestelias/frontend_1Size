@@ -60,12 +60,12 @@ export default function HomeScreen({ navigation }) {
   const userToken = useSelector((state) => state.user.value);
   console.log(userToken)
 
-  const carouselRef = React.useRef(null);
+  const carouselRef = useRef(null);
   const initialLayout = Dimensions.get("window").width ;
-  const [activeSlide, setActiveSlide] = React.useState(0);
+  const [activeSlide, setActiveSlide] = useState(0);
   
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "first", title: "Pour moi" },
     { key: "second", title: "Pour un ami" },
   ]);

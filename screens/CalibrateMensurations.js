@@ -13,16 +13,16 @@ import {
   Image,
 } from "react-native";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 
 const url = process.env.EXPO_PUBLIC_IP 
 
 export default function CalibrateMensurations ({navigation}){
     // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
-    const poitrineRef = React.useRef(null);
-    const tourTailleRef = React.useRef(null);
-    const hancheRef = React.useRef(null)
+    const poitrineRef = useRef(null);
+    const tourTailleRef = useRef(null);
+    const hancheRef = useRef(null)
 
   // On déclare un état pour afficher un message d'erreur
     const [errorMsg, setErrorMsg] = useState("");
