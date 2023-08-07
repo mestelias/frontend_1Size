@@ -1,13 +1,13 @@
 import "react-native-gesture-handler";
 
 //Sound
-import React, { useEffect } from "react";
+import React from "react";
 // import { Audio } from "expo-av";
 
 //Navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 
 //fonts
 import { useFonts } from "expo-font";
@@ -17,23 +17,33 @@ import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
-import CalibrateScreen from "./screens/CalibrateScreen";
+import LoadingScreen from "./screens/LoadingScreen";
+import CalibrateHomeScreen from "./screens/CalibrateHomeScreen";
+import CalibrateScreen from "./screens/CalibrateScreen"
+import FriendsScreen from "./screens/FriendsScreen";
+import ContactsScreen from "./screens/ContactsScreen";
+import HelpScreen from "./screens/HelpScreen";
 
 //Store
 import { Provider } from 'react-redux';
-import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import user from './reducers/user';
 
 //Persistance du Store
-import {persistStore, persistReducer} from "redux-persist"
+import { persistStore, persistReducer } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Icons
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+//React
+import {Text, Image, View, StyleSheet, TouchableOpacity} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { emptyStore } from './reducers/user'
 
 const reducers=combineReducers({user});
+
 const persistConfig = {
   key: "1size",
   storage: AsyncStorage
@@ -50,25 +60,77 @@ const persistor = persistStore(store);
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+//création d'un obj de correspondance nom de route/icon
+const routeIconMapping = {
+  "Home": "home",
+  "Profil": "user",
+  "Calibrage": "bullseye",
+  "Mes amis": "users",
+  "Nous contacter": "envelope",
+  "Aide": "question"
+};
+
+const CustomDrawer = (props) => {
+
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.value)
+  const {image, username} = user
+
+  const handleSignOut = () => {
+    dispatch(emptyStore())
+    props.navigation.navigate('SignIn')
+  }
+
+  
+  return (
+  <DrawerContentScrollView {...props}>
+    <View style = {styles.drawerHeader}>
+      <View style={styles.profilView}>
+        <Image source={image ? { uri: image } : require('./assets/Nelson.jpg')} style={styles.profilpic}/>
+        <TouchableOpacity onPress={()=> props.navigation.closeDrawer()}>
+          <FontAwesome name='times' size={30} color='#25958A' />
+        </TouchableOpacity>
+      </View>
+      <Text>@{username ? username : `username`}</Text>
+    </View>
+    <DrawerItemList {...props}/>
+    <TouchableOpacity onPress={()=> handleSignOut()} style={styles.signOutView}>
+      <FontAwesome name='sign-out' color={"#d95b33"} />
+      <Text style={styles.signOutText}>Sign Out</Text>
+    </TouchableOpacity>
+  </DrawerContentScrollView>
+)}
+
+const StackNavigator = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Loading"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="Loading" component={LoadingScreen} />
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="HomeStack" component={HomeScreen} />
+      <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
+      {/* Vous pouvez ajouter ici tous les autres écrans du Stack */}
+    </Stack.Navigator>
+  );
+};
+
 const AppDrawerNavigation = () => (
   <Drawer.Navigator
-    screenOptions={({ route }) => ({
+  drawerContent = {(props) => <CustomDrawer {...props} />}
+  screenOptions={({ route }) => ({
       headerShown: false,
       drawerActiveTintColor: "#25958A",
       drawerInactiveTintColor: "#d95b33",
       drawerType: "front",
+      drawerHeader: 'none',
       drawerIcon: ({ focused, color, size }) => {
-        let iconName;
-        if (route.name === "Home") {
-          iconName = focused ? "home" : "home"; // Nom de l'icône FontAwesome pour "Home"
-        } else if (route.name === "Profile") {
-          iconName = focused ? "user" : "user"; // Nom de l'icône FontAwesome pour "Profile"
-        }
-        // Définis la couleur en fonction de la variable 'iconColor'
-        iconColor = focused ? "#D95B33" : "#000"; 
-
-        // Retourne l'icône FontAwesome avec le nom calculé
-        return <FontAwesome name={iconName} size={size} color={color} />;
+        //utilisation de l'objet pour distribuer les icones
+        const iconName = routeIconMapping[route.name];
+        iconColor = focused ? "#D95B33" : "#000";
+        return <FontAwesome name={iconName} size={size} color={color} />;       
       },
     })}
     drawerStyle={{
@@ -76,11 +138,12 @@ const AppDrawerNavigation = () => (
       width: "80%",
     }}
   >
-    <Drawer.Screen name="Home" component={HomeScreen} />
-    <Drawer.Screen name="Profile" component={ProfileScreen} />
-    <Drawer.Screen name="SignUp" component={SignUpScreen} />
-    <Drawer.Screen name="SignIn" component={SignInScreen} />
-    <Drawer.Screen name="Calibrate" component={CalibrateScreen} />
+    <Drawer.Screen name="Home" component={StackNavigator} />
+    <Drawer.Screen name="Profil" component={ProfileScreen} />
+    <Drawer.Screen name="Calibrage" component={CalibrateHomeScreen} />
+    <Drawer.Screen name="Mes amis" component={FriendsScreen} />
+    <Drawer.Screen name="Nous contacter" component={ContactsScreen} />
+    <Drawer.Screen name="Aide" component={HelpScreen} />
   </Drawer.Navigator>
 );
 
@@ -113,14 +176,38 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NavigationContainer>
-         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-            name="AppDrawerNavigation"
-            component={AppDrawerNavigation}
-            />
-          </Stack.Navigator>
+          <AppDrawerNavigation/>
         </NavigationContainer>
       </PersistGate>
     </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  profilView: {
+    paddingRight: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    
+  },
+  profilpic: {
+    width:70, 
+    height:70,
+    borderRadius:50,
+  },
+  signOutView: {
+    flexDirection: 'row', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#d95b33',
+  },
+  signOutText: {
+    color: '#d95b33'
+  },
+  drawerHeader: {
+    justifyContent: 'space-between',
+    paddingLeft: 20,
+  }
+});

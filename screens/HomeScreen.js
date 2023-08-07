@@ -1,8 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
-
-//font
-import { useFonts } from "expo-font";
+import { useState, useRef } from "react";
 
 import {
   StyleSheet,
@@ -12,11 +9,14 @@ import {
   Dimensions,
   Image,
 } from "react-native";
+
+//font
+import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-
+import {useSelector} from 'react-redux'
 
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
@@ -56,12 +56,16 @@ const renderScene = SceneMap({
 // };
 
 export default function HomeScreen({ navigation }) {
-  const carouselRef = React.useRef(null);
+
+  const userToken = useSelector((state) => state.user.value);
+  console.log(userToken)
+
+  const carouselRef = useRef(null);
   const initialLayout = Dimensions.get("window").width ;
-  const [activeSlide, setActiveSlide] = React.useState(0);
+  const [activeSlide, setActiveSlide] = useState(0);
   
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "first", title: "Pour moi" },
     { key: "second", title: "Pour un ami" },
   ]);

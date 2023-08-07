@@ -124,8 +124,7 @@ export default function SignUpScreen({navigation}) {
       .then((data) => {
         console.log(data)
         if (data.result) {
-          console.log('ttt')
-          dispatch(addUserToStore(data.token));
+          dispatch(addUserToStore({token:data.data.token, username:data.data.username, genre:data.data.genre}));
           setFirstname("")
           setName("")
           setUsername("")
@@ -133,7 +132,7 @@ export default function SignUpScreen({navigation}) {
           setPassword("")
           setConfirmPassword("")
 
-          navigation.navigate("AppDrawerNavigation", { screen: "Home" });
+          navigation.navigate("HomeStack");
 
         } else {
           // User already exists in database
@@ -141,6 +140,11 @@ export default function SignUpScreen({navigation}) {
           setErrorMsg(data.error)
         }
       });
+  };
+
+   // Fonction pour empêcher l'utilisateur de saisir son email en majuscule
+   const updateEmail = (value) => {
+    setEmail(value.toLowerCase()); 
   };
 
   // Création des différents éléments pour chaque radiobouton qui sera map dans le return
@@ -224,7 +228,7 @@ export default function SignUpScreen({navigation}) {
               styles.input,
               (errors.email || !emailValid) ? styles.inputError : null
             ]}
-            onChangeText={(value) => setEmail(value)}
+            onChangeText={(value) => updateEmail(value)}
             value={email}
           />
           <TextInput
@@ -257,7 +261,6 @@ export default function SignUpScreen({navigation}) {
 
           <TouchableOpacity
           // TO DO : INSCRIPTION AVEC GOOGLE
-          onPress={() => navigation.navigate('Home')}
           style={styles.google} 
           activeOpacity={0.8}>
             <Text style={styles.textGoogle}>S'inscrire avec Google</Text>

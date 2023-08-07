@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect} from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from "@react-navigation/native";
 import {
   Modal, 
@@ -13,23 +13,25 @@ import {
   Platform,
   ScrollView,
   TouchableWithoutFeedback,
-  Icon
 } from "react-native";
 import { Camera, CameraType, FlashMode } from 'expo-camera'; 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker'; 
+import {updatePicture} from '../reducers/user'
 
 const backendIp = process.env.EXPO_PUBLIC_IP
-
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
 export default function ProfileScreen() {
 
+  const userToken = useSelector((state) => state.user.value.token);
+  
   const navigation = useNavigation();
-
-//états pour gérer les focus des champs inputs 
+  const dispatch = useDispatch()
+  //états pour gérer les focus des champs inputs 
   const [isFocused, setIsFocused] = useState(false);
   const [isFocused2, setIsFocused2] = useState(false);
   const [isFocused3, setIsFocused3] = useState(false);
@@ -39,73 +41,105 @@ export default function ProfileScreen() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [userGender, setUserGender] = useState("")
+  const [picPreview, setPicPreview] = useState(null)
+
+  
+  //vérifier si tous les champs sont pleins et que l'email est correct
+  const emailValid = (EMAIL_REGEX.test(email))
+  const saveable = Boolean(emailValid && firstname && name && username && email && userGender)
   
   const [gender, setGender] = useState([
     { id: 1, value: true, name: "Homme", selected: false },
     { id: 2, value: false, name: "Femme", selected: false }
   ]);
 
-/* Afin d'éviter de faire plein de fetchs vers la BDD, l'ensemble des infos du user doivent être mis dans un seul état - à faire
-  const [userData, setUserData] = useState({
-    firstname: "",
-    name: "",
-    username: "",
-    email: "",
-    gender: [
-      { id: 1, value: true, name: "Homme", selected: false },
-      { id: 2, value: false, name: "Femme", selected: false }
-    ],
-  })
-  */
-
-  const [modalVisible, setModalVisible] = useState(false);
+  const [picModalVisible, setPicModalVisible] = useState(false);
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   const [cameraVisible, setCameraVisible] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [type, setType] = useState(CameraType.front);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
-  const [picPreview, setPicPreview] = useState(null)
-  const userToken = useSelector((state) => state.user.value);
 
   const formData = new FormData();
 
-  //TODO Sauvegarder ses données de profil 
-  const handleSaveButton = () => {
-  
-  if (picPreview){
-      formData.append('profilePic', {
-        uri: picPreview,
-        name: 'photo.jpg',
-        type: 'image/jpeg',
+  useEffect(() => {
+    fetch(`${backendIp}/users/userdata/${userToken}`)
+    .then((response) => response.json())
+    .then((user) => {
+      setName(user.nom)
+      setFirstname(user.prenom)
+      setUsername(user.username)
+      setEmail(user.email)
+      setUserGender(user.genre)
+      setPicPreview(user.image)
+
+      const updatedGender = gender.map(item => {
+        if (item.name === user.genre) {
+          return { ...item, selected: true };
+        }
+        return { ...item, selected: false };
       });
-    
-    //Affichage des éléments du user à travers un fetch via son token puis le stockage des éléments reçus dans des états
-    fetch(`${backendIp}/users/upload`, {
-      method: 'POST',
-      body: formData,
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        fetch(`${backendIp}/users/update`, {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token: userToken,
-            image: data.url
-          })
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          if (data.result === true) {
-            console.log("Youpi !")
-          } else {
-            console.log("Moins youpi...")
-          }
-        })
-      })
+      setGender(updatedGender);
+    })
+  },[userToken])
+//rajout du userToken dans le useEffect, car c'est l'indication qu'un utilisateur se connecte
+//donc il faut charger les données dans la page profil 
+
+  
+  const handleSaveButton = async () => {
+    setSaveModalVisible(false)
+    //pas besoin de vérifier si tous les cahmps sont pleins, le bouton est inactif si c'est pas le cas, grâce à saveable
+    let imageUrl = null;
+    //on vérifie juste s'il veut enregistrer une photo, car on doit attendre cloudinary
+    if (picPreview) {
+        //on formate la photo
+        formData.append('profilePic', {
+            uri: picPreview,
+            name: 'photo.jpg',
+            type: 'image/jpeg',
+        });
+        // on fait la demande et on attend la réponse de cloudinary pour continuer
+        let response = await fetch(`${backendIp}/users/upload`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        let data = await response.json();
+        imageUrl = data.url;
     }
+    // on fabrique l'objet qu'on va mettre en bdd
+    let updateData = {
+        token: userToken,
+        username: username,
+        nom: name,
+        email: email,
+        prenom: firstname,
+        genre: userGender
+    };
+    // si il y a une image, on l'ajoute
+    if (imageUrl) {
+        updateData.image = imageUrl;
+    }
+    // on requête le back pour update avec l'objet qu'on a créé
+    let response = await fetch(`${backendIp}/users/update`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateData)
+    });
+
+    let data = await response.json();
+    // si ça a bien fonctionné, on met à jour le store redux pour l'afficher dans le drawer
+    if (data.result === true) {
+        if (imageUrl) {
+            dispatch(updatePicture(imageUrl));
+        }
+        console.log("Youpi !");
+    } else {
+        console.log("Moins youpi...");
+    }
+  }
 
     // Choisir une image dans le dossier
     const pickImage = async () => {
@@ -117,13 +151,11 @@ export default function ProfileScreen() {
         quality: 1,
       });
 
-      console.log(result);
-
       if (!result.canceled) {
         setPicPreview(result.assets[0].uri);
       }
   };
-}
+
 
 // Prise de photo
     let cameraRef = useRef(null);
@@ -164,6 +196,12 @@ export default function ProfileScreen() {
         : { ...isGender, selected: false }
     );
     setGender(updatedState);
+    setUserGender(item.name)
+  };
+
+   // Fonction pour empêcher l'utilisateur de faire la saisie en majuscule
+   const updateEmail = (value) => {
+    setEmail(value.toLowerCase()); 
   };
 
 
@@ -173,11 +211,26 @@ export default function ProfileScreen() {
       style={styles.background}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      {/* Modal de sauvegarde des données profil */}
+      <Modal visible={saveModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Voulez-vous vraiment sauvegarder ces données ?</Text>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleSaveButton}>
+              <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, sauvegarder</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setSaveModalVisible(false)}>
+              <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* Modal de choix entre photo et galerie */}
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}>
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+        visible={picModalVisible}>
+        <TouchableWithoutFeedback onPress={() => setPicModalVisible(false)}> 
             <View style={styles.centeredView}>
               <TouchableWithoutFeedback>  
                 <View style={styles.modal}>
@@ -203,13 +256,15 @@ export default function ProfileScreen() {
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-          </TouchableOpacity>      
-          <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text> 
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('HomeStack')}>
+            <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
+          </TouchableOpacity>       
         </View>
         <View style={styles.profilAvatar}>
           <Text style={styles.h1}>Profil</Text>
           <TouchableOpacity style={styles.picture} onPress={() => {
-              setModalVisible(!modalVisible);
+              setPicModalVisible(!picModalVisible);
             }}>
           <Image
             source={picPreview != null ? { uri: picPreview } : require('../assets/messi.jpg')}
@@ -219,12 +274,11 @@ export default function ProfileScreen() {
            <Ionicons name="camera-outline" size={23} color="#fff"/>
           </View>
           </TouchableOpacity>
-          <Text>@GOAT</Text>
+          <Text>@{username}</Text>
           <TouchableOpacity
             style={styles.classicbutton}
             activeOpacity={0.8}
-            // A REDIRIGER VERS LE CALIBRAGE
-            // onPress={()=> }
+            onPress={()=> navigation.navigate('Calibrage')}
           >
             <Text style={styles.textButtonactive}>Me re-calibrer</Text>
           </TouchableOpacity>
@@ -286,19 +340,21 @@ export default function ProfileScreen() {
               ]}
               onFocus={()=> setIsFocused4(true)}
               onBlur={()=> setIsFocused4(false)}
-              onChangeText={setEmail}
+              onChangeText={updateEmail}
               value={email}
               placeholder="Email"
             ></TextInput>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.savebutton}
-          activeOpacity={0.8}
-          onPress={()=> handleSaveButton()}
-        >
+        {saveable ? 
+        <TouchableOpacity style={[styles.savebutton, {backgroundColor: "#D95B33"}]} activeOpacity={0.8} onPress={()=>setSaveModalVisible(true)} >
+          <Text style={styles.textButtonactive}>Sauvegarder mes modifications</Text>
+        </TouchableOpacity>
+        :
+        <TouchableOpacity style={styles.savebutton} activeOpacity={0.8} >
           <Text style={styles.textButtoninactive}>Sauvegarder mes modifications</Text>
         </TouchableOpacity>
+        }
         <TouchableOpacity
           style={styles.classicbutton}
           activeOpacity={0.8}
@@ -333,6 +389,22 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
   camera: {
     flex:1,
   }, 
@@ -393,8 +465,8 @@ const styles = StyleSheet.create({
     margin : 0,
   },
   picture: {
-  flex: 1,
-  position: 'relative',
+    flex: 1,
+    position: 'relative',
     width: '100%',
     height: '100%',
     justifyContent: 'center',
@@ -476,7 +548,7 @@ const styles = StyleSheet.create({
     height: 30,
     fontFamily: "Outfit",
     fontWeight: "600",
-    color: "#FFF",
+    color : "#FFF"
   },
   textButtoninactive: {
     color: "#707B81",
@@ -527,5 +599,29 @@ const styles = StyleSheet.create({
   gender: {
     marginTop: 20,
     flexDirection: "row",
-  }
+  },
+  button: {
+    width: 150,
+    alignItems: "center",
+    marginTop: 20,
+    paddingTop: 8,
+    marginBottom: 30,
+    backgroundColor: "#d95b33",
+    borderRadius: 30,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "rgba(0, 0, 0, 0.25)",
+  },
+  textButton: {
+    color: "#ffffff",
+    fontFamily: 'Outfit',
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+  },
 });

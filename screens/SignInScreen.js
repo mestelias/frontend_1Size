@@ -87,9 +87,9 @@ export default function SignInScreen({ navigation }) {
         // On vérifie si l'utilisateur a bien été trouvé en BDD
         if (data.result) {
           // On stocke le token utilisateur dans le reducer user
-          dispatch(addUserToStore(data.token));
+          dispatch(addUserToStore({username : data.data.username, token:data.data.token, image:data.data.image, genre:data.data.genre}));
           //on redirige l'utilisateur vers la Home
-          navigation.navigate("AppDrawerNavigation", { screen: "Home" });
+          navigation.navigate("HomeStack");
         } else {
           // User already exists in database
           setErrorMsg(data.error);
@@ -99,6 +99,11 @@ export default function SignInScreen({ navigation }) {
         setPassword("");
       });
   };
+
+    // Fonction pour empêcher l'utilisateur de faire la saisie en majuscule
+    const updateEmail = (value) => {
+      setEmail(value.toLowerCase()); 
+    };
 
   return (
     <ScrollView style={styles.background} > 
@@ -118,7 +123,7 @@ export default function SignInScreen({ navigation }) {
               (errors.email || !emailValid) ? styles.inputError : null
               
             ]}
-            onChangeText={(value) => setEmail(value)}
+            onChangeText={(value) => updateEmail(value)}
             value={email}
           />
           <Text style={styles.texte}>Mot de passe</Text>
@@ -148,7 +153,6 @@ export default function SignInScreen({ navigation }) {
 
           <TouchableOpacity
             // TO DO : INSCRIPTION AVEC GOOGLE
-            onPress={() => navigation.navigate('Home')}
             style={styles.google}
             activeOpacity={0.8}
           >
