@@ -28,7 +28,6 @@ export default function CalibrateHomeScreen({ navigation }) {
     navigation.navigate('CalibrateScreen', { categorie: categorie[activeSlide] })
   }
   
-  console.log(activeSlide)
   const images = [
     require("../assets/vetements/basket.png"),
     require("../assets/vetements/pantalon.jpeg"),
