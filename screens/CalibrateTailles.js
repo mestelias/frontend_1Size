@@ -41,6 +41,8 @@ export default function CalibrateTailles({ navigation, categorie }) {
     
     // mensurations créées via l'algo de moyenne
     const [mensurationsCreees, setMensurationsCreees] = useState(null)
+
+    console.log(mensurationsCreees)
     
     //Etats pour stocker l'ensemble des éléments récupérés en BDD 
     const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch

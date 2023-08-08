@@ -31,13 +31,9 @@ export default function CalibrateHomeScreen({ navigation }) {
     { image: require("../assets/pantalon.png"), text: "Bas" },
     { image: require("../assets/shoes.png"), text: "Chaussures" },
   ];
-
-
   
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef(null);
-  
-  console.log(dataType[activeIndex])
 
   const _renderItem = ({ item, index }) => {
     return (
@@ -204,6 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FCFAF1",
   },
   header: {
+    paddingTop: 50,
     flex: 1,
     justifyContent: "flex-start",
     width: "100%",
