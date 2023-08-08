@@ -23,6 +23,7 @@ import CalibrateScreen from "./screens/CalibrateScreen"
 import FriendsScreen from "./screens/FriendsScreen";
 import ContactsScreen from "./screens/ContactsScreen";
 import HelpScreen from "./screens/HelpScreen";
+import ClothesScreen from "./screens/ClothesScreen";
 
 //Store
 import { Provider } from 'react-redux';
@@ -126,10 +127,11 @@ const CustomDrawer = (props) => {
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="SignIn"
+      initialRouteName="Clothes"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
+      <Stack.Screen name="Clothes" component={ClothesScreen} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="HomeStack" component={HomeScreen} />

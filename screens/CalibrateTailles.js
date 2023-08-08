@@ -179,7 +179,8 @@ export default function CalibrateTailles({ navigation, categorie }) {
                     type: type,
                     coupe: coupe,
                     taille: taille,
-                    mensurations: mensurations
+                    mensurations: mensurations,
+                    fit: true
                   }),
                 })
                 .then((response) => response.json())
@@ -287,7 +288,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                 <View key={vetement._id}>
                   <Text>{vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}</Text>
                   <TouchableOpacity onPress={() => handleDeleteConfirmation(vetement._id)}>
-                    <Ionicons size={32} name="trash-bin-outline" color="#D95B33" />
+                    <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
                   </TouchableOpacity>
                 </View>
               ))}
