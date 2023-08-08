@@ -2,7 +2,7 @@ function recommendSize(userData, brandSizes, desiredFit = 'normale') {
     // Coefficients pour ajuster l'importance des mesures
     const coefficients = {
         "europe": 1,
-        "tourDePoitrine": desiredFit === 'slim' ? 2 : 1.5,
+        "tourDePoitrine": desiredFit === 'slim' ? 2 : 1,
         "tourDeTaille": 1,
         "tourDeHanches":1,
         "tourDeHanches":1,
