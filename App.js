@@ -23,6 +23,7 @@ import CalibrateScreen from "./screens/CalibrateScreen"
 import FriendsScreen from "./screens/FriendsScreen";
 import ContactsScreen from "./screens/ContactsScreen";
 import HelpScreen from "./screens/HelpScreen";
+import RecommendationScreen from "./screens/RecommendationScreen";
 
 //Store
 import { Provider } from 'react-redux';
@@ -104,7 +105,7 @@ const CustomDrawer = (props) => {
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Loading"
+      initialRouteName="SignIn"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
@@ -113,6 +114,8 @@ const StackNavigator = () => {
       <Stack.Screen name="HomeStack" component={HomeScreen} />
       <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
       {/* Vous pouvez ajouter ici tous les autres écrans du Stack */}
+      <Stack.Screen name="RecommendationScreen" component={RecommendationScreen} />
+
     </Stack.Navigator>
   );
 };
@@ -144,6 +147,7 @@ const AppDrawerNavigation = () => (
     <Drawer.Screen name="Mes amis" component={FriendsScreen} />
     <Drawer.Screen name="Nous contacter" component={ContactsScreen} />
     <Drawer.Screen name="Aide" component={HelpScreen} />
+    <Drawer.Screen name="Recommandation" component={RecommendationScreen}/>
   </Drawer.Navigator>
 );
 
