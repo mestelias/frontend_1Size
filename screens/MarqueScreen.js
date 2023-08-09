@@ -28,25 +28,13 @@ export default function MarqueScreen({ navigation, route }) {
   const sexe = useSelector((state)=>state.user.value.genre)
   const sexeLC = sexe && sexe.toLowerCase()
 
-  const [search, setSearch] = useState('');
-
-  // const imagesData = [
-  //   {id: '1', image: require("../assets/marques/adidas.png"), name: 'adidas'},
-  //   {id: '2', image: require("../assets/marques/nike.png"), name: 'nike'},
-  //   {id: '3', image: require("../assets/marques/lacoste.png"), name: 'lacoste'},
-  //   {id: '4', image: require("../assets/marques/stjames.png"), name: 'stjames'},
-  //   {id: '5', image: require("../assets/marques/hm.png"), name: 'hm'},
-  // ];
+  //const [search, setSearch] = useState('');
 
   const images = marquesDispo.map((data, i) => {
-    console.log(data)
     return (
-      <View key={i} style={styles.photoContainer}>
-        {/* <TouchableOpacity onPress={() => dispatch(removePhoto(data))}>
-          <FontAwesome name='times' size={20} color='#000000' style={styles.deleteIcon} />
-        </TouchableOpacity> */}
+      <TouchableOpacity key={i} style={styles.photoContainer} onPress={()=>{navigation.navigate('MarqueTypeScreen', {name:data.name, categorie:categorie})}}>
         <Image source={ {uri:data.url} } style={styles.photo} />
-      </View>
+      </TouchableOpacity>
     );
   });
 
@@ -66,14 +54,14 @@ export default function MarqueScreen({ navigation, route }) {
         <Text style={styles.retour}>Retour</Text> 
       </View>
       <Text style={styles.H1}>{categorie}</Text>
-      <View style={styles.inputContainer}>
+      {/* <View style={styles.inputContainer}>
         <TextInput
           placeholder="Barre de recherche"
           onChangeText={(value) => setSearch(value)}
           value={search}
           style={styles.input}
         />
-      </View>
+      </View> */}
       <ScrollView contentContainerStyle={styles.imageContainer}>
         {images}
       </ScrollView>

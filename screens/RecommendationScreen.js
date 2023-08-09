@@ -16,6 +16,7 @@ const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const url = process.env.EXPO_PUBLIC_IP;
 
 export default function RecommendationScreen({ navigation, route }) {
+  const { categorie, marque, type, coupe} = route.params
   // L'état qui va stocker la taille idéale recommandée par l'algo
   const [recoTaille, setRecoTaille] = useState(null);
 
@@ -39,10 +40,10 @@ export default function RecommendationScreen({ navigation, route }) {
   console.log("recoTailleNull", recoTaille);
 
   // A SUPPRIMER valeurs test
-  const categorie = "haut";
-  const marque = "Lacoste";
-  const type = "Polo";
-  const coupe = "normale";
+  // const categorie = "haut";
+  // const marque = "Lacoste";
+  // const type = "Polo";
+  // const coupe = "normale";
 
   //TO DO : use effect d'initialistation qui va permettre à l'algo de calculer la reco de taille idéale
   useEffect(() => {
@@ -62,7 +63,7 @@ export default function RecommendationScreen({ navigation, route }) {
       const userMensurations = await responseForUserMensurations.json();
       console.log("Mensurations: ", userMensurations);
 
-      // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la marque, le sexe et le type
+      // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
       const responseForSizes = await fetch(
         `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}`
       );
@@ -81,7 +82,12 @@ export default function RecommendationScreen({ navigation, route }) {
 
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
+    const responseForRecoSizes = await fetch(
+    `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}&${recoTaille}`
+    );
+    const recoSizes = await responseForRecoSizes.json();
     //On ajoute le vêtement en BDD dans les vêtements en attente
     fetch(`${url}/users/vetementsenattente/${categorie}/${userToken}`, {
       method: "POST",
@@ -91,15 +97,15 @@ export default function RecommendationScreen({ navigation, route }) {
         type: type,
         coupe: coupe,
         taille: recoTaille,
-        mensurations: mensurations,
+        mensurations: recoSizes,
       }),
     })
-      .then((response) => response.json())
-      .then((vetement) => {
-        console.log("vêtement: ", vetement);
-        // Navigation vers la page de ses vêtements
-        navigation.navigate("ClothesScreen");
-      });
+    .then((response) => response.json())
+    .then((vetement) => {
+      console.log("vêtement: ", vetement);
+      // Navigation vers la page de ses vêtements
+      navigation.navigate("Clothes");
+    });
   };
 
   return (
@@ -123,23 +129,20 @@ export default function RecommendationScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.H3}>Notre reco OneSize</Text>
         <View style={styles.circleContainer}>
-        {showAnimation && (
+          {showAnimation && (
             <AnimatedLottieView
-                source={require("../assets/animations/shoes-colorOneSize.json")}
-                autoPlay
-                loop={false}
-                style={styles.lottie}
-
+              source={require("../assets/animations/shoes-colorOneSize.json")}
+              autoPlay
+              loop={false}
+              style={styles.lottie}
             />
-        )}
+          )}
 
-        {recoTaille && (
-          <View style={styles.circle}>
-
-            <Text style={styles.circleText}>{recoTaille}</Text>
+          {recoTaille && (
+            <View style={styles.circle}>
+              <Text style={styles.circleText}>{recoTaille}</Text>
             </View>
-
-            )}
+          )}
         </View>
         <TouchableOpacity
           onPress={() => handleSubmit()}
@@ -149,7 +152,7 @@ export default function RecommendationScreen({ navigation, route }) {
           <Text style={styles.textButton}>Je veux prendre cette taille</Text>
         </TouchableOpacity>
         <Text style={styles.text}>
-          Samy, le CEO de OneSize a approuvé cette taille recommandée.{" "}
+          Samy, le CEO de OneSize a approuvé cette taille recommandée.
         </Text>
       </View>
     </View>
