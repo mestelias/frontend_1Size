@@ -50,6 +50,9 @@ export default function CalibrateScreen({ navigation, route }) {
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Calibrage")}>
+            <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
+          </TouchableOpacity>  
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.H1}>Calibrage {categorie}</Text>
@@ -114,6 +117,9 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   burgerIcon:{
+    flexDirection: "row",
+    justifyContent: "space-btween",
+    width: "100%",
     paddingLeft: 30,
     paddingTop: 15,
   },

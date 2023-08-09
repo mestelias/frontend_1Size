@@ -10,7 +10,10 @@ import {
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useState, useRef } from 'react'
+
 export default function HelpScreen({ navigation }) {
+
   return (
     <View style={styles.background}>
       <SafeAreaView style={styles.header}>

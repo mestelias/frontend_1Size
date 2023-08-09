@@ -22,9 +22,9 @@ export default function CalibrateMensurations ({navigation, categorie}){
 
     const categorieLC = categorie.toLowerCase()
     // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
-    const poitrineRef = useRef(null);
-    const tourTailleRef = useRef(null);
-    const hancheRef = useRef(null)
+    const firstRef = useRef(null);
+    const secondRef = useRef(null);
+    const thirdRef = useRef(null)
 
   // On déclare un état pour afficher un message d'erreur
     const [errorMsg, setErrorMsg] = useState("");
@@ -36,11 +36,20 @@ export default function CalibrateMensurations ({navigation, categorie}){
     
   // Fonction pour vérifier si le formulaire est valide
     const isFormValid = () => {
-        return (
-        poitrineRef.current.value &&
-        tourTailleRef.current.value &&
-        hancheRef.current.value
-        );
+      //à chaque fois que thirdRef est appelé, on vérifie si on est en categorie chaussures
+      //si c'est le cas on l'enlève car il est "null"
+        if (categorieLC !== "chaussures") {
+          return (
+              firstRef.current.value &&
+              secondRef.current.value &&
+              thirdRef.current.value
+          );
+      } else {
+          return (
+              firstRef.current.value &&
+              secondRef.current.value
+          );
+    }
     };
 
     const token = useSelector((state) => state.user.value.token);
@@ -61,43 +70,59 @@ export default function CalibrateMensurations ({navigation, categorie}){
 
         if (isFormValid()){
             // On stocke les valeurs d'origine avant la conversion
-        const originalPoitrineValue = poitrineRef.current.value;
-        const originalTourTailleValue = tourTailleRef.current.value;
-        const originalHancheValue = hancheRef.current.value;
-
+        const originalFirstValue = firstRef.current.value;
+        const originalSecondValue = secondRef.current.value;
+        let originalThirdValue;
+          if (categorieLC !== "chaussures") {
+              originalThirdValue = thirdRef.current.value;
+          }
+    
         // On vérifie le système métrique utilisé et fais la conversion si nécessaire
         if (convertLong == 'Inch'){
-            poitrineRef.current.value = inchToCm(poitrineRef.current.value);
-            tourTailleRef.current.value = inchToCm(tourTailleRef.current.value);
-            hancheRef.current.value = inchToCm(hancheRef.current.value);
+            firstRef.current.value = inchToCm(firstRef.current.value);
+            secondRef.current.value = inchToCm(secondRef.current.value);
+              if (categorieLC !== "chaussures") {
+                  thirdRef.current.value = inchToCm(thirdRef.current.value);
+              }
         }
 
-        //J'appelle la route pour mettre à jour les mensurations Haut
+        const requestBody = {
+          firstValue: firstRef.current.value,
+          secondValue: secondRef.current.value,
+        };
+      
+        if (categorieLC !== "chaussures") {
+            requestBody.thirdValue = thirdRef.current.value;
+        }
+
+        //J'appelle la route pour mettre à jour les mensurations
         fetch(`${url}/users/mensurations/${categorieLC}/${token}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-            tourDePoitrine: poitrineRef.current.value,
-            tourDeTaille: tourTailleRef.current.value,
-            tourDeHanches: hancheRef.current.value,
-            }),
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
         })
-            .then((response) => response.json())
-            .then((data) => {
+        .then((response) => response.json())
+        .then((data) => {
             if(!data){
-                setErrorMsg(data.message)
+                setErrorMsg(data.message);
             } else {
                 setModalVisible(true);
-
+              // petit bloc responsable de l'animation
+                if (animationRef.current) {
+                  animationRef.current.play();
+                  setPlayAnimation(true);
+                }
+    
                 // On réinitialise les valeurs après validation
-                poitrineRef.current.value = originalPoitrineValue;
-                tourTailleRef.current.value = originalTourTailleValue;
-                hancheRef.current.value = originalHancheValue;
-
+                firstRef.current.value = originalFirstValue;
+                secondRef.current.value = originalSecondValue;
+                if (categorieLC !== "chaussures") {
+                    thirdRef.current.value = originalThirdValue;
+                }
             }
-            }) 
-        }
+        });
     }
+  }
     
     // La fonction permet de fermer la modal et rediriger l'utilisateur vers la Home
     navigateToHome = () => {
@@ -120,6 +145,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
             source={require('../assets/messi.jpg')}
             style={styles.roundedImage}
             />
+            <Text>Votre calibrage haut est réussi !</Text>
             <TouchableOpacity style={styles.button} activeOpacity={0.8}>
                 <Text style={styles.textButton}>Calibrer le reste</Text>
             </TouchableOpacity>
@@ -157,27 +183,39 @@ export default function CalibrateMensurations ({navigation, categorie}){
             {/* ... */}
             <View style={styles.containerInput}>
                 <View style={styles.inputBox}>
-                <Text style={styles.texte}>Tour de poitrine</Text>
+                <Text style={styles.texte}>
+                {categorie === "haut" ? "Tour de poitrine" : 
+                 categorie === "bas" ? "Tour de bassin" : 
+                 "Longueur de pied"}
+                </Text>
                 <View style={styles.inputBoxRow}>
-                    <MensurationsInput ref={poitrineRef} placeholder="exemple : 90" />
+                    <MensurationsInput ref={firstRef}
+                    placeholder={categorieLC === "chaussures" ? "exemple : 27" : "exemple : 90"} />
                     <Text style={styles.inputTexte}>{convertLong}</Text>
                 </View>
 
                 </View>
                 <View style={styles.inputBox}>
-                <Text style={styles.texte}>Tour de taille</Text>
+                <Text style={styles.texte}>
+                {categorie === "haut" || categorie === "bas" ? "Tour de taille" : "Pointure"}
+                </Text>
                 <View style={styles.inputBoxRow}>
-                    <MensurationsInput ref={tourTailleRef} placeholder="exemple : 60" />  
-                    <Text style={styles.inputTexte}>{convertLong}</Text>                   
+                    <MensurationsInput ref={secondRef} 
+                    placeholder={categorieLC === "chaussures" ? "exemple : 42" : "exemple : 90"} />  
+                    <Text style={styles.inputTexte}>{categorieLC === "chaussures" ? null : convertLong}</Text>                   
                 </View>
                 </View>
+                { categorie != "chaussures" &&
                 <View style={styles.inputBox}>
-                <Text style={styles.texte}>Tour de hanches</Text>
+                <Text style={styles.texte}>
+                {categorie === "haut" ? "Tour de hanches" : "Longueur de jambe"}
+                </Text>
                 <View style={styles.inputBoxRow}>
-                    <MensurationsInput ref={hancheRef} placeholder="exemple : 90" />    
+                    <MensurationsInput ref={thirdRef} placeholder="exemple : 80" />    
                     <Text style={styles.inputTexte}>{convertLong}</Text>  
-                </View>                                 
                 </View>
+                </View>
+                }                                 
             </View>
             { errorMsg !== '' && (<Text style={styles.error}>{errorMsg}</Text>)}
             <View>
@@ -215,11 +253,13 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      width: "80%",
     },
     modalView: {
       backgroundColor: 'white',
       borderRadius: 20,
       padding: 30,
+      width: "100%",
       alignItems: 'center',
       shadowColor: '#000',
       shadowOffset: {

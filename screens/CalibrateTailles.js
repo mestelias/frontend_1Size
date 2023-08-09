@@ -145,9 +145,9 @@ export default function CalibrateTailles({ navigation, categorie }) {
     
     const coupes = [
       {key:'1', value : 'Classic', disabled:false},
-      {key:'1', value : 'Ample', disabled:false},
-      {key:'1', value : 'Slim', disabled:false},
-      {key:'1', value : 'Skinny', disabled:false}
+      {key:'2', value : 'Ample', disabled:false},
+      {key:'3', value : 'Slim', disabled:false},
+      {key:'4', value : 'Skinny', disabled:false}
     ]
     
     function displayTailles(type) {
@@ -239,28 +239,48 @@ export default function CalibrateTailles({ navigation, categorie }) {
             )}
               <View style={styles.containerInput}>
               <SelectList 
+                  boxStyles={styles.box}
+                  inputStyles={styles.input}
+                  dropdownStyles={styles.dropdown}
+                  dropdownItemStyles={styles.dropdownItem}
+                  dropdownTextStyles={styles.dropdownText}
                   setSelected={(val) => displayType(val)} 
                   data={newDataMarques} 
                   save="value"
-                  placeholder="marque"
+                  placeholder="Marque"
               />
               <SelectList 
+                  boxStyles={styles.box}
+                  inputStyles={styles.input}
+                  dropdownStyles={styles.dropdown}
+                  dropdownItemStyles={styles.dropdownItem}
+                  dropdownTextStyles={styles.dropdownText}
                   setSelected={(val) => displayTailles(val)} 
                   data={newDataTypes} 
                   save="value"
-                  placeholder="type"
+                  placeholder="Type"
               />
               <SelectList 
+                  boxStyles={styles.box}
+                  inputStyles={styles.input}
+                  dropdownStyles={styles.dropdown}
+                  dropdownItemStyles={styles.dropdownItem}
+                  dropdownTextStyles={styles.dropdownText}
                   setSelected={(val) => setCoupe(val)} 
                   data={coupes} 
                   save="value"
-                  placeholder="coupe"
+                  placeholder="Coupe"
               />
               <SelectList 
+                  boxStyles={styles.box}
+                  inputStyles={styles.input}
+                  dropdownStyles={styles.dropdown}
+                  dropdownItemStyles={styles.dropdownItem}
+                  dropdownTextStyles={styles.dropdownText}
                   setSelected={(val) => setTaille(val)} 
                   data={newDataTailles} 
                   save="value"
-                  placeholder="taille"
+                  placeholder="Taille"
               />
               </View>
               <View>
@@ -318,8 +338,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
       },
     containerInput: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     width: '100%',
+    
     backgroundColor: '#fcfaf1',
     borderRadius: 10,
     marginTop: 15,
@@ -364,4 +385,32 @@ const styles = StyleSheet.create({
       fontSize: 18,
       marginBottom: 20,
     },
+    box: {
+      borderColor: '#D6D1BD',
+      backgroundColor: 'white',
+      margin: 5,
+      width: 350,
+      alignSelf: 'center',
+    },
+    input: {
+        fontSize: 16,
+        color: 'black'
+    },
+    dropdown: {
+        backgroundColor: 'white',
+        width:350,
+        alignSelf: 'center',
+        marginBottom: 10, 
+        borderColor: '#D6D1BD' // Cela permet au menu déroulant de s'adapter à son contenu
+    },
+    dropdownItem: {
+        padding: 10,
+        borderColor: '#eee',
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+    },
+    dropdownText: {
+        fontSize: 16,
+        color: 'black'
+    }
 })
