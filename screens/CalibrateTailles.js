@@ -58,6 +58,21 @@ export default function CalibrateTailles({ navigation, categorie }) {
     //Etats pour gérer la suppression des vêtements calibrés
     const [vetementToDelete, setVetementToDelete] = useState(null);
     const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
+
+
+    // Fonction pour convertir l'objet en format first,second,third value pour match les routes
+    const convertObject = (obj) => {
+      const firstValue = obj.tourDeHanches || obj.longueurJambe || obj.pointure || null;
+      const secondValue = obj.tourDePoitrine || obj.tourDeBassin || obj.longueur || null;
+      const thirdValue = obj.tourDeTaille || null;
+    
+      // Pour les chaussures, renvoyer seulement les deux premières valeurs
+      if (obj.pointure) {
+        return { firstValue, secondValue };
+      }
+    
+      return { firstValue, secondValue, thirdValue };
+    };
     
     //Va chercher tous les marques de la categorie en BDD
     useEffect(()=>{
@@ -115,13 +130,16 @@ export default function CalibrateTailles({ navigation, categorie }) {
     }
     // Si l'algo est passé par là : on met en bdd
     if (mensurationsCreees) {
+
+      const mensurationsConverties = convertObject(mensurationsCreees)
+
       fetch(`${url}/users/mensurations/${categorieLC}/${userToken}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(mensurationsCreees),
+          body: JSON.stringify(mensurationsConverties),
         })
           .then((response) => response.json())
-          .then((data) => { console.log(data)})
+          .then((data) => { console.log("data",data)})
     }
     
     newDataMarques = marquesDispo.map((name, i) => {

@@ -107,12 +107,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
                 setErrorMsg(data.message);
             } else {
                 setModalVisible(true);
-              // petit bloc responsable de l'animation
-                if (animationRef.current) {
-                  animationRef.current.play();
-                  setPlayAnimation(true);
-                }
-    
+
                 // On réinitialise les valeurs après validation
                 firstRef.current.value = originalFirstValue;
                 secondRef.current.value = originalSecondValue;
