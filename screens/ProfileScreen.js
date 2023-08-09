@@ -268,7 +268,7 @@ export default function ProfileScreen() {
               setPicModalVisible(!picModalVisible);
             }}>
           <Image
-            source={picPreview != null ? { uri: picPreview } : require('../assets/messi.jpg')}
+            source={picPreview != null ? { uri: picPreview } : require('../assets/Profildefault.jpg')}
             style={styles.roundedImage}
           />
           <View style={styles.iconContainer}>

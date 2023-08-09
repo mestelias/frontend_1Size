@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   H1: {
     textAlign: 'center',
     fontFamily: 'Outfit',
-    fontSize: '50',
+    fontSize: 50,
   },
   inputContainer: {
     width: '80%',

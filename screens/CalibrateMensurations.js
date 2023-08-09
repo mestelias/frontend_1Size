@@ -170,11 +170,11 @@ export default function CalibrateMensurations ({navigation, categorie}){
             <View style={styles.mensurationHeader}>
                 <Text style={styles.h3}>Renseigner vos mensurations</Text>
             <View style={styles.tailleSwitch}>
-                <TouchableOpacity onPress={() => setConvertLong('CM')} activeOpacity={0.5}>
-                { convertLong == 'CM' ? <Text style={styles.tailleBold}>CM</Text>  : <Text style={styles.taille}>CM</Text> }
+                <TouchableOpacity onPress={() => setConvertLong('cm')} activeOpacity={0.5}>
+                { convertLong == 'cm' ? <Text style={styles.tailleBold}>CM</Text>  : <Text style={styles.taille}>CM</Text> }
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setConvertLong('Inch')}>
-                { convertLong == 'Inch' ? <Text style={styles.tailleBold}>INCH</Text>  : <Text style={styles.taille}>INCH</Text> }
+                <TouchableOpacity onPress={() => setConvertLong('inch')}>
+                { convertLong == 'inch' ? <Text style={styles.tailleBold}>INCH</Text>  : <Text style={styles.taille}>INCH</Text> }
                 </TouchableOpacity>
             </View>
             </View>
