@@ -16,12 +16,6 @@ import { Animated, Easing } from "react-native";
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
-<<<<<<< HEAD
-import { useState, useRef } from 'react'
-
-export default function HelpScreen({ navigation }) {
-
-=======
 
 // source={require("../assets/animations/animation_ll2dyvvk.json")}
 export default function HelpScreen({ navigation }) {
@@ -48,7 +42,6 @@ export default function HelpScreen({ navigation }) {
   console.log(restartAnim)
   console.log('show', showAnimation)
 
->>>>>>> 6373fd789684a5b38617c416bc6373cf918990a4
   return (
     <View style={styles.background}>
       <SafeAreaView style={styles.header}>

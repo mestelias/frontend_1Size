@@ -129,7 +129,7 @@ const CustomDrawer = (props) => {
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Clothes"
+      initialRouteName="SignIn"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
