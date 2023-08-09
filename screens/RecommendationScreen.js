@@ -82,7 +82,12 @@ export default function RecommendationScreen({ navigation, route }) {
 
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
+    const responseForRecoSizes = await fetch(
+    `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}&${recoTaille}`
+    );
+    const recoSizes = await responseForRecoSizes.json();
     //On ajoute le vêtement en BDD dans les vêtements en attente
     fetch(`${url}/users/vetementsenattente/${categorie}/${userToken}`, {
       method: "POST",
@@ -92,14 +97,14 @@ export default function RecommendationScreen({ navigation, route }) {
         type: type,
         coupe: coupe,
         taille: recoTaille,
-        mensurations: mensurations,
+        mensurations: recoSizes,
       }),
     })
     .then((response) => response.json())
     .then((vetement) => {
       console.log("vêtement: ", vetement);
       // Navigation vers la page de ses vêtements
-      navigation.navigate("ClothesScreen");
+      navigation.navigate("Clothes");
     });
   };
 
@@ -147,7 +152,7 @@ export default function RecommendationScreen({ navigation, route }) {
           <Text style={styles.textButton}>Je veux prendre cette taille</Text>
         </TouchableOpacity>
         <Text style={styles.text}>
-          Samy, le CEO de OneSize a approuvé cette taille recommandée.{" "}
+          Samy, le CEO de OneSize a approuvé cette taille recommandée.
         </Text>
       </View>
     </View>
