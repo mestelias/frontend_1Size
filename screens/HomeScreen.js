@@ -25,7 +25,6 @@ export default function CalibrateHomeScreen({ navigation }) {
   const userToken = useSelector((state) => state.user.value.token);
   const username = useSelector((state) => state.user.value.username);
 
-
   const width = Dimensions.get("window").width;
 
   const dataType = [
@@ -33,7 +32,7 @@ export default function CalibrateHomeScreen({ navigation }) {
     { image: require("../assets/pantalon.png"), text: "Bas" },
     { image: require("../assets/shoes.png"), text: "Chaussures" },
   ];
-  
+
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef(null);
 
@@ -61,38 +60,40 @@ export default function CalibrateHomeScreen({ navigation }) {
       </View>
     );
   };
-  
+
   const selectedItem = dataType[activeIndex].text.toLowerCase();
-  
-  console.log('token', userToken)
-  console.log('item', selectedItem)
+
+  console.log("token", userToken);
+  console.log("item", selectedItem);
   // Fonction qui permet d'accéder à la recherche d'un vêtement selon le type
   const handleSubmit = () => {
     // Vérification de la présence de mensurations en BDD selon le type choisi
-    fetch(`${url}/users/mensurations?categorie=${selectedItem}&token=${userToken}`)
+    fetch(
+      `${url}/users/mensurations?categorie=${selectedItem}&token=${userToken}`
+    )
       .then((response) => response.json())
       .then((data) => {
-        console.log('data', data)
+        console.log("data", data);
         // Si l'utilisateur n'a pas de mensurations pour le type, la modal lui permet d'accéder au calibrage.
         // Si l'utilisateur a bien des mensurations, il est redirigé vers MarqueScreen
-        Object.keys(data).length == 0  ? setModalVisible(true) : navigation.navigate("MarqueScreen", { categorie: selectedItem });
-
+        Object.keys(data).length == 0
+          ? setModalVisible(true)
+          : navigation.navigate("MarqueScreen", { categorie: selectedItem });
+        // Object.keys(data).length != 0 ? setModalVisible(true) : navigation.navigate("CalibrateScreen", { categorie: selectedItem });
       });
   };
 
-// l'utilisateur souhaite accéder au calibrage 
-const goCalibrate = () => {
-  setModalVisible(false)
-  navigation.navigate("CalibrateScreen", { categorie: selectedItem })
-}
+  // l'utilisateur souhaite accéder au calibrage
+  const goCalibrate = () => {
+    setModalVisible(false);
+    navigation.navigate("CalibrateScreen", { categorie: selectedItem });
+  };
 
   return (
     <View style={styles.background}>
       <Modal visible={modalVisible} animationType="fade" transparent>
         <View style={styles.modalContainer}>
-          <TouchableWithoutFeedback
-            onPress={() => setModalVisible(false)}
-          >
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
             <View style={styles.centeredView}>
               <TouchableWithoutFeedback>
                 <View style={styles.modalView}>
@@ -100,28 +101,25 @@ const goCalibrate = () => {
                     source={dataType[activeIndex].image}
                     style={styles.image}
                   />
-                  <View style={styles.textModal} >
-                  <Text style={styles.h3}>
-                    Vous n'avez pas encore effectué votre calibrage pour le type {selectedItem}. 
-                  </Text>
-                  </View>
-                  <TouchableOpacity 
-                  style={styles.button} 
-                  activeOpacity={0.8}
-                  onPress={() => goCalibrate()}
-                  >
-                    <Text style={styles.textButton}>
-                      Calibrer
+                  <View style={styles.textModal}>
+                    <Text style={styles.h3}>
+                      Vous n'avez pas encore effectué votre calibrage pour le
+                      type {selectedItem}.
                     </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.button}
+                    activeOpacity={0.8}
+                    onPress={() => goCalibrate()}
+                  >
+                    <Text style={styles.textButton}>Calibrer</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.button2}
                     activeOpacity={0.8}
                     onPress={() => setModalVisible(false)}
                   >
-                    <Text style={styles.textButton2}>
-                      Annuler
-                    </Text>
+                    <Text style={styles.textButton2}>Annuler</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableWithoutFeedback>
@@ -140,13 +138,13 @@ const goCalibrate = () => {
           <Text style={styles.H1}>Bienvenue {username} </Text>
           <View style={styles.border}></View>
           <View style={styles.paragraphe}>
-            <Text style={styles.h3}>Tu recherches un vêtement mais tu ne connais pas ta taille ?</Text>
-
+            <Text style={styles.h3}>
+              Tu recherches un vêtement mais tu ne connais pas ta taille ?
+            </Text>
           </View>
           <View style={styles.paragraphe}>
             <Text style={styles.text}>
-              Choisis ton type vêtement pour trouver ta taille idéale
-              :
+              Choisis ton type vêtement pour trouver ta taille idéale :
             </Text>
           </View>
         </View>
@@ -167,9 +165,11 @@ const goCalibrate = () => {
               data={dataType}
               renderItem={_renderItem}
               sliderWidth={width}
-              itemWidth={width} // Adjust according to your needs
+              itemWidth={width}
               onSnapToItem={(index) => setActiveIndex(index)}
+              loop={true} // Activer le défilement en boucle
             />
+
             <TouchableOpacity onPress={() => carouselRef.current.snapToNext()}>
               <FontAwesome
                 name={"chevron-right"}
@@ -379,20 +379,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   image: {
-    width: 120,
+    width: 100,
     height: 150,
     // borderRadius: 50,
     marginBottom: 15,
-    resizeMode: "contains"
+    resizeMode: "contains",
   },
   textModal: {
-    width: "90%", 
+    width: "90%",
     marginBottom: 15,
   },
 });
-
-
-
 
 // import * as React from "react";
 // import { useState, useRef, useEffect} from "react";
@@ -415,8 +412,6 @@ const styles = StyleSheet.create({
 // import {useSelector} from 'react-redux'
 
 // import Carousel, { Pagination } from 'react-native-snap-carousel';
-
-
 
 // const FirstRoute = () => (
 //   <View style={styles.firstRoute}>
@@ -451,7 +446,7 @@ const styles = StyleSheet.create({
 // //   });
 // // };
 
-// const url = process.env.EXPO_PUBLIC_IP 
+// const url = process.env.EXPO_PUBLIC_IP
 
 // export default function HomeScreen({ navigation, categorie }) {
 
@@ -461,7 +456,7 @@ const styles = StyleSheet.create({
 //   const carouselRef = useRef(null);
 //   const initialLayout = Dimensions.get("window").width ;
 //   const [activeSlide, setActiveSlide] = useState(0);
-  
+
 //   // const [index, setIndex] = useState(0);
 //   // const [routes] = useState([
 //   //   { key: "first", title: "Pour moi" },
@@ -479,11 +474,11 @@ const styles = StyleSheet.create({
 //   // const [categorieDispo, setCategorieDispo] = useState([]); // récupéré au moment de la sélection de la marque
 
 //   // useEffect(()=>{
-    
+
 //   //   fetch(`${url}/marques/names?sexe=${sexeLC}&categorie=${dataType[activeSlide].name}`)
 //   //   .then((response)=> response.json())
 //   //   .then((marques) => console.log(marques))
-  
+
 //   // }, [activeSlide])
 
 //   const selectedItem = dataType[activeSlide].text.toLowerCase();
@@ -498,7 +493,7 @@ const styles = StyleSheet.create({
 //       <Text style={styles.H1}>Recherche ton vêtement</Text>
 //       <View style={styles.container}>
 //         {/* <TabView
-//           navigationState={{ index, routes }} 
+//           navigationState={{ index, routes }}
 //           renderTabBar={(props) => (
 //             <TabBar
 //               {...props}
@@ -543,7 +538,7 @@ const styles = StyleSheet.create({
 //           dotsLength={dataType.length} // spécifie le nombre total d'indicateurs à afficher
 //           activeDotIndex={activeSlide} // définit l'index de l'indicateur actif
 //           dotStyle={styles.paginationDot} // spécifie le style des indicateurs individuels
-//           inactiveDotOpacity={0.4} // définit l'opacité des indicateurs inactifs 
+//           inactiveDotOpacity={0.4} // définit l'opacité des indicateurs inactifs
 //           inactiveDotScale={0.6} // définit l'échelle des indicateurs inactifs par rapport à l'indicateur actif
 //         />
 //       </View>
