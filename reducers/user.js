@@ -14,11 +14,13 @@ export const userSlice = createSlice({
    emptyStore: (state) => {
     state.value = {image:'',username:'',token:''}
    },
-   updatePicture: (state,action) => {
-    state.value.image = action.payload  
-   }
+   updateUser: (state,action) => {
+    Object.keys(action.payload).forEach(key => {
+    state.value[key] = action.payload[key];
+    })
+   },
  },
 });
 
-export const { addUserToStore, emptyStore, updatePicture } = userSlice.actions;
+export const { addUserToStore, emptyStore, updateUser } = userSlice.actions;
 export default userSlice.reducer;

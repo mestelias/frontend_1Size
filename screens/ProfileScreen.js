@@ -19,7 +19,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker'; 
-import {updatePicture} from '../reducers/user'
+import {updateUser} from '../reducers/user'
 
 const backendIp = process.env.EXPO_PUBLIC_IP
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -133,8 +133,9 @@ export default function ProfileScreen() {
     // si ça a bien fonctionné, on met à jour le store redux pour l'afficher dans le drawer
     if (data.result === true) {
         if (imageUrl) {
-            dispatch(updatePicture(imageUrl));
+          dispatch(updateUser({ image: imageUrl }));
         }
+        dispatch(updateUser({ username: username, genre: userGender }))
         console.log("Youpi !");
     } else {
         console.log("Moins youpi...");
