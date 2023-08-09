@@ -23,6 +23,7 @@ import CalibrateScreen from "./screens/CalibrateScreen"
 import FriendsScreen from "./screens/FriendsScreen";
 import ContactsScreen from "./screens/ContactsScreen";
 import HelpScreen from "./screens/HelpScreen";
+import ClothesScreen from "./screens/ClothesScreen";
 import RecommendationScreen from "./screens/RecommendationScreen";
 import MarqueScreen from "./screens/MarqueScreen";
 
@@ -132,6 +133,7 @@ const StackNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
+      <Stack.Screen name="Clothes" component={ClothesScreen} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="HomeStack" component={HomeScreen} />
