@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 //font
 import { useFonts } from "expo-font";
@@ -19,28 +20,42 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
+const url = process.env.EXPO_PUBLIC_IP
 
-export default function MarqueScreen({ navigation }) {
+export default function MarqueScreen({ navigation, route }) {
+  const categorie = route.params.categorie
+  const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
+  const sexe = useSelector((state)=>state.user.value.genre)
+  const sexeLC = sexe && sexe.toLowerCase()
+
   const [search, setSearch] = useState('');
 
-  const imagesData = [
-    {id: '1', image: require("../assets/marques/adidas.png"), name: 'adidas'},
-    {id: '2', image: require("../assets/marques/nike.png"), name: 'nike'},
-    {id: '3', image: require("../assets/marques/lacoste.png"), name: 'lacoste'},
-    {id: '4', image: require("../assets/marques/stjames.png"), name: 'stjames'},
-    {id: '5', image: require("../assets/marques/hm.png"), name: 'hm'},
-  ];
+  // const imagesData = [
+  //   {id: '1', image: require("../assets/marques/adidas.png"), name: 'adidas'},
+  //   {id: '2', image: require("../assets/marques/nike.png"), name: 'nike'},
+  //   {id: '3', image: require("../assets/marques/lacoste.png"), name: 'lacoste'},
+  //   {id: '4', image: require("../assets/marques/stjames.png"), name: 'stjames'},
+  //   {id: '5', image: require("../assets/marques/hm.png"), name: 'hm'},
+  // ];
 
-  const images = imagesData.map((data, i) => {
+  const images = marquesDispo.map((data, i) => {
+    console.log(data)
     return (
       <View key={i} style={styles.photoContainer}>
         {/* <TouchableOpacity onPress={() => dispatch(removePhoto(data))}>
           <FontAwesome name='times' size={20} color='#000000' style={styles.deleteIcon} />
         </TouchableOpacity> */}
-        <Image source={ data.image } style={styles.photo} />
+        <Image source={ {uri:data.url} } style={styles.photo} />
       </View>
     );
   });
+
+  useEffect(()=>{
+    fetch(`${url}/marques/logos?sexe=${sexeLC}&categorie=${categorie}`)
+    .then((response)=> response.json())
+    .then((marques) => setMarquesDispo(marques))
+  
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -50,7 +65,7 @@ export default function MarqueScreen({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.retour}>Retour</Text> 
       </View>
-      <Text style={styles.H1}>Haut</Text>
+      <Text style={styles.H1}>{categorie}</Text>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Barre de recherche"

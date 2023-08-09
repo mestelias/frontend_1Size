@@ -60,7 +60,7 @@ const url = process.env.EXPO_PUBLIC_IP
 export default function HomeScreen({ navigation, categorie }) {
 
   const userToken = useSelector((state) => state.user.value);
-  console.log(userToken)
+  //console.log(userToken)
 
   const carouselRef = useRef(null);
   const initialLayout = Dimensions.get("window").width ;
@@ -92,7 +92,6 @@ export default function HomeScreen({ navigation, categorie }) {
   // }, [activeSlide])
 
   const selectedItem = images[activeSlide].name.toLowerCase();
-  console.log(selectedItem);
 
   return (
     <View style={styles.background}>
