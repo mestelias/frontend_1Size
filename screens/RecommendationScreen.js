@@ -16,6 +16,7 @@ const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const url = process.env.EXPO_PUBLIC_IP;
 
 export default function RecommendationScreen({ navigation, route }) {
+  const { categorie, marque, type, coupe} = route.params
   // L'état qui va stocker la taille idéale recommandée par l'algo
   const [recoTaille, setRecoTaille] = useState(null);
 
@@ -39,10 +40,10 @@ export default function RecommendationScreen({ navigation, route }) {
   console.log("recoTailleNull", recoTaille);
 
   // A SUPPRIMER valeurs test
-  const categorie = "haut";
-  const marque = "Lacoste";
-  const type = "Polo";
-  const coupe = "normale";
+  // const categorie = "haut";
+  // const marque = "Lacoste";
+  // const type = "Polo";
+  // const coupe = "normale";
 
   //TO DO : use effect d'initialistation qui va permettre à l'algo de calculer la reco de taille idéale
   useEffect(() => {
@@ -62,7 +63,7 @@ export default function RecommendationScreen({ navigation, route }) {
       const userMensurations = await responseForUserMensurations.json();
       console.log("Mensurations: ", userMensurations);
 
-      // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la marque, le sexe et le type
+      // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
       const responseForSizes = await fetch(
         `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}`
       );
@@ -94,12 +95,12 @@ export default function RecommendationScreen({ navigation, route }) {
         mensurations: mensurations,
       }),
     })
-      .then((response) => response.json())
-      .then((vetement) => {
-        console.log("vêtement: ", vetement);
-        // Navigation vers la page de ses vêtements
-        navigation.navigate("ClothesScreen");
-      });
+    .then((response) => response.json())
+    .then((vetement) => {
+      console.log("vêtement: ", vetement);
+      // Navigation vers la page de ses vêtements
+      navigation.navigate("ClothesScreen");
+    });
   };
 
   return (
@@ -123,23 +124,20 @@ export default function RecommendationScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.H3}>Notre reco OneSize</Text>
         <View style={styles.circleContainer}>
-        {showAnimation && (
+          {showAnimation && (
             <AnimatedLottieView
-                source={require("../assets/animations/shoes-colorOneSize.json")}
-                autoPlay
-                loop={false}
-                style={styles.lottie}
-
+              source={require("../assets/animations/shoes-colorOneSize.json")}
+              autoPlay
+              loop={false}
+              style={styles.lottie}
             />
-        )}
+          )}
 
-        {recoTaille && (
-          <View style={styles.circle}>
-
-            <Text style={styles.circleText}>{recoTaille}</Text>
+          {recoTaille && (
+            <View style={styles.circle}>
+              <Text style={styles.circleText}>{recoTaille}</Text>
             </View>
-
-            )}
+          )}
         </View>
         <TouchableOpacity
           onPress={() => handleSubmit()}
