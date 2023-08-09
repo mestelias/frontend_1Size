@@ -62,6 +62,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
                     source={require('../assets/vetements/teeshirt.jpeg')}
                     style={styles.image}
                   />
+                  <Text style={styles.textType}>Choisissez votre coupe</Text>
                   <View style={styles.buttonChoiceView}>
                     <TouchableOpacity style={coupe === 'Slim' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Slim')}}>
                       <Text style={styles.textButton}>Slim</Text>
@@ -282,6 +283,12 @@ const styles = StyleSheet.create({
       height: 30,
       fontWeight: "600",
       fontSize: 16,
+    },
+    textType: {
+      fontFamily: 'Outfit',
+      color: "#707B81",
+      fontSize: 20,
+      fontFamily: "Outfit",
     },
     image: {
       width: 100,
