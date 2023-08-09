@@ -22,7 +22,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
     const [typesDispo, setTypesDispo] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [type, setType] = useState('')
-    const [coupe, setCoupe] = useState("normale")
+    const [coupe, setCoupe] = useState("Normale")
 
     const handlePressType = (typePressed) => {
       setType(typePressed)
