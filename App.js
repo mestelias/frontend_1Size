@@ -23,7 +23,11 @@ import CalibrateScreen from "./screens/CalibrateScreen"
 import FriendsScreen from "./screens/FriendsScreen";
 import ContactsScreen from "./screens/ContactsScreen";
 import HelpScreen from "./screens/HelpScreen";
+<<<<<<< HEAD
 import RecommendationScreen from "./screens/RecommendationScreen";
+=======
+import MarqueScreen from "./screens/MarqueScreen";
+>>>>>>> 9967f21a49dc8e10c80b50a16b28468667cf0008
 
 //Store
 import { Provider } from 'react-redux';
@@ -135,6 +139,7 @@ const StackNavigator = () => {
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="HomeStack" component={HomeScreen} />
       <Stack.Screen name="CalibrateScreen" component={CalibrateScreen} />
+      <Stack.Screen name="MarqueScreen" component={MarqueScreen} />
       {/* Vous pouvez ajouter ici tous les autres écrans du Stack */}
       <Stack.Screen name="RecommendationScreen" component={RecommendationScreen} />
 
