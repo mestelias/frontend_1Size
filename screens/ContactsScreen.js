@@ -11,31 +11,27 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
-
-export default function ContactScreen() {
-
-  
+export default function ContactScreen({ navigation }) {
   return (
-    <ScrollView style={styles.background} > 
+    <ScrollView style={styles.background}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <FontAwesome name={"bars"} size={40} color={"#25958A"} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.title}>Contactez nous !</Text>
-        <Text style={styles.h3}>Envoyez nous votre demande en remplissant le formulaire ci-dessous</Text>
+        <Text style={styles.h3}>
+          Envoyez nous votre demande en remplissant le formulaire ci-dessous
+        </Text>
         <View style={styles.inputContainer}>
           <Text style={styles.texte}>Votre message :</Text>
-          <TextInput
-            placeholder="Message"
-            style={[
-              styles.input                          
-            ]}   
-            
-          />
-          
+          <TextInput placeholder="Message" style={[styles.input]} />
         </View>
-       
+
         <View style={styles.pressBottom}>
           <TouchableOpacity
             onPress={() => handleSubmit()}
@@ -43,11 +39,10 @@ export default function ContactScreen() {
             activeOpacity={0.8}
           >
             <Text style={styles.textButton}>Envoyer le formulaire</Text>
-          </TouchableOpacity>     
-         
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    {/* </View> */}
+      {/* </View> */}
     </ScrollView>
   );
 }
@@ -64,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     backgroundColor: "#fcfaf1",
-    marginTop: 80,
+    marginTop: 70,
   },
   title: {
     fontSize: 30,
@@ -105,7 +100,7 @@ const styles = StyleSheet.create({
     width: "100%",
     fontFamily: "Outfit",
     borderRadius: 5,
-    backgroundColor: '#ffffff'
+    backgroundColor: "#ffffff",
   },
   pressBottom: {
     flexDirection: "column",
@@ -117,7 +112,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   register: {
-    alignItems: "center",    
+    alignItems: "center",
     width: "100%",
     height: "35%",
     marginTop: 10,
@@ -130,4 +125,12 @@ const styles = StyleSheet.create({
     padding: "5%",
     fontSize: 20,
   },
+  header: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    paddingLeft: 30,
+    // paddingTop: 15,
+    width: "100%"
+  },
+
 });
