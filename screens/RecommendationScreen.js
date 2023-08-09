@@ -16,8 +16,12 @@ const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const url = process.env.EXPO_PUBLIC_IP;
 
 export default function RecommendationScreen({ navigation, route }) {
+
+  const { categorie, marque, type, coupe } = route.params
+  console.log(route.params)
   // L'état qui va stocker la taille idéale recommandée par l'algo
   const [recoTaille, setRecoTaille] = useState(null);
+
 
   const [showAnimation, setShowAnimation] = useState(true);
   const animationDuration = 5000; // Adaptez cette valeur à la durée réelle de votre animation (en ms).
@@ -39,10 +43,10 @@ export default function RecommendationScreen({ navigation, route }) {
   console.log("recoTailleNull", recoTaille);
 
   // A SUPPRIMER valeurs test
-  const categorie = "haut";
-  const marque = "Lacoste";
-  const type = "Polo";
-  const coupe = "normale";
+  // const categorie = "haut";
+  // const marque = "Lacoste";
+  // const type = "Polo";
+  // const coupe = "normale";
 
   //TO DO : use effect d'initialistation qui va permettre à l'algo de calculer la reco de taille idéale
   useEffect(() => {

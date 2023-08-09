@@ -1,25 +1,103 @@
 import * as React from "react";
-import { useRef, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   Text,
-  Button
+  Modal,
+  TouchableWithoutFeedback,
+  Image,
 } from "react-native";
-
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LottieView from "lottie-react-native";
-import { Animated, Easing } from "react-native";
 
-export default function HelpScreen({ navigation }) {
+const url = process.env.EXPO_PUBLIC_IP
 
-  console.log(restartAnim)
-  console.log('show', showAnimation)
+export default function MarqueTypeScreen({ navigation, route }) {
+    const { name, categorie } = route.params
+    const sexe = useSelector((state)=>state.user.value.genre)
+    const sexeLC = sexe && sexe.toLowerCase()
+    const [typesDispo, setTypesDispo] = useState([])
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [type, setType] = useState('')
+    const [coupe, setCoupe] = useState("normale")
+
+    const handlePressType = (typePressed) => {
+      setType(typePressed)
+      setIsModalVisible(true)
+    }
+
+
+
+
+    
+    useEffect(()=>{
+        fetch(`${url}/marques/types?marque=${name}&sexe=${sexeLC}&categorie=${categorie}`)
+        .then((response)=> response.json())
+        .then((types) => setTypesDispo(types))
+    }, [name])
+
+    const types = typesDispo.map((type,i) => {
+      return (
+        <TouchableOpacity key={i} style={styles.photoContainer} onPress={()=>handlePressType(type)}>
+          <Text>{type}</Text>
+        </TouchableOpacity>
+      )
+    })
+
 
   return (
     <View style={styles.background}>
+      <Modal visible={isModalVisible} animationType="fade" transparent>
+        <View style={styles.modalContainer}>
+          <TouchableWithoutFeedback
+            onPress={() => setIsModalVisible(false)}
+          >
+            <View style={styles.centeredView}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalView}>
+                  <Image
+                    source={require('../assets/vetements/teeshirt.jpeg')}
+                    style={styles.image}
+                  />
+                  <View style={styles.buttonChoiceView}>
+                    <TouchableOpacity style={coupe === 'slim' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('slim')}}>
+                      <Text style={styles.textButton}>Slim</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={coupe === 'normale' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('normale')}}>
+                      <Text style={styles.textButton}>Regular</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={coupe === 'ample' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('ample')}}>
+                      <Text style={styles.textButton}>Ample</Text>
+                    </TouchableOpacity>  
+                    
+                  </View>
+                  <TouchableOpacity 
+                  style={styles.button} 
+                  activeOpacity={0.8}
+                  onPress={()=>{navigation.navigate('RecommendationScreen',{categorie:categorie, marque:name, type:type, coupe:coupe})}}
+                  >
+                    <Text style={styles.textButton}>
+                      Valider
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.button2}
+                    activeOpacity={0.8}
+                    onPress={() => setIsModalVisible(false)}
+                  >
+                    <Text style={styles.textButton2}>
+                      Annuler
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </Modal>
       <SafeAreaView style={styles.header}>
         <View style={styles.burgerIcon}>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -28,33 +106,12 @@ export default function HelpScreen({ navigation }) {
         </View>
       </SafeAreaView>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Besoin d'aide ?</Text>
+        <Text style={styles.H1}>Types</Text>
         <View style={styles.border}></View>
       <View style={styles.container}>
+      {types}
+      </View> 
 
-          {/* <View style={styles.animationContainer}> */}
-          {showAnimation && (
-            <AnimatedLottieView
-              source={require("../assets/animations/shoes-colorOneSize.json")}
-              progress={animationProgress.current}
-              style={styles.lottieView}
-            />
-          )}
-
-
-        <TouchableOpacity style={styles.button}
-          title="Restart Animation"
-          onPress={() => {
-            animationProgress.current.setValue(0);  // Réinitialisez la progression de l'animation.
-            setShowAnimation(true);                 // Affichez l'animation.
-            setRestartAnim(prev => !prev); // Changez l'état pour déclencher le useEffect.
-        }}
-          >
-          <Text>Clique-ici</Text>
-
-        </TouchableOpacity>
-      </View>
-        
       </View>
     </View>
   );
@@ -69,11 +126,22 @@ const styles = StyleSheet.create({
       width: "100%",
       height: "100%",
     },
+    buttonChoiceView: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      marginBottom: 30,
+    },
     container: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'flex-start',
       width: '100%'
+    },
+    photoContainer: {
+      marginTop: 20,
+      flexDirection: 'row',
+      flexWrap: 'wrap'
     },
     titleContainer: {
       alignItems: "center",
@@ -99,34 +167,126 @@ const styles = StyleSheet.create({
       fontWeight: "600",
       marginBottom: 20,
     },
-    button: {
-      alignItems: "center",
+    centeredView: {
+      flex: 1,
       justifyContent: "center",
-      paddingTop: 3,
-      width: 250,
-      height: 50,
-      marginTop: 10,
+      alignItems: "center",
+    },
+    modalView: {
+      backgroundColor: "white",
+      width: "90%",
+      borderRadius: 20,
+      padding: 30,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    h3: {
+      fontSize: 20,
+      fontWeight: "600",
+      fontFamily: "Outfit",
+      textAlign: "center",
+    },
+    button: {
+      width: 200,
+      alignItems: "center",
+      marginTop: 20,
+      paddingTop: 8,
+      marginBottom: 15,
       backgroundColor: "#d95b33",
       borderRadius: 30,
+      shadowOpacity: 1,
+      elevation: 4,
+      shadowRadius: 4,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowColor: "rgba(0, 0, 0, 0.25)",
     },
-    animationContainer: {
-      // backgroundColor: '#fff',
-      // alignItems: 'center',
-      // justifyContent: 'center',
-      // flex: 1,
-    },
-    buttonContainer: {
-      paddingTop: 20,
-    },
-    lottie: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: "center",
+    buttonCoupe: {
+      width: 100,
       alignItems: "center",
-      width: 300,
-      height: 300,
-  }  
-  });
+      marginTop: 20,
+      paddingTop: 8,
+      marginHorizontal: 1.7,
+      marginBottom: 15,
+      backgroundColor: "#d95b33",
+      borderRadius: 30,
+      shadowOpacity: 1,
+      elevation: 4,
+      shadowRadius: 4,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowColor: "rgba(0, 0, 0, 0.25)",
+    },
+    textButton: {
+      color: "#ffffff",
+      fontFamily: "Outfit",
+      height: 30,
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    button2: {
+      width: 200,
+      alignItems: "center",
+      marginTop: 20,
+      paddingTop: 8,
+      marginBottom: 15,
+      backgroundColor: "#d6d1bd",
+      borderRadius: 30,
+      shadowOpacity: 1,
+      elevation: 4,
+      shadowRadius: 4,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowColor: "rgba(0, 0, 0, 0.25)",
+    },
+    button2Coupe: {
+      width: 100,
+      alignItems: "center",
+      marginTop: 20,
+      paddingTop: 8,
+      marginBottom: 15,
+      marginHorizontal: 1.7,
+      backgroundColor: "#d6d1bd",
+      borderRadius: 30,
+      shadowOpacity: 1,
+      elevation: 4,
+      shadowRadius: 4,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowColor: "rgba(0, 0, 0, 0.25)",
+    },
+    textButton2: {
+      color: "#707b81",
+      fontFamily: "Outfit",
+      height: 30,
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    image: {
+      width: 100,
+      height: 110,
+      borderRadius: 50,
+      marginBottom: 15,
+    },
+});
