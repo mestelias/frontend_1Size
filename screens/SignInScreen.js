@@ -132,6 +132,7 @@ export default function SignInScreen({ navigation }) {
             style={[styles.input, errors.password ? styles.inputError : null]}
             onChangeText={(value) => setPassword(value)}
             value={password}
+            secureTextEntry={true}
           />
           <TouchableOpacity
             onPress={() => handleSubmit()}
