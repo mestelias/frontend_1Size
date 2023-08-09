@@ -1,19 +1,54 @@
 import * as React from "react";
-
+import { useRef, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   Text,
+  Button
 } from "react-native";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LottieView from "lottie-react-native";
+import { Animated, Easing } from "react-native";
 
+
+const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
+
+<<<<<<< HEAD
 import { useState, useRef } from 'react'
 
 export default function HelpScreen({ navigation }) {
 
+=======
+
+// source={require("../assets/animations/animation_ll2dyvvk.json")}
+export default function HelpScreen({ navigation }) {
+
+  const [showAnimation, setShowAnimation] = useState(true);
+
+  const [restartAnim, setRestartAnim] = useState(false)
+  // const animation = useRef(null);
+  const animationProgress = useRef(new Animated.Value(0));
+
+  useEffect(() => {
+    Animated.timing(animationProgress.current, {
+      toValue: 1,
+      duration: 5000,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start(() => {
+        // La fonction de callback sera exécutée une fois l'animation terminée
+        setShowAnimation(false);
+    });
+}, [restartAnim]);
+
+
+  console.log(restartAnim)
+  console.log('show', showAnimation)
+
+>>>>>>> 6373fd789684a5b38617c416bc6373cf918990a4
   return (
     <View style={styles.background}>
       <SafeAreaView style={styles.header}>
@@ -27,6 +62,28 @@ export default function HelpScreen({ navigation }) {
         <Text style={styles.H1}>Besoin d'aide ?</Text>
         <View style={styles.border}></View>
       <View style={styles.container}>
+
+          {/* <View style={styles.animationContainer}> */}
+          {showAnimation && (
+            <AnimatedLottieView
+              source={require("../assets/animations/shoes-colorOneSize.json")}
+              progress={animationProgress.current}
+              style={styles.lottieView}
+            />
+          )}
+
+
+        <TouchableOpacity style={styles.button}
+          title="Restart Animation"
+          onPress={() => {
+            animationProgress.current.setValue(0);  // Réinitialisez la progression de l'animation.
+            setShowAnimation(true);                 // Affichez l'animation.
+            setRestartAnim(prev => !prev); // Changez l'état pour déclencher le useEffect.
+        }}
+          >
+          <Text>Clique-ici</Text>
+
+        </TouchableOpacity>
       </View>
         
       </View>
@@ -45,7 +102,8 @@ const styles = StyleSheet.create({
     },
     container: {
       flex: 1,
-      alignItems: 'center', 
+      alignItems: 'center',
+      justifyContent: 'flex-start',
       width: '100%'
     },
     titleContainer: {
@@ -72,4 +130,34 @@ const styles = StyleSheet.create({
       fontWeight: "600",
       marginBottom: 20,
     },
+    button: {
+      alignItems: "center",
+      justifyContent: "center",
+      paddingTop: 3,
+      width: 250,
+      height: 50,
+      marginTop: 10,
+      backgroundColor: "#d95b33",
+      borderRadius: 30,
+    },
+    animationContainer: {
+      // backgroundColor: '#fff',
+      // alignItems: 'center',
+      // justifyContent: 'center',
+      // flex: 1,
+    },
+    buttonContainer: {
+      paddingTop: 20,
+    },
+    lottie: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: "center",
+      alignItems: "center",
+      width: 300,
+      height: 300,
+  }  
   });

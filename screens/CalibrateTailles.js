@@ -15,12 +15,12 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-
-const url = process.env.EXPO_PUBLIC_IP 
+const url = process.env.EXPO_PUBLIC_IP
 
 export default function CalibrateTailles({ navigation, categorie }) {
     //cagtegorie vient des props de HomeCalibrateScreen => CalibrateScreen => CalibrateTailles
     const categorieLC = categorie.toLowerCase()
+    console.log('test:', categorieLC);
     const userToken = useSelector((state) => state.user.value.token);
 
     const sexe = useSelector((state)=>state.user.value.genre)
