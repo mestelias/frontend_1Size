@@ -59,8 +59,6 @@ export default function CalibrateTailles({ navigation, categorie }) {
     const [vetementToDelete, setVetementToDelete] = useState(null);
     const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
 
-
-    // Fonction pour convertir l'objet en format first,second,third value pour match les routes
     const convertObject = (obj) => {
       const firstValue = obj.tourDeHanches || obj.longueurJambe || obj.pointure || null;
       const secondValue = obj.tourDePoitrine || obj.tourDeBassin || obj.longueur || null;
@@ -130,7 +128,6 @@ export default function CalibrateTailles({ navigation, categorie }) {
     }
     // Si l'algo est passé par là : on met en bdd
     if (mensurationsCreees) {
-
       const mensurationsConverties = convertObject(mensurationsCreees)
 
       fetch(`${url}/users/mensurations/${categorieLC}/${userToken}`, {

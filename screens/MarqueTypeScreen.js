@@ -30,9 +30,6 @@ export default function MarqueTypeScreen({ navigation, route }) {
     }
 
 
-
-
-    
     useEffect(()=>{
         fetch(`${url}/marques/types?marque=${name}&sexe=${sexeLC}&categorie=${categorie}`)
         .then((response)=> response.json())
@@ -47,7 +44,10 @@ export default function MarqueTypeScreen({ navigation, route }) {
       )
     })
 
-
+    const handleValidate = () => {
+      setIsModalVisible(false);
+      navigation.navigate('RecommendationScreen',{categorie:categorie, marque:name, type:type, coupe:coupe})
+    }
   return (
     <View style={styles.background}>
       <Modal visible={isModalVisible} animationType="fade" transparent>
@@ -63,13 +63,13 @@ export default function MarqueTypeScreen({ navigation, route }) {
                     style={styles.image}
                   />
                   <View style={styles.buttonChoiceView}>
-                    <TouchableOpacity style={coupe === 'slim' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('slim')}}>
+                    <TouchableOpacity style={coupe === 'Slim' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Slim')}}>
                       <Text style={styles.textButton}>Slim</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={coupe === 'normale' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('normale')}}>
+                    <TouchableOpacity style={coupe === 'Normale' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Normale')}}>
                       <Text style={styles.textButton}>Regular</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={coupe === 'ample' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('ample')}}>
+                    <TouchableOpacity style={coupe === 'Ample' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Ample')}}>
                       <Text style={styles.textButton}>Ample</Text>
                     </TouchableOpacity>  
                     
@@ -77,7 +77,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
                   <TouchableOpacity 
                   style={styles.button} 
                   activeOpacity={0.8}
-                  onPress={()=>{navigation.navigate('RecommendationScreen',{categorie:categorie, marque:name, type:type, coupe:coupe})}}
+                  onPress={()=>{handleValidate()}}
                   >
                     <Text style={styles.textButton}>
                       Valider
