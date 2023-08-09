@@ -23,11 +23,8 @@ import CalibrateScreen from "./screens/CalibrateScreen"
 import FriendsScreen from "./screens/FriendsScreen";
 import ContactsScreen from "./screens/ContactsScreen";
 import HelpScreen from "./screens/HelpScreen";
-<<<<<<< HEAD
 import RecommendationScreen from "./screens/RecommendationScreen";
-=======
 import MarqueScreen from "./screens/MarqueScreen";
->>>>>>> 9967f21a49dc8e10c80b50a16b28468667cf0008
 
 //Store
 import { Provider } from 'react-redux';
