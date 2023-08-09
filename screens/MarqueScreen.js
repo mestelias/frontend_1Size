@@ -55,7 +55,7 @@ export default function MarqueScreen({ navigation, route }) {
     .then((response)=> response.json())
     .then((marques) => setMarquesDispo(marques))
   
-  }, [])
+  }, [categorie])
 
   return (
     <View style={styles.container}>
