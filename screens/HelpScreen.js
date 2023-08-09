@@ -61,6 +61,7 @@ export default function HelpScreen({ navigation }) {
             <AnimatedLottieView
               source={require("../assets/animations/shoes-colorOneSize.json")}
               progress={animationProgress.current}
+              style={styles.lottieView}
             />
           )}
 
@@ -141,4 +142,15 @@ const styles = StyleSheet.create({
     buttonContainer: {
       paddingTop: 20,
     },
+    lottie: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: "center",
+      alignItems: "center",
+      width: 300,
+      height: 300,
+  }  
   });

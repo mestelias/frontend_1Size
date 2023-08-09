@@ -1,64 +1,84 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { recommendSize } from "../modules/recommendSize";
+import LottieView from "lottie-react-native";
+import { Animated, Easing } from "react-native";
+
+
+const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
+
+
 
 const url = process.env.EXPO_PUBLIC_IP;
 
 export default function RecommendationScreen({ navigation, route }) {
   // L'état qui va stocker la taille idéale recommandée par l'algo
   const [recoTaille, setRecoTaille] = useState(null);
-  
+
+  const [showAnimation, setShowAnimation] = useState(true);
+  const animationDuration = 5000; // Adaptez cette valeur à la durée réelle de votre animation (en ms).
+  const animationProgress = useRef(new Animated.Value(0));
+
+  console.log('show animation', showAnimation)
 
   // Récupération du token stocké dans le reducer
   const userToken = useSelector((state) => state.user.value.token);
   const userSexe = useSelector((state) => state.user.value.genre).toLowerCase();
 
-
-  // // Récupération des props de l'écran type/coupe
+  // A AFFICHER QUAND PAGE MARQUE OK Récupération des props de l'écran type/coupe
   // const { categorie, marque, type, coupe } = route.params;
 
   // let desiredFit = coupe;
 
-    console.log('sexe', userSexe)
-    console.log('token', userToken)
-    console.log('recoTailleNull', recoTaille)
+  console.log("sexe", userSexe);
+  console.log("token", userToken);
+  console.log("recoTailleNull", recoTaille);
 
-    // A SUPPRIMER valeurs test
-    const categorie = 'haut'
-    const marque = 'Lacoste'
-    const type = 'Polo'
-    const coupe = 'normale'
+  // A SUPPRIMER valeurs test
+  const categorie = "haut";
+  const marque = "Lacoste";
+  const type = "Polo";
+  const coupe = "normale";
 
   //TO DO : use effect d'initialistation qui va permettre à l'algo de calculer la reco de taille idéale
   useEffect(() => {
-    //On récupère les mensurations de l'utilisateur
-    fetch(
-      `${url}/users/mensurations/?token=${userToken}&categorie=${categorie}`
-    )
-      .then((response) => response.json())
-      .then((userMensurations) => {
-        console.log(userMensurations);
+    const fetchData = async () => {
 
-        //On récupère toutes les tailles et leurs mensurations du type de vêtement selon la marque, le sexe et le type
-        fetch(
-          `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}`
-        )
-          .then((response) => response.json())
-          .then((sizes) => {
-            console.log('size',sizes);
-            // On appelle la fonction qui calcule la taille idéale
-            recommendSize(userMensurations, sizes, coupe);
-            console.log('fonction')
-            const bestFit = recommendSize(userMensurations, sizes, coupe)
-            // On met à jour la valeur retournée dans un état
-            setRecoTaille(bestFit[0]);
+        // Démarrage de l'animation
+        await new Promise(resolve => setTimeout(resolve, animationDuration));
 
-          });
-      });
+        // Cacher l'animation
+        setShowAnimation(false);
+
+
+      // Récupération des mensurations de l'utilisateur
+      const responseForUserMensurations = await fetch(
+        `${url}/users/mensurations/?token=${userToken}&categorie=${categorie}`
+      );
+      const userMensurations = await responseForUserMensurations.json();
+      console.log("Mensurations: ", userMensurations);
+
+      // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la marque, le sexe et le type
+      const responseForSizes = await fetch(
+        `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}`
+      );
+      const sizes = await responseForSizes.json();
+      console.log("Tailles: ", sizes);
+
+      // Appel de la fonction qui calcule la taille idéale
+      const bestFit = recommendSize(userMensurations, sizes, coupe);
+      console.log("Taille recommandée: ", bestFit[0]);
+
+      // Sauvegarde de la valeur retournée dans un état
+      setRecoTaille(bestFit[0]);
+    };
+
+    fetchData();
+
   }, []);
 
   const handleSubmit = () => {
@@ -76,7 +96,8 @@ export default function RecommendationScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((vetement) => {
-        console.log(vetement);
+        console.log("vêtement: ", vetement);
+        // Navigation vers la page de ses vêtements
         navigation.navigate("ClothesScreen");
       });
   };
@@ -102,9 +123,23 @@ export default function RecommendationScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.H3}>Notre reco OneSize</Text>
         <View style={styles.circleContainer}>
+        {showAnimation && (
+            <AnimatedLottieView
+                source={require("../assets/animations/shoes-colorOneSize.json")}
+                autoPlay
+                loop={false}
+                style={styles.lottie}
+
+            />
+        )}
+
+        {recoTaille && (
           <View style={styles.circle}>
+
             <Text style={styles.circleText}>{recoTaille}</Text>
-          </View>
+            </View>
+
+            )}
         </View>
         <TouchableOpacity
           onPress={() => handleSubmit()}
@@ -168,6 +203,9 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: "center",
+    justifyContent: "center",
+    width: '100%',
+
   },
   circle: {
     justifyContent: "center",
@@ -208,4 +246,11 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-around",
   },
+  lottie: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 300,
+    height: 300,
+    // height: 100,
+  }
 });
