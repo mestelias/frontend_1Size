@@ -379,36 +379,67 @@ export default function FriendsScreen({ navigation }) {
           >
             <TouchableWithoutFeedback>
               <View style={styles.modalView}>
-                <View>
-                <Text style={styles.H1}>{friendSelected.username}</Text>
-                <Image
-                  source={require("../assets/messi.jpg")}
-                  style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: 75,
-                    marginRight: 20,
-                  
-                  }}
-                />
-                </View>
-                <View>
-                <Text style={styles.h3}>Ses vêtements</Text>
-                <View style={styles.orangeLine}></View>
-                </View>
-
-
-                <View>
+                <View style={styles.modalViewProfil}>
+                  <Image
+                    source={{ uri: friendSelected.image }}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 75,
+                      borderColor: "#d95b33",
+                      borderWidth: 2,
+                    }}
+                  />
+                  <Text style={styles.H1}>{friendSelected.username}</Text>
 
                 </View>
-                <TouchableOpacity
-                  onPress={() => handleDeleteFriend(friendSelected._id)}
-                  style={styles.button2}
-                >
-                  <Text style={styles.textButton2}>
-                    retirer de ma liste d'ami
-                  </Text>
-                </TouchableOpacity>
+
+                <View style={styles.vetementsContainer}>
+                  <Text style={styles.h3}>Ses vêtements</Text>
+                  <View style={styles.border}></View>
+                  <ScrollView
+                    style={{
+                      width: "100%",
+                      paddingTop: 15,
+                    }}
+                    showsVerticalScrollIndicator={false}
+                  >
+                    {friendProfile &&
+                      Object.keys(friendSelected.vetements).map((category) => (
+                        <View key={category} style={styles.vetementsInput}>
+                          <Text style={styles.h3}>{category}</Text>
+                          {friendSelected.vetements[category].map(
+                            (vetement, index) => (
+                              <View key={index} style={styles.categorieList}>
+                                <Text style={styles.vetements}>
+                                  {vetement.marque}
+                                </Text>
+                                <Text style={styles.vetements}>
+                                  {vetement.type}
+                                </Text>
+                                <Text style={styles.vetements}>
+                                  {vetement.coupe}
+                                </Text>
+                                <Text style={styles.vetements}>
+                                  {vetement.taille}
+                                </Text>
+                                {/* Si vous avez une image pour chaque vêtement, vous pouvez également l'afficher ici */}
+                                {/* <Image source={{ uri: vetement.image }} style={styles.vetementImage} /> */}
+                              </View>
+                            )
+                          )}
+                        </View>
+                      ))}
+                    <TouchableOpacity
+                      onPress={() => handleDeleteFriend(friendSelected._id)}
+                      style={styles.button2}
+                    >
+                      <Text style={styles.textButton2}>
+                        retirer de ma liste d'ami
+                      </Text>
+                    </TouchableOpacity>
+                  </ScrollView>
+                </View>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -509,6 +540,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  modalViewProfil :{
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+    alignItems: "center"
+  },
   h3: {
     color: "#000000",
     fontSize: 20,
@@ -543,5 +580,25 @@ const styles = StyleSheet.create({
     height: 30,
     fontWeight: "600",
     fontSize: 16,
+  },
+  vetementsContainer: {
+    flex: 1,
+    alignItems: "center",
+    width: "100%",
+    marginTop: 20,
+  },
+  categorieList: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  vetements: {
+    fontFamily: "Outfit",
+  },
+  vetementsInput: {
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
   },
 });
