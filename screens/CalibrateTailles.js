@@ -250,7 +250,6 @@ export default function CalibrateTailles({ navigation, categorie }) {
           .then((response) => response.json())
           .then((data) => {
             if (data.result) {
-              Alert.alert('Suppression réussie', 'Le vêtement a été supprimé avec succès.');
             } else {
               Alert.alert('Erreur', data.error);
             }

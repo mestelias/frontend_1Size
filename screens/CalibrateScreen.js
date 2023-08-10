@@ -14,65 +14,81 @@ import { useState } from "react";
 import CalibrateTailles from "./CalibrateTailles";
 import CalibrateMensurations from "./CalibrateMensurations"
 
+
+// Lors de la navigation de CalibrateHomeScreen à ici, on envoie en props la categorie haut/bas/chaussure
+// qu'on récupère ici avec "route" en plus de navigation
 export default function CalibrateScreen({ navigation, route }) {
-  const { categorie } = route.params;
+
+  // destructuraction des props, pour récupérer la valeur de la categorie envoyée depuis CalibrateHomeScreen
+  const { categorie } = route.params
+  console.log(navigation)
+
+  // État pour gérer l'onglet actif
   const [index, setIndex] = useState(0);
+
+
+  // Définir les routes pour les onglets
   const [routes] = useState([
     { key: "first", title: "Tailles" },
     { key: "second", title: "Mensurations" },
   ]);
 
+    // Fonction pour rendre les scènes des onglets
   const renderScene = SceneMap({
+    // Envoie ici aussi des props navigation & categorie, qu'on récupère dans premier & secondroute
     first: () => <CalibrateTailles navigation={navigation} categorie={categorie} />,
-    second: () => <CalibrateMensurations navigation={navigation} categorie={categorie} />,
+    second: () => <CalibrateMensurations navigation={navigation} categorie={categorie} />, 
   });
 
+  // Obtenir la largeur initiale de l'écran
   const initialLayout = { width: Dimensions.get("window").width };
 
   return (
-    <SafeAreaView style={styles.background}>
-      <View style={styles.header}>
+    <View style={styles.background}>
+      <SafeAreaView style={styles.header}>
         <View style={styles.burgerIcon}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Calibrage")}>
             <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>  
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.H1}>Calibrage {categorie}</Text>
           <View style={styles.border}></View>
         </View>
-      </View>
+      </SafeAreaView>
+      {/* Onglets */}
       <View style={styles.container}>
-        <TabView
-          navigationState={{ index, routes }}
-          renderTabBar={(props) => (
-            <TabBar
-              {...props}
-              renderLabel={({ route, color }) => (
-                <Text style={{ color: "#FFFF", margin: 8, fontFamily: 'Outfit', fontSize: 15 }}>{route.title}</Text>
-              )}
-              style={{ backgroundColor: "#d6d1bd", width: '100%', margin: 5, borderRadius: 20 }} // Rounded edges for the TabBar
-              indicatorStyle={{
-                backgroundColor: '#d95b33',
-                height: '80%',
-                marginBottom: 5,
-                marginHorizontal: 5,
-                width: '47%',
-                opacity: 0.8,
-                borderRadius: 10, // Rounded edges for the tab indicator
-              }}
-            />
-          )}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={initialLayout}
-          style={styles.tabView}
-        />
+      <TabView
+        navigationState={{ index, routes }}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            renderLabel={({ route, color }) => (
+              <Text style={{ color: "#FFFF", margin: 8, fontFamily: 'Outfit', fontSize: 15}}>{route.title}</Text>
+            )}
+            style={{ backgroundColor: "#d6d1bd", width:'100%', margin:5 }}
+            indicatorStyle={{
+            backgroundColor: '#d95b33',
+            height: '80%',
+            marginBottom : 5,
+            marginHorizontal : 5,
+            width: '47%',
+            opacity: 0.8,
+            borderRadius: 10,
+            // marginLeft : -8,
+            }}
+          />
+        )}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={initialLayout}
+        style={styles.tabView}
+      />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -80,14 +96,14 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: "#FCFAF1",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    borderRadius: 20,
-    backgroundColor: '#FCFAF1"', 
+    alignItems: 'center', 
+    width: '100%'
   },
   titleContainer: {
     alignItems: "center",
