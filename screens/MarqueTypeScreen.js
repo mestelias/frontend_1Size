@@ -108,7 +108,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
         <Text style={styles.retour}>Retour</Text>
       </SafeAreaView>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Types</Text>
+        <Text style={styles.H1}>Choisissez le type de votre {categorie} :</Text>
         <View style={styles.border}></View>
       <View style={styles.container}>
       {types}

@@ -24,6 +24,7 @@ const url = process.env.EXPO_PUBLIC_IP
 
 export default function MarqueScreen({ navigation, route }) {
   const categorie = route.params.categorie
+  const capCategorie = categorie.charAt(0).toUpperCase() + categorie.slice(1);
   const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
   const sexe = useSelector((state)=>state.user.value.genre)
   const sexeLC = sexe && sexe.toLowerCase()
@@ -53,7 +54,8 @@ export default function MarqueScreen({ navigation, route }) {
         </TouchableOpacity> */}
         <Text style={styles.retour}>Retour</Text> 
       </View>
-      <Text style={styles.H1}>{categorie}</Text>
+      <Text style={styles.H1}>Choisissez la marque de votre {categorie} :</Text>
+      <View style={styles.border}></View>
       {/* <View style={styles.inputContainer}>
         <TextInput
           placeholder="Barre de recherche"
@@ -74,6 +76,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  border: {
+    width: '25%',
+    paddingHorizontal: 35, 
+    borderBottomWidth:3,
+    borderBottomColor: '#d95b33', 
+    borderRadius: 50,
   },
   photo: {
     margin: 10,
@@ -104,7 +113,7 @@ const styles = StyleSheet.create({
   H1: {
     textAlign: 'center',
     fontFamily: 'Outfit',
-    fontSize: 50,
+    fontSize: 35,
   },
   inputContainer: {
     width: '80%',
