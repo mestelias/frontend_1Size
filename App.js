@@ -128,7 +128,7 @@ const CustomDrawer = (props) => {
       })}
       <TouchableOpacity onPress={() => handleSignOut()} style={styles.signOutView}>
         <FontAwesome name='sign-out' color={"#d95b33"} size={30}/>
-        <Text style={styles.signOutText}>Sign Out</Text>
+        <Text style={styles.signOutText}>Deconnexion</Text>
       </TouchableOpacity>
     </DrawerContentScrollView>
   );
