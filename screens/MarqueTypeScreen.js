@@ -22,7 +22,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
     const [typesDispo, setTypesDispo] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [type, setType] = useState('')
-    const [coupe, setCoupe] = useState("Normale")
+    const [coupe, setCoupe] = useState("Regular")
 
     const handlePressType = (typePressed) => {
       setType(typePressed)
@@ -62,12 +62,12 @@ export default function MarqueTypeScreen({ navigation, route }) {
                     source={require('../assets/vetements/teeshirt.jpeg')}
                     style={styles.image}
                   />
-                  <Text style={styles.textType}>Choisis ta coupe</Text>
+                  <Text style={styles.textType}>Quelle coupe ?</Text>
                   <View style={styles.buttonChoiceView}>
                     <TouchableOpacity style={coupe === 'Slim' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Slim')}}>
                       <Text style={coupe === 'Slim' ? styles.textButton : styles.text2Button}>Slim</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={coupe === 'Normale' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Normale')}}>
+                    <TouchableOpacity style={coupe === 'Regular' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Regular')}}>
                       <Text style={coupe === 'Normale' ? styles.textButton : styles.text2Button}>Regular</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={coupe === 'Ample' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Ample')}}>
@@ -108,7 +108,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
         <Text style={styles.retour}>Retour</Text>
       </SafeAreaView>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Types</Text>
+        <Text style={styles.H1}>Choisis le type de ton {categorie} :</Text>
         <View style={styles.border}></View>
       <View style={styles.container}>
       {types}
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
       marginTop: 30,
     },
     border: {
+
       paddingHorizontal: 35, 
       borderBottomWidth:3,
       borderBottomColor: '#d95b33', 

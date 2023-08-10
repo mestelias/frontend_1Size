@@ -53,7 +53,9 @@ export default function MarqueScreen({ navigation, route }) {
         </TouchableOpacity> */}
         <Text style={styles.retour}>Retour</Text> 
       </View>
-      <Text style={styles.H1}>{categorie}</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.H1}>Choisis la marque de ton {categorie} :</Text>
+        <View style={styles.border}></View>
       {/* <View style={styles.inputContainer}>
         <TextInput
           placeholder="Barre de recherche"
@@ -65,6 +67,7 @@ export default function MarqueScreen({ navigation, route }) {
       <ScrollView contentContainerStyle={styles.imageContainer}>
         {images}
       </ScrollView>
+      </View>
     </View>
   );
 }
@@ -80,6 +83,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 110,
     height: 110
+  },
+  titleContainer: {
+    alignItems: "center",
+    backgroundColor: "#fcfaf1",
+    marginTop: 30,
+  },
+  border: {
+    paddingHorizontal: 35, 
+    borderBottomWidth:3,
+    borderBottomColor: '#d95b33', 
+    borderRadius: 50,
   },
   container: {
     flex: 1,
@@ -102,9 +116,9 @@ const styles = StyleSheet.create({
     paddingTop: 15
   },
   H1: {
-    textAlign: 'center',
-    fontFamily: 'Outfit',
-    fontSize: 50,
+    fontSize: 24,
+    fontWeight: "600",
+    marginBottom: 20,
   },
   inputContainer: {
     width: '80%',
