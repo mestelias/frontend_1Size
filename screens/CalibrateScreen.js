@@ -48,7 +48,7 @@ export default function CalibrateScreen({ navigation, route }) {
           <FontAwesome name={"bars"} size={40} color={"#25958A"} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Calibrage")} style={styles.retourButton}>
-          <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
+          <Text style={{ fontWeight: 'bold', color: '#D95B33', fontSize: 20 }}>Retour</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.titleContainer}>
