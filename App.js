@@ -95,7 +95,7 @@ const CustomDrawer = (props) => {
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerHeader}>
         <View style={styles.profilView}>
-          <Image source={image ? { uri: image } : require('./assets/Nelson.jpg')} style={styles.profilpic} />
+          <Image source={image ? { uri: image } : require('./assets/Profildefault.jpg')} style={styles.profilpic} />
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
             <FontAwesome name='times' size={30} color='#25958A' />
           </TouchableOpacity>

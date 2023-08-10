@@ -213,10 +213,10 @@ export default function ProfileScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       {/* Modal de sauvegarde des données profil */}
-      <Modal visible={saveModalVisible} animationType="slide" transparent={true}>
+      <Modal visible={saveModalVisible} animationType="fade" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Voulez-vous vraiment sauvegarder ces données ?</Text>
+            <Text style={styles.modalText}>Souhaites-tu vraiment mettre à jour tes données ?</Text>
             <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleSaveButton}>
               <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, sauvegarder</Text>
             </TouchableOpacity>
@@ -228,7 +228,7 @@ export default function ProfileScreen() {
       </Modal>
       {/* Modal de choix entre photo et galerie */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={picModalVisible}>
         <TouchableWithoutFeedback onPress={() => setPicModalVisible(false)}> 

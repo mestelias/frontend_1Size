@@ -92,7 +92,7 @@ const forceCalibrate = () => {
                     style={styles.image}
                   />
                   <Text style={styles.h3}>
-                    Attention ! Vous avez déjà effectué votre calibrage. Souhaitez-vous quand même continuer?
+                    Attention ! Tu as déjà effectué ton calibrage. Souhaites-tu quand même continuer?
                   </Text>
                   <TouchableOpacity 
                   style={styles.button} 
@@ -135,8 +135,7 @@ const forceCalibrate = () => {
           </View>
           <View style={styles.paragraphe}>
             <Text style={styles.text}>
-              Vous devez calibrer au minimum un vêtement parmi la liste suivante
-              :
+              Calibre au minimum un vêtement parmi les types suivants
             </Text>
           </View>
         </View>
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 35, // Ajoute un padding horizontal de 20 pixels autour du texte
     borderBottomWidth: 3, // Ajoute une bordure sous le texte
     borderBottomColor: "#d95b33", // Couleur de la bordure sous le texte
-    borderRadius: 50,
+    borderRadius: 50
   },
   paragraphe: {
     width: "100%",

@@ -12,7 +12,6 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from "react-native";
-
 import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -131,33 +130,37 @@ export default function CalibrateMensurations ({navigation, categorie}){
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
         >
-        <Modal visible={modalVisible} animationType="fade" transparent>
-        <View style={styles.modalContainer}>
-        <TouchableWithoutFeedback style={styles.modalContainer} onPress={() => setModalVisible(false)}> 
-        <View style={styles.centeredView}>
-        <TouchableWithoutFeedback>  
-            <View style={styles.modalView}>
-            <Image
-            source={require('../assets/messi.jpg')}
-            style={styles.roundedImage}
-            />
-            <Text>Votre calibrage haut est réussi !</Text>
-            <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={()=>navigation.navigate('Calibrage')}>
-                <Text style={styles.textButton}>Calibrer le reste</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-            style={styles.button} 
-            activeOpacity={0.8}
-            onPress={navigateToHome}
-            >
-                <Text style={styles.textButton}>Rechercher un vêtement</Text>
-            </TouchableOpacity>
+         <Modal visible={modalVisible} animationType="fade" transparent={true}  onRequestClose={() => setModalDeleteVisible(false)}>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <View style={styles.gradient}>
+                  <Image source={require('../assets/gradient.png')} style={styles.gradientImage} />
+                  <Image source={require('../assets/confetti.png')} style={styles.confettiImage} />
+                </View>
+                <Text style={styles.modalText}>Calibrage {categorieLC} réussi !</Text>
+                <TouchableOpacity
+                  style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate('Calibrage')} 
+                >
+                  <Text style={styles.textButton}>
+                    Calibrer le reste
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate('Home')} 
+                >
+                  <Text style={styles.textButton}>
+                    Chercher un vêtement
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            </TouchableWithoutFeedback>  
-        </View>
-        </TouchableWithoutFeedback>
-        </View>
-        <ConfettiCannon count={200} origin={{x: -10, y: 0}} colors={['#25958A','#D95B33', '#D6D1BD']} autoStart={true} />
+          </TouchableWithoutFeedback>
+          <ConfettiCannon count={200} origin={{x: -10, y: 0}} colors={['#25958A','#D95B33', '#D6D1BD']} autoStart={true} />
         </Modal>
         <ScrollView 
             contentContainerStyle={{flexGrow: 1}}

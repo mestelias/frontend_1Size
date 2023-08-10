@@ -62,7 +62,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
                     source={require('../assets/vetements/teeshirt.jpeg')}
                     style={styles.image}
                   />
-                  <Text style={styles.textType}>Choisissez votre coupe</Text>
+                  <Text style={styles.textType}>Choisis ta coupe</Text>
                   <View style={styles.buttonChoiceView}>
                     <TouchableOpacity style={coupe === 'Slim' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Slim')}}>
                       <Text style={styles.textButton}>Slim</Text>

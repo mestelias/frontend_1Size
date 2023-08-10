@@ -16,6 +16,8 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import ConfettiCannon from 'react-native-confetti-cannon';
+
 
 const url = process.env.EXPO_PUBLIC_IP
 
@@ -93,6 +95,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
           .then((response)=>response.json())
           .then((vetements) => {
             setVetements(vetements);
+            console.log(vetements)
             setAlreadyCalculated(false)
           }); 
     
@@ -167,7 +170,6 @@ export default function CalibrateTailles({ navigation, categorie }) {
       {key:'1', value : 'Classic', disabled:false},
       {key:'2', value : 'Ample', disabled:false},
       {key:'3', value : 'Slim', disabled:false},
-      {key:'4', value : 'Skinny', disabled:false}
     ]
     
     function displayTailles(type) {
@@ -270,7 +272,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
         <ScrollView keyboardShouldPersistTaps="always">
           <View style={styles.premierRoute}>
             <View style={{marginTop: 20}}>
-            {vetements.length >= 3 ? (<Text st>Veuillez confirmer vos vêtements</Text>) : (
+            {vetements.length >= 3 ? (<Text st>Merci de confirmer tes vêtements</Text>) : (
             <Text>Vêtement {vetements.length+1}/3</Text>
             )}
             </View>
@@ -340,7 +342,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                     {vetements.length >= 3 ? 'Confirmer' : 'Suivant'}
                   </Text>
                 </TouchableOpacity>
-                <Modal visible={modalCongratsVisible} animationType="slide" transparent={true}  onRequestClose={() => setModalDeleteVisible(false)}>
+                <Modal visible={modalCongratsVisible} animationType="fade" transparent={true}  onRequestClose={() => setModalDeleteVisible(false)}>
                   <TouchableWithoutFeedback onPress={() => setModalCongratsVisible(false)}>
                     <View style={styles.modalContainer}>
                       <View style={styles.modalContent}>
@@ -370,21 +372,33 @@ export default function CalibrateTailles({ navigation, categorie }) {
                       </View>
                     </View>
                   </TouchableWithoutFeedback>
+                  <ConfettiCannon count={200} origin={{x: -10, y: 0}} colors={['#25958A','#D95B33', '#D6D1BD']} autoStart={true} />
                 </Modal>
               </View>
               {vetements.map((vetement) => (
-                <View key={vetement._id}>
-                  <Text>{vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}</Text>
-                  <TouchableOpacity onPress={() => handleDeleteConfirmation(vetement._id)}>
-                    <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
-                  </TouchableOpacity>
+                <View style={styles.centeredContainer} key={vetement._id}>
+                  <View style={styles.clothingItem}>
+                    {/* Affichage des informations du vêtement */}
+                    <View style={styles.textContainer}>
+                      <Text style={{ ...styles.textButton, color: 'black' }}>
+                        {vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}
+                      </Text>
+                    </View>
+                    <View style={styles.iconContainer}>
+                      <TouchableOpacity
+                        onPress={() => handleDeleteConfirmation(vetement._id)}
+                      >
+                        <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
               ))}
-              <Modal visible={modalDeleteVisible} animationType="slide" transparent={true} onRequestClose={() => setModalDeleteVisible(false)}>
+              <Modal visible={modalDeleteVisible} animationType="fade" transparent={true} onRequestClose={() => setModalDeleteVisible(false)}>
                 <TouchableWithoutFeedback onPress={() => setModalDeleteVisible(false)}>
                   <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                      <Text style={styles.modalText}>Voulez-vous vraiment supprimer ce vêtement ?</Text>
+                      <Text style={styles.modalText}>Souhaites-tu vraiment supprimer ce vêtement ?</Text>
                       <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleDelete}>
                         <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, supprimer</Text>
                       </TouchableOpacity>
@@ -503,5 +517,30 @@ const styles = StyleSheet.create({
       position: 'absolute',
       width: '100%',
       height: '100%',
+    },
+    textButton: {
+      color: "#ffffff",
+      fontFamily: "Outfit",
+      height: 25,
+      fontWeight: "600",
+      fontSize: 14,
+    },
+    centeredContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 10, // Increase spacing between items
+    },
+    clothingItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between', // Align text and icon with space in between
+      paddingHorizontal: 20, // Add horizontal padding for spacing
+    },
+    textContainer: {
+      flex: 1
+    },
+    iconContainer: {
+      marginRight : 30,
     },
 })
