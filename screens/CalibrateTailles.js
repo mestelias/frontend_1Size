@@ -166,11 +166,14 @@ export default function CalibrateTailles({ navigation, categorie }) {
       return {key:i, value:types, disabled:false}
     })
     
-    const coupes = [
-      {key:'1', value : 'Classic', disabled:false},
-      {key:'2', value : 'Ample', disabled:false},
-      {key:'3', value : 'Slim', disabled:false},
-    ]
+    const coupes = (categorieLC === 'haut') ? [
+      {key:'1', value : 'Regular', disabled:false},
+      {key:'2', value : 'Slim', disabled:false},
+      {key:'3', value : 'Ample', disabled:false},
+    ] : [
+      {key:'1', value : 'Regular', disabled:false},
+      {key:'2', value : 'Slim', disabled:false},
+    ]  
     
     function displayTailles(type) {
       fetch(`${url}/marques/tailles?marque=${marque}&type=${type}&sexe=${sexeLC}&categorie=${categorieLC}`)
@@ -301,6 +304,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                     save="value"
                     placeholder="Type"
                 />
+                { !(categorie === "chaussures") && 
                 <SelectList 
                     boxStyles={styles.box}
                     inputStyles={styles.input}
@@ -312,6 +316,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                     save="value"
                     placeholder="Coupe"
                 />
+                }
                 <SelectList 
                     boxStyles={styles.box}
                     inputStyles={styles.input}
