@@ -46,19 +46,19 @@ export default function CalibrateScreen({ navigation, route }) {
   return (
     <View style={styles.background}>
       <SafeAreaView style={styles.header}>
-        <View style={styles.burgerIcon}>
+      <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Calibrage")}>
-            <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
-          </TouchableOpacity>  
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.H1}>Calibrage {categorie}</Text>
-          <View style={styles.border}></View>
+          <TouchableOpacity onPress={() => navigation.navigate('HomeStack')}>
+            <Text style={{ fontWeight: 'bold', color: '#D95B33', fontSize: 20 }}>Retour</Text>
+          </TouchableOpacity>       
         </View>
       </SafeAreaView>
+      <View style={styles.titleContainer}>
+        <Text style={styles.H1}>Calibrage {categorie}</Text>
+        <View style={styles.border}></View>
+      </View>
       {/* Onglets */}
       <View style={styles.container}>
       <TabView
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
     backgroundColor: "#fcfaf1",
-    marginTop: 30,
+    // marginTop: 0,
   },
   border: {
     paddingHorizontal: 35, 
@@ -124,13 +124,18 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   header: {
-    justifyContent: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     width: "100%",
+    padding: 20,
+    paddingLeft: 15,
+    paddingTop: 8,
   },
   H1: {
     fontSize: 24,
     fontWeight: "600",
-    marginBottom: 20,
+    marginBottom: 30,
   },
   tabView: {
     flex: 1,
