@@ -111,12 +111,9 @@ export default function RecommendationScreen({ navigation, route }) {
   return (
     <View style={styles.background}>
       <SafeAreaView style={styles.header}>
-        {/* <View style={styles.burgerIcon}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-          </TouchableOpacity>
-        </View> */}
+      <TouchableOpacity onPress={() => navigation.goBack()}>
         <Text style={styles.retour}>Retour</Text>
+      </TouchableOpacity>
       </SafeAreaView>
       <View style={styles.titleContainer}>
         <Text style={styles.H1}>One Size</Text>
