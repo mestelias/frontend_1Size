@@ -55,7 +55,7 @@ export default function MarqueScreen({ navigation, route }) {
         <Text style={styles.retour}>Retour</Text> 
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Choisis la marque de ton {categorie} :</Text>
+        <Text style={styles.H1}>Choisis la marque de ton {categorie}</Text>
         <View style={styles.border}></View>
       {/* <View style={styles.inputContainer}>
         <TextInput
