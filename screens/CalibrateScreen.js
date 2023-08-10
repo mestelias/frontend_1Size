@@ -87,9 +87,11 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingTop: 15,
     alignItems: "center",
+    width: "100%",
+    padding: 20,
+    paddingLeft: 15,
+    paddingTop: 8,
   },
   burgerIcon: {},
   retourButton: {
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
     backgroundColor: "#fcfaf1",
-    marginTop: 30,
+    // marginTop: 0,
   },
   border: {
     paddingHorizontal: 35, 
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
   H1: {
     fontSize: 24,
     fontWeight: "600",
-    marginBottom: 20,
+    marginBottom: 30,
   },
   tabView: {
     flex: 1,
