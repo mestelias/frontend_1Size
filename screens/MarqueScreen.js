@@ -24,7 +24,6 @@ const url = process.env.EXPO_PUBLIC_IP
 
 export default function MarqueScreen({ navigation, route }) {
   const categorie = route.params.categorie
-  const capCategorie = categorie.charAt(0).toUpperCase() + categorie.slice(1);
   const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
   const sexe = useSelector((state)=>state.user.value.genre)
   const sexeLC = sexe && sexe.toLowerCase()
@@ -54,7 +53,9 @@ export default function MarqueScreen({ navigation, route }) {
         </TouchableOpacity> 
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Choisis la marque de ton {categorie}</Text>
+
+        <Text style={styles.H1}>Choisis la marque de {categorie === "chaussures" ? "tes" : "ton"} {categorie}</Text>
+        
         <View style={styles.border}></View>
       {/* <View style={styles.inputContainer}>
         <TextInput
