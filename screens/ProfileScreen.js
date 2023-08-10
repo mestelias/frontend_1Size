@@ -213,10 +213,10 @@ export default function ProfileScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       {/* Modal de sauvegarde des données profil */}
-      <Modal visible={saveModalVisible} animationType="slide" transparent={true}>
+      <Modal visible={saveModalVisible} animationType="fade" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.h3}>Voulez-vous sauvegarder ces données ?</Text>
+            <Text style={styles.h3}>Souhaites-tu mettre à jour tes données ?</Text>
             <TouchableOpacity style={styles.button} onPress={handleSaveButton}>
               <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, sauvegarder</Text>
             </TouchableOpacity>
@@ -228,7 +228,7 @@ export default function ProfileScreen() {
       </Modal>
       {/* Modal de choix entre photo et galerie */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={picModalVisible}>
         <TouchableWithoutFeedback onPress={() => setPicModalVisible(false)}>
@@ -274,7 +274,7 @@ export default function ProfileScreen() {
               setPicModalVisible(!picModalVisible);
             }}>
           <Image
-            source={picPreview != null ? { uri: picPreview } : require('../assets/messi.jpg')}
+            source={picPreview != null ? { uri: picPreview } : require('../assets/Profildefault.jpg')}
             style={styles.roundedImage}
           />
           <View style={styles.iconContainer}>

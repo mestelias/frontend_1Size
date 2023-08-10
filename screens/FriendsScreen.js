@@ -119,7 +119,7 @@ export default function FriendsScreen({ navigation }) {
   const handleSearch = async () => {
     // Vérifie que la requête est d'au moins 3 caractères
     if (friendSearch.length < 3) {
-      alert('Veuillez entrer au moins 3 caractères pour effectuer une recherche.');
+      alert('Entre au moins 3 caractères pour effectuer une recherche.');
       return;
   }
 

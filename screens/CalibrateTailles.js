@@ -9,11 +9,15 @@ import {
   ScrollView,
   Modal,
   Alert,
+  TouchableWithoutFeedback, 
+  Image
 } from "react-native";
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import ConfettiCannon from 'react-native-confetti-cannon';
+
 
 const url = process.env.EXPO_PUBLIC_IP
 
@@ -72,6 +76,9 @@ export default function CalibrateTailles({ navigation, categorie }) {
       return { firstValue, secondValue, thirdValue };
     };
     
+    //Etat pour gérer l'apparition de la modal de féclitations
+    const [modalCongratsVisible, setModalCongratsVisible] = useState(false);
+
     //Va chercher tous les marques de la categorie en BDD
     useEffect(()=>{
     
@@ -88,6 +95,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
           .then((response)=>response.json())
           .then((vetements) => {
             setVetements(vetements);
+            console.log(vetements)
             setAlreadyCalculated(false)
           }); 
     
@@ -162,7 +170,6 @@ export default function CalibrateTailles({ navigation, categorie }) {
       {key:'1', value : 'Classic', disabled:false},
       {key:'2', value : 'Ample', disabled:false},
       {key:'3', value : 'Slim', disabled:false},
-      {key:'4', value : 'Skinny', disabled:false}
     ]
     
     function displayTailles(type) {
@@ -177,46 +184,61 @@ export default function CalibrateTailles({ navigation, categorie }) {
       return {key:i, value:types, disabled:false}
     })
     
-    //reste à traiter l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
+    //TO DO l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
     const handleSubmit = () => { 
     //Condition d'envoi du tableau de mensuration
       if (!(marque === oldMarque)){  
         if (taille) {
-            fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexeLC}&categorie=${categorieLC}&taille=${taille}`)
-            .then((response)=>response.json())
-            .then((mensurations) => {
-              if (mensurations) {
-                fetch(`${url}/users/vetements/${categorieLC}/${userToken}`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    marque: marque,
-                    type: type,
-                    coupe: coupe,
-                    taille: taille,
-                    mensurations: mensurations,
-                    fit: true
-                  }),
-                })
-                .then((response) => response.json())
-                .then((vetement) => {
-                  console.log(vetement);
-                  (() => {
-                  setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]); // fetch les marques en bdd
-                  })();
-                  console.log("marque enregistrée");
-                  setOldMarque(marque);
-                  setCounterChanged(!counterChanged);
-                });
-              };    
-            })
+          fetch(`${url}/marques/types?marque=${marque}&sexe=${sexeLC}&categorie=${categorieLC}`)
+          .then((response)=>response.json())
+          .then((types) => {
+            console.log('types',types);
+            console.log(type)
+            if(types.includes(type)){
+              fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexeLC}&categorie=${categorieLC}&taille=${taille}`)
+              .then((response)=>response.json())
+              .then((mensurations) => {
+                if (mensurations) {
+                  fetch(`${url}/users/vetements/${categorieLC}/${userToken}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      marque: marque,
+                      type: type,
+                      coupe: coupe,
+                      taille: taille,
+                      mensurations: mensurations,
+                      fit: true
+                    }),
+                  })
+                  .then((response) => response.json())
+                  .then((vetement) => {
+                    console.log(vetement);
+                    (() => {
+                    setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]); // fetch les marques en bdd
+                    })();
+                    console.log("marque enregistrée");
+                    setOldMarque(marque);
+                    setCounterChanged(!counterChanged);
+                  });
+                };    
+              })
+            } 
+            else {
+              Alert.alert("Ce type n'est pas disponible pour cette marque")
+            }  
+          })
         }
       }
       else {
-        console.log("marque déjà utilisée")
+        Alert.alert("Marque déjà utilisée")
       }
     }
     
+    const handleFinish = () => {
+      setModalCongratsVisible(true);
+    }
+
       const handleDeleteConfirmation = (vetementId) => {
         setVetementToDelete(vetementId);
         setModalDeleteVisible(true);
@@ -230,7 +252,6 @@ export default function CalibrateTailles({ navigation, categorie }) {
           .then((response) => response.json())
           .then((data) => {
             if (data.result) {
-              Alert.alert('Suppression réussie', 'Le vêtement a été supprimé avec succès.');
             } else {
               Alert.alert('Erreur', data.error);
             }
@@ -244,15 +265,18 @@ export default function CalibrateTailles({ navigation, categorie }) {
       } 
     
       return (
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : null}
-        >
-          <ScrollView keyboardShouldPersistTaps="always">
-            <View style={styles.premierRoute}>
-            {vetements.length >= 3 ? null : (
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+      >
+        <ScrollView keyboardShouldPersistTaps="always">
+          <View style={styles.premierRoute}>
+            <View style={{marginTop: 20}}>
+            {vetements.length >= 3 ? (<Text st>Merci de confirmer tes vêtements</Text>) : (
             <Text>Vêtement {vetements.length+1}/3</Text>
             )}
+            </View>
+              {vetements.length >= 3 ? null : (
               <View style={styles.containerInput}>
               <SelectList 
                   boxStyles={styles.box}
@@ -264,7 +288,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                   data={newDataMarques} 
                   save="value"
                   placeholder="Marque"
-              />
+              /> 
               <SelectList 
                   boxStyles={styles.box}
                   inputStyles={styles.input}
@@ -298,7 +322,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                   save="value"
                   placeholder="Taille"
               />
-              </View>
+              </View>)}
               <View>
                 {/* Bouton Suivant */}
                 <TouchableOpacity
@@ -308,41 +332,86 @@ export default function CalibrateTailles({ navigation, categorie }) {
                       : styles.button
                   }
                   activeOpacity={0.8}
-                  onPress={handleSubmit}
+                  onPress={ vetements.length >= 3 ? handleFinish : handleSubmit}
                 >
                   <Text style={
                     vetements.length >= 3
                       ? { ...styles.textButton, color: '#FFFF'}
                       : styles.textButton
                   }>
-                    Suivant
+                    {vetements.length >= 3 ? 'Confirmer' : 'Suivant'}
                   </Text>
                 </TouchableOpacity>
+                <Modal visible={modalCongratsVisible} animationType="fade" transparent={true}  onRequestClose={() => setModalDeleteVisible(false)}>
+                  <TouchableWithoutFeedback onPress={() => setModalCongratsVisible(false)}>
+                    <View style={styles.modalContainer}>
+                      <View style={styles.modalContent}>
+                        <View style={styles.gradient}>
+                          <Image source={require('../assets/gradient.png')} style={styles.gradientImage} />
+                          <Image source={require('../assets/confetti.png')} style={styles.confettiImage} />
+                        </View>
+                        <Text style={styles.modalText}>Calibrage {categorieLC} réussi !</Text>
+                        <TouchableOpacity
+                          style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
+                          activeOpacity={0.8}
+                          onPress={() => navigation.navigate('Calibrage')} 
+                        >
+                          <Text style={styles.textButton}>
+                            Calibrer le reste
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
+                          activeOpacity={0.8}
+                          onPress={() => navigation.navigate('Home')} 
+                        >
+                          <Text style={styles.textButton}>
+                            Chercher un vêtement
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </TouchableWithoutFeedback>
+                  <ConfettiCannon count={200} origin={{x: -10, y: 0}} colors={['#25958A','#D95B33', '#D6D1BD']} autoStart={true} />
+                </Modal>
               </View>
               {vetements.map((vetement) => (
-                <View key={vetement._id}>
-                  <Text>{vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}</Text>
-                  <TouchableOpacity onPress={() => handleDeleteConfirmation(vetement._id)}>
-                    <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
-                  </TouchableOpacity>
-                </View>
-              ))}
-              <Modal visible={modalDeleteVisible} animationType="slide" transparent={true}>
-                <View style={styles.modalContainer}>
-                  <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>Voulez-vous vraiment supprimer ce vêtement ?</Text>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleDelete}>
-                      <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, supprimer</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setModalDeleteVisible(false)}>
-                      <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
-                    </TouchableOpacity>
+                <View style={styles.centeredContainer} key={vetement._id}>
+                  <View style={styles.clothingItem}>
+                    {/* Affichage des informations du vêtement */}
+                    <View style={styles.textContainer}>
+                      <Text style={{ ...styles.textButton, color: 'black' }}>
+                        {vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}
+                      </Text>
+                    </View>
+                    <View style={styles.iconContainer}>
+                      <TouchableOpacity
+                        onPress={() => handleDeleteConfirmation(vetement._id)}
+                      >
+                        <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
+              ))}
+              <Modal visible={modalDeleteVisible} animationType="fade" transparent={true} onRequestClose={() => setModalDeleteVisible(false)}>
+                <TouchableWithoutFeedback onPress={() => setModalDeleteVisible(false)}>
+                  <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                      <Text style={styles.modalText}>Souhaites-tu vraiment supprimer ce vêtement ?</Text>
+                      <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleDelete}>
+                        <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, supprimer</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setModalDeleteVisible(false)}>
+                        <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </TouchableWithoutFeedback>
               </Modal>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
       );
 };
 
@@ -389,9 +458,10 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
+      width: '80%', 
       backgroundColor: 'white',
       padding: 20,
       borderRadius: 10,
@@ -400,6 +470,7 @@ const styles = StyleSheet.create({
     modalText: {
       fontSize: 18,
       marginBottom: 20,
+      textAlign: 'center',
     },
     box: {
       borderColor: '#D6D1BD',
@@ -428,5 +499,48 @@ const styles = StyleSheet.create({
     dropdownText: {
         fontSize: 16,
         color: 'black'
-    }
+    },
+    confettiImage: {
+      width: 100,
+      height: 100,
+    },
+    gradient: {
+      width: 150,
+      height: 150,
+      borderRadius: 75,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+      overflow: 'hidden', 
+    },
+    gradientImage: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+    },
+    textButton: {
+      color: "#ffffff",
+      fontFamily: "Outfit",
+      height: 25,
+      fontWeight: "600",
+      fontSize: 14,
+    },
+    centeredContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 10, // Increase spacing between items
+    },
+    clothingItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between', // Align text and icon with space in between
+      paddingHorizontal: 20, // Add horizontal padding for spacing
+    },
+    textContainer: {
+      flex: 1
+    },
+    iconContainer: {
+      marginRight : 30,
+    },
 })
