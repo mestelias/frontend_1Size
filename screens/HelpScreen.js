@@ -57,13 +57,13 @@ export default function HelpScreen({ navigation }) {
       <View style={styles.container}>
 
           {/* <View style={styles.animationContainer}> */}
-          {showAnimation && (
+          {/* {showAnimation && (
             <AnimatedLottieView
               source={require("../assets/animations/shoes-colorOneSize.json")}
               progress={animationProgress.current}
               style={styles.lottieView}
             />
-          )}
+          )} */}
 
 
         <TouchableOpacity style={styles.button}
@@ -77,6 +77,10 @@ export default function HelpScreen({ navigation }) {
           <Text>Clique-ici</Text>
 
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate("Tutorial")}>
+        <Text style={styles.tutoButton}>Revoir le tutorial</Text>
+        </TouchableOpacity>  
       </View>
         
       </View>
@@ -93,10 +97,19 @@ const styles = StyleSheet.create({
       width: "100%",
       height: "100%",
     },
+
+    tutoButton: {
+      padding:10,
+      fontWeight: 'bold', 
+      color: '#25958A', 
+      borderWidth: 2,
+      borderRadius: 5,
+      borderColor:'#25958A'   
+    },
     container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      justifyContent: 'space-around',
       width: '100%'
     },
     titleContainer: {

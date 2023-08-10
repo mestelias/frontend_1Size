@@ -15,6 +15,7 @@ import {
 
 import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 const url = process.env.EXPO_PUBLIC_IP 
 
@@ -107,12 +108,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
                 setErrorMsg(data.message);
             } else {
                 setModalVisible(true);
-              // petit bloc responsable de l'animation
-                if (animationRef.current) {
-                  animationRef.current.play();
-                  setPlayAnimation(true);
-                }
-    
+
                 // On réinitialise les valeurs après validation
                 firstRef.current.value = originalFirstValue;
                 secondRef.current.value = originalSecondValue;
@@ -146,7 +142,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
             style={styles.roundedImage}
             />
             <Text>Votre calibrage haut est réussi !</Text>
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={()=>navigation.navigate('Calibrage')}>
                 <Text style={styles.textButton}>Calibrer le reste</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -161,6 +157,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
         </View>
         </TouchableWithoutFeedback>
         </View>
+        <ConfettiCannon count={200} origin={{x: -10, y: 0}} colors={['#25958A','#D95B33', '#D6D1BD']} autoStart={true} />
         </Modal>
         <ScrollView 
             contentContainerStyle={{flexGrow: 1}}

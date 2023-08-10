@@ -141,7 +141,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
           body: JSON.stringify(mensurationsConverties),
         })
           .then((response) => response.json())
-          .then((data) => { console.log(data)})
+          .then((data) => { console.log("data",data)})
     }
     
     newDataMarques = marquesDispo.map((name, i) => {
