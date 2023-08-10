@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 30,
     borderRadius: 10,
+    
   },
   register: {
     alignItems: "center",
@@ -118,11 +119,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#d95b33",
     borderRadius: 30,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "#d95b33",
   },
   textButton: {
     fontFamily: "Outfit",
-    color: "white",
-    padding: "5%",
+    color: "#ffffff",
+    padding: 25,
     fontSize: 20,
   },
   header: {

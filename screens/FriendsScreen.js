@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
+    shadowColor: "#d95b33",
   },
   modalView: {
     backgroundColor: "#FCFAF1",
