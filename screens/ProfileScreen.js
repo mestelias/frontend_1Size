@@ -373,17 +373,17 @@ export default function ProfileScreen() {
     <Camera type={type} flashMode={flashMode} ref={(ref)=>cameraRef=ref} style={styles.camera}>
       <View style={styles.cameraIconsDiv}>
       <TouchableOpacity onPress={() => setType(type === CameraType.back ? CameraType.front : CameraType.back)} style={styles.cameraButton}>
-        <Ionicons name="refresh-outline" size={32} color="#D95B33"/>
+        <Ionicons name="refresh-outline" size={32} color="white"/>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off)} style={styles.cameraButton}>
-        <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? '#D95B33' : '#e8be4b'}/>
+        <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? 'white' : '#e8be4b'}/>
       </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.cameraSnap} onPress={() => cameraRef && takePicture()}>
-        <Ionicons name="scan-circle-outline" size={95} color="#D95B33"/>
+        <Ionicons name="ellipse-outline" size={95} color="white"/>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {setCameraVisible(false)}} >
-        <Ionicons name="return-up-back" size={32} color="#D95B33"/>
+      <TouchableOpacity style={styles.upback} onPress={() => {setCameraVisible(false)}} >
+        <Ionicons name="return-up-back" size={32} color="white"/>
       </TouchableOpacity>
     </Camera>
   )
@@ -627,4 +627,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
+  upback: {
+    paddingLeft: 30,
+    paddingBottom: 40
+  }
 });
