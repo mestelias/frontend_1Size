@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     marginRight: 10, // Adjusted marginRight
     marginTop: 5,
     marginBottom: 5,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   indicator: {
     backgroundColor: '#d95b33',
