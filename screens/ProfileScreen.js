@@ -265,7 +265,7 @@ export default function ProfileScreen() {
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('HomeStack')}>
-            <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
+            <Text style={{ fontWeight: 'bold', color: '#D95B33', fontSize: 20 }}>Retour</Text>
           </TouchableOpacity>       
         </View>
         <View style={styles.profilAvatar}>
@@ -379,17 +379,17 @@ export default function ProfileScreen() {
     <Camera type={type} flashMode={flashMode} ref={(ref)=>cameraRef=ref} style={styles.camera}>
       <View style={styles.cameraIconsDiv}>
       <TouchableOpacity onPress={() => setType(type === CameraType.back ? CameraType.front : CameraType.back)} style={styles.cameraButton}>
-        <Ionicons name="refresh-outline" size={32} color="#D95B33"/>
+        <Ionicons name="refresh-outline" size={32} color="white"/>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off)} style={styles.cameraButton}>
-        <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? '#D95B33' : '#e8be4b'}/>
+        <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? 'white' : '#e8be4b'}/>
       </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.cameraSnap} onPress={() => cameraRef && takePicture()}>
-        <Ionicons name="scan-circle-outline" size={95} color="#D95B33"/>
+        <Ionicons name="ellipse-outline" size={95} color="white"/>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {setCameraVisible(false)}} >
-        <Ionicons name="return-up-back" size={32} color="#D95B33"/>
+      <TouchableOpacity style={styles.upback} onPress={() => {setCameraVisible(false)}} >
+        <Ionicons name="return-up-back" size={32} color="white"/>
       </TouchableOpacity>
     </Camera>
   )
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "80%",
-    backgroundColor: 'white',
+    backgroundColor: '#fcfaf1',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
@@ -469,6 +469,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     padding: 20,
+    paddingLeft: 10,
+    paddingTop: 15,
   },
   profilAvatar: {
     width: "100%",
@@ -663,4 +665,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
+  upback: {
+    paddingLeft: 30,
+    paddingBottom: 40
+  }
 });
