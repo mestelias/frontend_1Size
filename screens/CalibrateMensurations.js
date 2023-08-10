@@ -121,13 +121,13 @@ export default function CalibrateMensurations ({navigation, categorie}){
     
     // La fonction permet de fermer la modal et rediriger l'utilisateur vers la Home
     navigateToHome = () => {
-      navigation.navigate('Home'),
-      setModalVisible(false)
+      setModalVisible(false),
+      navigation.navigate('Home')
     }
 
     navigateToCalibrage = () => {
-      navigation.navigate('Calibrage'),
-      setModalVisible(false)
+      setModalVisible(false),
+      navigation.navigate('Calibrage')
   }
 
     return (
