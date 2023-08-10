@@ -377,6 +377,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#d95b33',
     borderRadius: 30,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "#d95b33",
   },
   google: {
     alignItems: 'center',
@@ -385,6 +392,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'white',
     borderRadius: 30,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "#838b8c",
   },
   textButton: {
     fontFamily: 'Outfit',

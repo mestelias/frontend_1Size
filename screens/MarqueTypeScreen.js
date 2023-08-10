@@ -96,7 +96,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
         </View>
       </Modal>
       <SafeAreaView style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity style={{marginRight:8, paddingBottom:10}} onPress={() => navigation.goBack()}>
         <Text style={styles.retour}>Retour</Text>
       </TouchableOpacity>
       </SafeAreaView>
@@ -165,13 +165,15 @@ const styles = StyleSheet.create({
       alignItems: "center",
       width: "100%",
       padding: 20,
+      paddingTop:13,
+
       // marginTop: 40
     },
     retour: {
       fontWeight: 'bold', 
       color: '#D95B33',
       fontSize: 20,
-      paddingTop: 10
+      paddingTop: 10,
     },
     H1: {
       fontSize: 24,
