@@ -266,7 +266,7 @@ const handleDeleteEnAttente = () => {
           <Text style={styles.h3}>Mes vêtements</Text>
           <View style={styles.orangeLine}></View>
         </View>
-        <ScrollView>
+        <View>
           {vetements.map((vetement) => (
             <View style={styles.centeredContainer} key={vetement._id}>
               <View style={styles.clothingItem}>
@@ -284,7 +284,7 @@ const handleDeleteEnAttente = () => {
               </View>
             </View>
           ))}
-        </ScrollView>
+        </View>
       </View>
       
       {/* Modale de confirmation pour supprimer un vêtement */}

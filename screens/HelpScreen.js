@@ -1,28 +1,19 @@
 import * as React from "react";
 import { useRef, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Button
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Button } from "react-native";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { Animated, Easing } from "react-native";
 
-
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
-
 
 // source={require("../assets/animations/animation_ll2dyvvk.json")}
 export default function HelpScreen({ navigation }) {
-
   const [showAnimation, setShowAnimation] = useState(true);
 
-  const [restartAnim, setRestartAnim] = useState(false)
+  const [restartAnim, setRestartAnim] = useState(false);
   // const animation = useRef(null);
   const animationProgress = useRef(new Animated.Value(0));
 
@@ -33,61 +24,57 @@ export default function HelpScreen({ navigation }) {
       easing: Easing.linear,
       useNativeDriver: false,
     }).start(() => {
-        // La fonction de callback sera exécutée une fois l'animation terminée
-        setShowAnimation(false);
+      // La fonction de callback sera exécutée une fois l'animation terminée
+      setShowAnimation(false);
     });
-}, [restartAnim]);
+  }, [restartAnim]);
 
-
-  console.log(restartAnim)
-  console.log('show', showAnimation)
+  console.log(restartAnim);
+  console.log("show", showAnimation);
 
   return (
     <View style={styles.background}>
       <SafeAreaView style={styles.header}>
         <View style={styles.burgerIcon}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
       <View style={styles.titleContainer}>
         <Text style={styles.H1}>Besoin d'aide ?</Text>
         <View style={styles.border}></View>
-      <View style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.animationContainer}>
+            {showAnimation && (
+              <AnimatedLottieView
+                source={require("../assets/animations/pants.json")}
+                progress={animationProgress.current}
+                style={styles.lottie}
+              />
+            )}
 
-          {/* <View style={styles.animationContainer}> */}
-          {/* {showAnimation && (
-            <AnimatedLottieView
-              source={require("../assets/animations/shoes-colorOneSize.json")}
-              progress={animationProgress.current}
-              style={styles.lottieView}
-            />
-          )} */}
+            {/* <TouchableOpacity
+              style={styles.button}
+              title="Restart Animation"
+              onPress={() => {
+                animationProgress.current.setValue(0); // Réinitialisez la progression de l'animation.
+                setShowAnimation(true); // Affichez l'animation.
+                setRestartAnim((prev) => !prev); // Changez l'état pour déclencher le useEffect.
+              }}
+            >
+              <Text style={styles.textClick}>Clique-ici</Text>
+            </TouchableOpacity> */}
 
-
-        <TouchableOpacity style={styles.button}
-          title="Restart Animation"
-          onPress={() => {
-            animationProgress.current.setValue(0);  // Réinitialisez la progression de l'animation.
-            setShowAnimation(true);                 // Affichez l'animation.
-            setRestartAnim(prev => !prev); // Changez l'état pour déclencher le useEffect.
-        }}
-          >
-          <Text style={styles.textClick}>Clique-ici</Text>
-
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Tutorial")}>
-          <Text style={styles.tutoButton}>Revoir le tutorial</Text>
-        </TouchableOpacity>  
-      </View>
-        
+            <TouchableOpacity onPress={() => navigation.navigate("Tutorial")}>
+              <Text style={styles.tutoButton}>Revoir le tutorial</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   background: {
@@ -98,12 +85,12 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   tutoButton: {
-    padding:10,
-    fontWeight: 'bold', 
-    color: '#25958A', 
+    padding: 10,
+    fontWeight: "bold",
+    color: "#25958A",
     borderWidth: 2,
     borderRadius: 5,
-    borderColor:'#25958A',
+    borderColor: "#25958A",
     shadowRadius: 4,
     shadowOffset: {
       width: 0,
@@ -113,9 +100,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    width: '100%'
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
   },
   titleContainer: {
     alignItems: "center",
@@ -123,12 +110,12 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   border: {
-    paddingHorizontal: 35, 
-    borderBottomWidth:3,
-    borderBottomColor: '#d95b33', 
+    paddingHorizontal: 35,
+    borderBottomWidth: 3,
+    borderBottomColor: "#d95b33",
     borderRadius: 50,
   },
-  burgerIcon:{
+  burgerIcon: {
     paddingLeft: 30,
     paddingTop: 15,
   },
@@ -160,15 +147,15 @@ const styles = StyleSheet.create({
   },
   animationContainer: {
     // backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   buttonContainer: {
     paddingTop: 20,
   },
   lottie: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -179,10 +166,10 @@ const styles = StyleSheet.create({
     height: 300,
   },
   textClick: {
-    padding:10,
-    fontWeight: 'bold', 
+    padding: 10,
+    fontWeight: "bold",
     color: "#ffffff",
     fontFamily: "Outfit",
     fontSize: 18,
-  }
+  },
 });

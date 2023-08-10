@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, TouchableOpacity, Text, Image} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
@@ -105,9 +105,9 @@ export default function RecommendationScreen({ navigation, route }) {
   return (
     <View style={styles.background}>
       <SafeAreaView style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.retour}>Retour</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.retour}>Retour</Text>
+        </TouchableOpacity>
       </SafeAreaView>
       <View style={styles.titleContainer}>
         <Text style={styles.H1}>One Size</Text>
@@ -119,16 +119,22 @@ export default function RecommendationScreen({ navigation, route }) {
         </View>
       </View>
       <View style={styles.container}>
-        <Text style={styles.H3}>Notre recommandation :</Text>
+        <Text style={styles.H3}>Notre recommandation </Text>
         <View style={styles.circleContainer}>
-          {/* {showAnimation && (
+          {showAnimation && (
             <AnimatedLottieView
-              source={require("../assets/animations/shoes-colorOneSize.json")}
+              source={
+                categorie === "chaussures"
+                  ? require("../assets/animations/shoes-colorOneSize.json")
+                  : categorie === "haut"
+                  ? require("../assets/animations/t-shirt-rocket.json")
+                  : require("../assets/animations/pants.json")
+              }
               autoPlay
               loop={false}
               style={styles.lottie}
             />
-          )}  */}
+          )}
 
           {recoTaille && (
             <View style={styles.circle}>
@@ -154,7 +160,7 @@ export default function RecommendationScreen({ navigation, route }) {
             }}
           />
           <Text style={styles.text}>
-            Samy, le CEO de OneSize a approuvé cette recommandation.
+            Samy, le CEO de OneSize a approuvé cette recommandation
           </Text>
         </View>
       </View>
@@ -270,11 +276,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 300,
     height: 300,
-    // height: 100,
   },
   footer: {
     flexDirection: "row",
-    padding:10,
+    alignItems: "center",
+    padding: 10,
     margin: 10,
   },
 });
