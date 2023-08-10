@@ -49,10 +49,9 @@ export default function MarqueScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-        </TouchableOpacity> */}
-        <Text style={styles.retour}>Retour</Text> 
+        <TouchableOpacity onPress={() => navigation.goBack()}>  
+          <Text style={styles.retour}>Retour</Text> 
+        </TouchableOpacity> 
       </View>
       <View style={styles.titleContainer}>
         <Text style={styles.H1}>Choisis la marque de ton {categorie}</Text>

@@ -96,12 +96,9 @@ export default function MarqueTypeScreen({ navigation, route }) {
         </View>
       </Modal>
       <SafeAreaView style={styles.header}>
-        {/* <View style={styles.burgerIcon}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-            </TouchableOpacity>
-        </View> */}
+      <TouchableOpacity onPress={() => navigation.goBack()}>
         <Text style={styles.retour}>Retour</Text>
+      </TouchableOpacity>
       </SafeAreaView>
       <View style={styles.titleContainer}>
         <Text style={styles.H1}>Choisis ton {categorie}</Text>
