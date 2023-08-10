@@ -33,7 +33,7 @@ export default function MarqueScreen({ navigation, route }) {
   const images = marquesDispo.map((data, i) => {
     return (
       <TouchableOpacity key={i} style={styles.photoContainer} onPress={()=>{navigation.navigate('MarqueTypeScreen', {name:data.name, categorie:categorie})}}>
-        <Image source={ {uri:data.url} } style={styles.photo} />
+        <Image source={ {uri:data.url} } style={styles.photo} resizeMode='contain'/>
       </TouchableOpacity>
     );
   });
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   photoContainer: {
     marginTop: 20,
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   photo: {
     margin: 10,
