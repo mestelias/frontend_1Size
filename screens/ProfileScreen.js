@@ -213,43 +213,49 @@ export default function ProfileScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       {/* Modal de sauvegarde des données profil */}
-      <Modal visible={saveModalVisible} animationType="slide" transparent={true}>
+      <Modal visible={saveModalVisible} animationType="fade" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Voulez-vous vraiment sauvegarder ces données ?</Text>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={handleSaveButton}>
+            <Text style={styles.h3}>Souhaites-tu mettre à jour tes données ?</Text>
+            <TouchableOpacity style={styles.button} onPress={handleSaveButton}>
               <Text style={{ ...styles.textButton, color: '#FFFF'}}>Oui, sauvegarder</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: '#D95B33'}} onPress={() => setSaveModalVisible(false)}>
-              <Text style={{ ...styles.textButton, color: '#FFFF'}}>Annuler</Text>
+            <TouchableOpacity style={styles.button2} onPress={() => setSaveModalVisible(false)}>
+              <Text style={styles.textButton2}>Annuler</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       {/* Modal de choix entre photo et galerie */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={picModalVisible}>
-        <TouchableWithoutFeedback onPress={() => setPicModalVisible(false)}> 
-            <View style={styles.centeredView}>
+        <TouchableWithoutFeedback onPress={() => setPicModalVisible(false)}>
+          <View style={styles.modalContainer}> 
               <TouchableWithoutFeedback>  
-                <View style={styles.modal}>
+                <View style={styles.modalContent}>
+                  <View style={{flexDirection:"row"}}>
+                  <Text style={styles.h3}>Prends une photo</Text>
                   <TouchableOpacity
                     onPress={() => {
                       handleCameraButton();
                     }}>
                     <Ionicons name="camera-outline" size={32} color="#D95B33"/>
                   </TouchableOpacity>
+                  </View>
+                  <View style={{flexDirection:"row"}}>
+                  <Text style={styles.h3}>Cherche dans ta galerie</Text>
                   <TouchableOpacity
                     onPress={() => {
                       pickImage()
                     }}>
                     <Ionicons name="folder-open-outline" size={32} color="#D95B33"/>
                   </TouchableOpacity>
+                  </View>
                 </View>
               </TouchableWithoutFeedback>
-            </View>
+          </View>
         </TouchableWithoutFeedback>
       </Modal>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
@@ -259,7 +265,7 @@ export default function ProfileScreen() {
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('HomeStack')}>
-            <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
+            <Text style={{ fontWeight: 'bold', color: '#D95B33', fontSize: 20 }}>Retour</Text>
           </TouchableOpacity>       
         </View>
         <View style={styles.profilAvatar}>
@@ -268,14 +274,14 @@ export default function ProfileScreen() {
               setPicModalVisible(!picModalVisible);
             }}>
           <Image
-            source={picPreview != null ? { uri: picPreview } : require('../assets/messi.jpg')}
+            source={picPreview != null ? { uri: picPreview } : require('../assets/Profildefault.jpg')}
             style={styles.roundedImage}
           />
           <View style={styles.iconContainer}>
            <Ionicons name="camera-outline" size={23} color="#fff"/>
           </View>
           </TouchableOpacity>
-          <Text>@{username}</Text>
+          <Text style={styles.usernameText}>@{username}</Text>
           <TouchableOpacity
             style={styles.classicbutton}
             activeOpacity={0.8}
@@ -373,17 +379,17 @@ export default function ProfileScreen() {
     <Camera type={type} flashMode={flashMode} ref={(ref)=>cameraRef=ref} style={styles.camera}>
       <View style={styles.cameraIconsDiv}>
       <TouchableOpacity onPress={() => setType(type === CameraType.back ? CameraType.front : CameraType.back)} style={styles.cameraButton}>
-        <Ionicons name="refresh-outline" size={32} color="#D95B33"/>
+        <Ionicons name="refresh-outline" size={32} color="white"/>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off)} style={styles.cameraButton}>
-        <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? '#D95B33' : '#e8be4b'}/>
+        <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? 'white' : '#e8be4b'}/>
       </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.cameraSnap} onPress={() => cameraRef && takePicture()}>
-        <Ionicons name="scan-circle-outline" size={95} color="#D95B33"/>
+        <Ionicons name="ellipse-outline" size={95} color="white"/>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {setCameraVisible(false)}} >
-        <Ionicons name="return-up-back" size={32} color="#D95B33"/>
+      <TouchableOpacity style={styles.upback} onPress={() => {setCameraVisible(false)}} >
+        <Ionicons name="return-up-back" size={32} color="white"/>
       </TouchableOpacity>
     </Camera>
   )
@@ -397,6 +403,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
+    width: "80%",
     backgroundColor: '#fcfaf1',
     padding: 20,
     borderRadius: 10,
@@ -405,6 +412,10 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     marginBottom: 20,
+  },
+  usernameText:{
+    fontSize: 16,
+    fontFamily:'Outfit',
   },
   camera: {
     flex:1,
@@ -438,7 +449,7 @@ const styles = StyleSheet.create({
   borderRadius: 10, 
   borderWidth: 1,  
   borderColor: '#D95B33',
-  },  
+  },
   background: {
     flex: 1,
     backgroundColor: '#FCFAF1' ,
@@ -458,6 +469,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     padding: 20,
+    paddingLeft: 10,
+    paddingTop: 15,
   },
   profilAvatar: {
     width: "100%",
@@ -519,6 +532,7 @@ const styles = StyleSheet.create({
     fontFamily: "Outfit",
     fontSize: 24,
     marginBottom: 15,
+    fontWeight: "bold",
   },
   classicbutton: {
     alignItems: "center",
@@ -567,6 +581,8 @@ const styles = StyleSheet.create({
     width: 150, 
     height: 150,
     borderRadius: 75, 
+    borderWidth: 3,
+    borderColor: '#D95B33',
   },
   radioButtonContainer: {
     flexDirection: "row",
@@ -606,7 +622,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
     paddingTop: 8,
-    marginBottom: 30,
+    marginBottom: 10,
     backgroundColor: "#d95b33",
     borderRadius: 30,
     shadowOpacity: 1,
@@ -620,9 +636,37 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: "#ffffff",
-    fontFamily: 'Outfit',
+    fontFamily: "Outfit",
     height: 30,
     fontWeight: "600",
     fontSize: 16,
   },
+  button2: {
+    width: 200,
+    alignItems: "center",
+    marginTop: 20,
+    paddingTop: 8,
+    marginBottom: 15,
+    backgroundColor: "#d6d1bd",
+    borderRadius: 30,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "rgba(0, 0, 0, 0.25)",
+  },
+  textButton2: {
+    color: "#707b81",
+    fontFamily: "Outfit",
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  upback: {
+    paddingLeft: 30,
+    paddingBottom: 40
+  }
 });

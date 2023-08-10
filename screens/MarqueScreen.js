@@ -24,6 +24,7 @@ const url = process.env.EXPO_PUBLIC_IP
 
 export default function MarqueScreen({ navigation, route }) {
   const categorie = route.params.categorie
+  const capCategorie = categorie.charAt(0).toUpperCase() + categorie.slice(1);
   const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
   const sexe = useSelector((state)=>state.user.value.genre)
   const sexeLC = sexe && sexe.toLowerCase()
@@ -48,12 +49,14 @@ export default function MarqueScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        {/* <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <FontAwesome name={"bars"} size={40} color={"#25958A"} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.retour}>Retour</Text> 
       </View>
-      <Text style={styles.H1}>{categorie}</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.H1}>Choisis la marque de ton {categorie} :</Text>
+        <View style={styles.border}></View>
       {/* <View style={styles.inputContainer}>
         <TextInput
           placeholder="Barre de recherche"
@@ -65,6 +68,7 @@ export default function MarqueScreen({ navigation, route }) {
       <ScrollView contentContainerStyle={styles.imageContainer}>
         {images}
       </ScrollView>
+      </View>
     </View>
   );
 }
@@ -75,11 +79,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
+  border: {
+    width: '25%',
+    paddingHorizontal: 35, 
+    borderBottomWidth:3,
+    borderBottomColor: '#d95b33', 
+    borderRadius: 50,
+  },
   photo: {
     margin: 10,
     marginBottom: 20,
     width: 110,
     height: 110
+  },
+  titleContainer: {
+    alignItems: "center",
+    backgroundColor: "#fcfaf1",
+    marginTop: 30,
+  },
+  border: {
+    paddingHorizontal: 35, 
+    borderBottomWidth:3,
+    borderBottomColor: '#d95b33', 
+    borderRadius: 50,
   },
   container: {
     flex: 1,
@@ -89,7 +111,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     width: "100%",
     padding: 20,
@@ -98,12 +120,13 @@ const styles = StyleSheet.create({
   retour: {
     fontWeight: 'bold', 
     color: '#D95B33',
-    fontSize: 20
+    fontSize: 20,
+    paddingTop: 15
   },
   H1: {
-    textAlign: 'center',
-    fontFamily: 'Outfit',
-    fontSize: 50,
+    fontSize: 24,
+    fontWeight: "600",
+    marginBottom: 20,
   },
   inputContainer: {
     width: '80%',

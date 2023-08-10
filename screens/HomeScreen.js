@@ -103,7 +103,7 @@ export default function CalibrateHomeScreen({ navigation }) {
                   />
                   <View style={styles.textModal}>
                     <Text style={styles.h3}>
-                      Vous n'avez pas encore effectué votre calibrage pour le
+                      Tu n'as pas encore effectué de calibrage pour le
                       type {selectedItem}.
                     </Text>
                   </View>
@@ -144,7 +144,7 @@ export default function CalibrateHomeScreen({ navigation }) {
           </View>
           <View style={styles.paragraphe}>
             <Text style={styles.text}>
-              Choisis ton type vêtement pour trouver ta taille idéale :
+              Choisis ton type vêtement
             </Text>
           </View>
         </View>
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     height: 150,
     // borderRadius: 50,
     marginBottom: 15,
-    resizeMode: "contains",
+    resizeMode: "contain",
   },
   textModal: {
     width: "90%",

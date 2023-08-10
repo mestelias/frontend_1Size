@@ -1,4 +1,3 @@
-// Importations nécessaires
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux"
 import {
@@ -23,7 +22,7 @@ const url = process.env.EXPO_PUBLIC_IP;
 // Composant principal
 export default function ClothesScreen() {
   // État pour gérer le token de l'utilisateur
-  const userToken = useSelector((state) => state.user.value.token); // Remplacez par useSelector
+  const userToken = useSelector((state) => state.user.value.token);
 
   // Initialisation de la navigation
   const navigation = useNavigation();
@@ -102,7 +101,6 @@ export default function ClothesScreen() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          Alert.alert('Suppression réussie', 'Le vêtement a été supprimé avec succès.');
         } else {
           Alert.alert('Erreur', data.error);
         }
@@ -124,7 +122,6 @@ const handleDeleteEnAttente = () => {
     .then((response) => response.json())
     .then((data) => {
       if (data.result) {
-        Alert.alert('Suppression réussie', 'Le vêtement a été supprimé avec succès.');
       } else {
         Alert.alert('Erreur', data.error);
       }
@@ -161,7 +158,6 @@ const handleDeleteEnAttente = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            Alert.alert('Le vêtement a été confirmé avec succès.');
           } else {
             Alert.alert('Erreur', data.error);
           }
@@ -178,10 +174,9 @@ const handleDeleteEnAttente = () => {
   // Rendu du composant
   return (
     <View style={styles.background}>
-       <ScrollView>
       {/* En-tête */}
       <SafeAreaView style={styles.header}>
-        <View style={styles.burgerIcon}>
+        <View>
           {/* Bouton pour ouvrir le menu de navigation */}
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
@@ -192,37 +187,39 @@ const handleDeleteEnAttente = () => {
       
       {/* Section pour les vêtements en attente */}
       <View>
-        <Text style={styles.h3}>Vêtements en attente</Text>
-        <View style={styles.orangeLine}></View>
+        <View style={styles.titleContainer}>
+          <Text style={styles.h3}>Vêtements en attente</Text>
+          <View style={styles.orangeLine}></View>
+        </View>
         {vetementsEnAttente.length > 0 ? (
-        <View>
+        <ScrollView>
           {vetementsEnAttente.map((vetement) => (
-          <View style={styles.centeredContainer} key={vetement._id}>
-            <View style={styles.clothingItem}>
-              {/* Affichage des informations du vêtement en attente */}
-              <Text style={{ ...styles.textButton, color: 'black' }}>
-                {vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}
-              </Text>
-              <View style={styles.buttonContainer}>
-                {/* Bouton pour confirmer l'ajout */}
-                <TouchableOpacity onPress={() => handleAddConfirmation(vetement)}>
-                  <Ionicons size={32} name="save-outline" color="#D95B33" />
-                </TouchableOpacity>
-                {/* Bouton pour supprimer */}
-                <TouchableOpacity
-                  style={{ marginLeft: 35 }}
-                  onPress={() => {
-                    handleDeleteConfirmation(vetement);
-                    setDeleteEnAttente(true);
-                  }}
-                >
-                  <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
-                </TouchableOpacity>
+            <View style={styles.centeredContainer} key={vetement._id}>
+              <View style={styles.clothingItem}>
+                {/* Affichage des informations du vêtement en attente */}
+                <Text style={{ ...styles.textButton, color: 'black' }}>
+                  {vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}
+                </Text>
+                <View style={styles.buttonContainer}>
+                  {/* Bouton pour confirmer l'ajout */}
+                  <TouchableOpacity onPress={() => handleAddConfirmation(vetement)}>
+                    <Ionicons size={32} name="save-outline" color="#D95B33" />
+                  </TouchableOpacity>
+                  {/* Bouton pour supprimer */}
+                  <TouchableOpacity
+                    style={{ marginLeft: 35 }}
+                    onPress={() => {
+                      handleDeleteConfirmation(vetement);
+                      setDeleteEnAttente(true);
+                    }}
+                  >
+                    <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
               ))}
-        </View>
+        </ScrollView>
         ) : (
           <View style={styles.textContainer}>
             <Text style={{ ...styles.textButton, color: 'black' }}>Aucun vêtement en attente</Text>
@@ -232,7 +229,7 @@ const handleDeleteEnAttente = () => {
         {/* Modale de confirmation pour ajouter un vêtement */}
         <Modal
           visible={modalConfirmVisible}
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           onRequestClose={() => setModalConfirmVisible(false)}
         >
@@ -240,7 +237,7 @@ const handleDeleteEnAttente = () => {
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 {/* Message de confirmation */}
-                <Text style={styles.modalText}>La taille recommandée vous convient-elle?</Text>
+                <Text style={styles.modalText}>La taille recommandée te convient-elle?</Text>
                 {/* Bouton pour confirmer l'ajout avec la taille recommandée */}
                 <TouchableOpacity
                   style={{ ...styles.button, backgroundColor: '#D95B33'}}
@@ -265,31 +262,35 @@ const handleDeleteEnAttente = () => {
       
       {/* Section pour les vêtements de l'utilisateur */}
       <View>
-        <Text style={styles.h3}>Mes vêtements</Text>
-        <View style={styles.orangeLine}></View>
-        {vetements.map((vetement) => (
-        <View style={styles.centeredContainer} key={vetement._id}>
-          <View style={styles.clothingItem}>
-            {/* Affichage des informations du vêtement */}
-            <Text style={{ ...styles.textButton, color: 'black'}}>
-              {vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}
-            </Text>
-            <View style={styles.buttonContainer}>
-            {/* Affichage de l'icône de confirmation ou de rejet */}
-            {vetement.fit ? (<Ionicons size={32} name="happy-outline" color="#25958A" />) : (<Ionicons size={32} name="sad-outline" color="#707B81" />)}
-            <TouchableOpacity style={{marginLeft: 35}} onPress={() => {handleDeleteConfirmation(vetement); setDeleteEnAttente(false)}}>
-              <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
-            </TouchableOpacity>
-            </View>
-          </View>
+        <View style={styles.titleContainer}>
+          <Text style={styles.h3}>Mes vêtements</Text>
+          <View style={styles.orangeLine}></View>
         </View>
-        ))}
+        <ScrollView>
+          {vetements.map((vetement) => (
+            <View style={styles.centeredContainer} key={vetement._id}>
+              <View style={styles.clothingItem}>
+                {/* Affichage des informations du vêtement */}
+                <Text style={{ ...styles.textButton, color: 'black'}}>
+                  {vetement.type} {vetement.marque} {vetement.coupe} {vetement.taille}
+                </Text>
+                <View style={styles.buttonContainer}>
+                {/* Affichage de l'icône de confirmation ou de rejet */}
+                {vetement.fit ? (<Ionicons size={32} name="happy-outline" color="#25958A" />) : (<Ionicons size={32} name="sad-outline" color="#707B81" />)}
+                <TouchableOpacity style={{marginLeft: 35}} onPress={() => {handleDeleteConfirmation(vetement); setDeleteEnAttente(false)}}>
+                  <Ionicons size={32} name="close-circle-outline" color="#D95B33" />
+                </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
       
       {/* Modale de confirmation pour supprimer un vêtement */}
       <Modal
           visible={modalDeleteVisible}
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           onRequestClose={() => setModalDeleteVisible(false)}
         >
@@ -297,7 +298,7 @@ const handleDeleteEnAttente = () => {
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 {/* Message de confirmation */}
-                <Text style={styles.modalText}>Voulez-vous vraiment supprimer ce vêtement ?</Text>
+                <Text style={styles.modalText}>Souhaites-tu vraiment supprimer ce vêtement ?</Text>
                 {/* Bouton pour confirmer la suppression */}
                 <TouchableOpacity
                   style={styles.button}
@@ -321,11 +322,10 @@ const handleDeleteEnAttente = () => {
       <View>
         <View style={{...styles.centeredContainer, marginTop : 50}}>
           <Text style={{ ...styles.textButton, color: 'black' }}>
-            {vetements ? `${vetements.length * 10} kg CO2e et ${vetements.length * 2} kg de déchets économisés` : 'Commencez dès maintenant à économiser du CO2e et des déchets'}
+            {vetements ? `${vetements.length * 10} kg CO2e et ${vetements.length * 2} kg de déchets économisés` : 'Commence dès maintenant à économiser du CO2e et des déchets'}
           </Text>
         </View> 
       </View>
-    </ScrollView>
     </View>
   );
 }
@@ -342,6 +342,7 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       paddingHorizontal: 20,
       width: "100%",
+      paddingTop: 15,
     },
     h3: {
       fontSize: 20,
@@ -352,11 +353,10 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
     orangeLine: {
-      height: 2, 
-      width: "33%",
-      backgroundColor: "#D95B33",
-      marginTop: 5,
-      alignSelf: "center",
+      paddingHorizontal: 35, 
+      borderBottomWidth:3,
+      borderBottomColor: '#d95b33', 
+      borderRadius: 50,
     },
     enAttente: {
       alignItems: "center",
@@ -427,5 +427,10 @@ const styles = StyleSheet.create({
     modalText: {
       fontSize: 18,
       marginBottom: 20,
+    },
+    titleContainer: {
+      alignItems: "center",
+      backgroundColor: "#fcfaf1",
+      marginTop: 20,
     },
 });

@@ -23,12 +23,12 @@ export default function ContactScreen({ navigation }) {
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Contactez nous !</Text>
+        <Text style={styles.title}>Contacte-nous !</Text>
         <Text style={styles.h3}>
-          Envoyez nous votre demande en remplissant le formulaire ci-dessous
+          Envoie-nous ta demande en remplissant le formulaire ci-dessous
         </Text>
         <View style={styles.inputContainer}>
-          <Text style={styles.texte}>Votre message :</Text>
+          <Text style={styles.texte}>Ton message :</Text>
           <TextInput placeholder="Message" style={[styles.input]} />
         </View>
 
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     paddingLeft: 30,
-    // paddingTop: 15,
+    paddingTop: 10,
     width: "100%"
   },
 

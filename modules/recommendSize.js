@@ -1,15 +1,13 @@
-function recommendSize(userData, brandSizes, desiredFit = 'normale') {
+function recommendSize(userData, brandSizes, desiredFit = 'Regular') {
     // Coefficients pour ajuster l'importance des mesures
     const coefficients = {
         "europe": 1,
-        "tourDePoitrine": desiredFit === 'slim' ? 2 : 1,
-        "tourDeTaille": 1,
-        "tourDeHanches":1,
-        "tourDeHanches":1,
+        "tourDePoitrine": desiredFit === 'Slim' ? 1.5 : desiredFit === 'Ample' ? 1 : 1.5,
+        "tourDeTaille": desiredFit === 'Slim' ? 2 : desiredFit === 'Ample' ? 0 : 1,
+        "tourDeHanches": desiredFit === 'Slim' ? 2 : desiredFit === 'Ample' ? 0 : 1,
         "tourDeBassin":1,
-        "tourDeTaille":1,
         "longueurJambe":1,
-        "longueur":1,
+        "longueur":1.5,
         "pointure":1,
     }
     //on initialise bestFit en tableau au cas où il y ait deux tailles équivalentes
