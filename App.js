@@ -114,7 +114,7 @@ const CustomDrawer = (props) => {
              <DrawerItem 
                  key={route.key} 
                  label={route.name}
-                 labelStyle={{ color: color }} // ici, nous utilisons le style pour la couleur du label
+                 labelStyle={{ color: color }} //style pour la couleur du label
                  focused={isFocused}
                  onPress={() => props.navigation.navigate(route.name)}
                  icon={({ size }) => <FontAwesome name={iconName} size={size} color={color} />}
@@ -220,9 +220,12 @@ const styles = StyleSheet.create({
     
   },
   profilpic: {
-    width:70, 
-    height:70,
+    width:100, 
+    height:100,
     borderRadius:50,
+    borderWidth: 3,
+    borderColor: '#D95B33',
+
   },
   signOutView: {
     flexDirection: 'row', 
