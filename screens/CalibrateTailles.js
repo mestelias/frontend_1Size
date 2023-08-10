@@ -443,11 +443,12 @@ const styles = StyleSheet.create({
       shadowOpacity: 1,
       elevation: 4,
       shadowRadius: 4,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowColor: "rgba(0, 0, 0, 0.25)",
+      shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "#d95b33",
     },
     textButton: {
       color: "#ffffff",
