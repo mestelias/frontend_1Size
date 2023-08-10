@@ -100,11 +100,12 @@ export default function MarqueTypeScreen({ navigation, route }) {
         </View>
       </Modal>
       <SafeAreaView style={styles.header}>
-        <View style={styles.burgerIcon}>
+        {/* <View style={styles.burgerIcon}>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
             </TouchableOpacity>
-        </View>
+        </View> */}
+        <Text style={styles.retour}>Retour</Text>
       </SafeAreaView>
       <View style={styles.titleContainer}>
         <Text style={styles.H1}>Types</Text>
@@ -159,9 +160,23 @@ const styles = StyleSheet.create({
       paddingLeft: 30,
       paddingTop: 15,
     },
+    // header: {
+    //   justifyContent: "flex-start",
+    //   width: "100%",
+    // },
     header: {
-      justifyContent: "flex-start",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "center",
       width: "100%",
+      padding: 20,
+      // marginTop: 40
+    },
+    retour: {
+      fontWeight: 'bold', 
+      color: '#D95B33',
+      fontSize: 20,
+      paddingTop: 10
     },
     H1: {
       fontSize: 24,

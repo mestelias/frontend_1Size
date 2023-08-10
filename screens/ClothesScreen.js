@@ -342,6 +342,8 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       paddingHorizontal: 20,
       width: "100%",
+      paddingLeft: 30,
+      paddingTop: 15,
     },
     h3: {
       fontSize: 20,

@@ -259,7 +259,7 @@ export default function ProfileScreen() {
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('HomeStack')}>
-            <Text style={{ fontWeight: 'bold', color: '#D95B33' }}>Retour</Text>
+            <Text style={{ fontWeight: 'bold', color: '#D95B33', fontSize: 20 }}>Retour</Text>
           </TouchableOpacity>       
         </View>
         <View style={styles.profilAvatar}>
@@ -458,6 +458,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     padding: 20,
+    paddingLeft: 10,
+    paddingTop: 15,
   },
   profilAvatar: {
     width: "100%",
