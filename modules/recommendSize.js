@@ -1,4 +1,4 @@
-function recommendSize(userData, brandSizes, desiredFit = 'Classic') {
+function recommendSize(userData, brandSizes, desiredFit = 'Regular') {
     // Coefficients pour ajuster l'importance des mesures
     const coefficients = {
         "europe": 1,

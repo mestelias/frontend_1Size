@@ -119,7 +119,7 @@ export default function RecommendationScreen({ navigation, route }) {
         <Text style={styles.retour}>Retour</Text>
       </SafeAreaView>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>{categorie}</Text>
+        <Text style={styles.H1}>One Size</Text>
         <View style={styles.border}></View>
         <View style={styles.searchedData}>
           <Text style={styles.H3}>{type}</Text>
@@ -128,7 +128,7 @@ export default function RecommendationScreen({ navigation, route }) {
         </View>
       </View>
       <View style={styles.container}>
-        <Text style={styles.H3}>Notre reco OneSize</Text>
+        <Text style={styles.H3}>Notre recommandation :</Text>
         <View style={styles.circleContainer}>
            {/* {showAnimation && (
             <AnimatedLottieView
