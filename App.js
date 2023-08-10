@@ -93,15 +93,13 @@ const CustomDrawer = (props) => {
   
   return (
     <DrawerContentScrollView {...props}>
-      <View style={styles.drawerHeader}>
+      {/* <View style={styles.drawerHeader}> */}
         <View style={styles.profilView}>
           <Image source={image ? { uri: image } : require('./assets/Profildefault.jpg')} style={styles.profilpic} />
-          <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
-            <FontAwesome name='times' size={30} color='#25958A' />
-          </TouchableOpacity>
+          <Text paddingTop={10}>@{username ? username : `username`}</Text>
+          <View style={styles.line}></View>
         </View>
-        <Text>@{username ? username : `username`}</Text>
-      </View>
+      {/* </View> */}
       {props.state.routes.map((route, index) => {
         //map pour créer tous les drawerItems avec les styles associés et icones associés
          if (route.name === 'Main') return null; 
@@ -109,20 +107,24 @@ const CustomDrawer = (props) => {
          const isFocused = props.state.index === index;
          const color = isFocused ? "#25958A" : "#d95b33";
          const iconName = routeIconMapping[route.name];
-     
+        
          return (
              <DrawerItem 
                  key={route.key} 
                  label={route.name}
-                 labelStyle={{ color: color }} // ici, nous utilisons le style pour la couleur du label
+                 labelStyle={{color: isFocused ? "#25958A" :  "black", fontFamily: 'Outfit'} }
+                 // ici, nous utilisons le style pour la couleur du label
                  focused={isFocused}
                  onPress={() => props.navigation.navigate(route.name)}
-                 icon={({ size }) => <FontAwesome name={iconName} size={size} color={color} />}
+                 icon={({ size }) => <View style={styles.icon}>
+                  <FontAwesome name={iconName} size={size} color={color} />
+                 </View> }
+                  
              />
          );
       })}
       <TouchableOpacity onPress={() => handleSignOut()} style={styles.signOutView}>
-        <FontAwesome name='sign-out' color={"#d95b33"} />
+        <FontAwesome name='sign-out' color={"#d95b33"} size={30}/>
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
     </DrawerContentScrollView>
@@ -212,29 +214,41 @@ export default function App() {
 
 const styles = StyleSheet.create({
   profilView: {
-    paddingRight: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  icon:{
+    minWidth: 25
   },
   profilpic: {
-    width:70, 
-    height:70,
+    width:90, 
+    height:90,
     borderRadius:50,
+    borderColor: '#25958a',
+    borderWidth: 2
   },
   signOutView: {
     flexDirection: 'row', 
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingLeft: 20,
     color: '#d95b33',
+    paddingTop: 15,
   },
   signOutText: {
-    color: '#d95b33'
+    color: 'black',
+    fontSize: 15,
+    paddingHorizontal: 28,
+    fontFamily: 'Outfit',
   },
-  drawerHeader: {
-    justifyContent: 'space-between',
-    paddingLeft: 20,
+  line: {
+    paddingHorizontal: 40, 
+    borderBottomWidth: 3,
+    borderBottomColor: '#25958a', 
+    borderRadius: 15,
+    marginTop: 20,
+    marginBottom: 20
   }
 });

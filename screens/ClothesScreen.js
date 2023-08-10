@@ -1,4 +1,3 @@
-// Importations nécessaires
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux"
 import {
@@ -419,7 +418,7 @@ const styles = StyleSheet.create({
       backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContent: {
-      backgroundColor: "white",
+      backgroundColor: "#fcfaf1",
       padding: 20,
       borderRadius: 10,
       alignItems: "center",

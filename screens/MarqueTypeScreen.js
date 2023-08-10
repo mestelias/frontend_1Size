@@ -64,22 +64,22 @@ export default function MarqueTypeScreen({ navigation, route }) {
                   />
                   <Text style={styles.textType}>Choisis ta coupe</Text>
                   <View style={styles.buttonChoiceView}>
-                    <TouchableOpacity style={coupe === 'Slim' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Slim')}}>
-                      <Text style={styles.textButton}>Slim</Text>
+                    <TouchableOpacity style={coupe === 'Slim' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Slim')}}>
+                      <Text style={coupe === 'Slim' ? styles.textButton : styles.text2Button}>Slim</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={coupe === 'Normale' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Normale')}}>
-                      <Text style={styles.textButton}>Regular</Text>
+                    <TouchableOpacity style={coupe === 'Normale' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Normale')}}>
+                      <Text style={coupe === 'Normale' ? styles.textButton : styles.text2Button}>Regular</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={coupe === 'Ample' ? styles.button2Coupe : styles.buttonCoupe} onPress={() => {setCoupe('Ample')}}>
-                      <Text style={styles.textButton}>Ample</Text>
+                    <TouchableOpacity style={coupe === 'Ample' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Ample')}}>
+                      <Text style={coupe === 'Ample' ? styles.textButton : styles.text2Button}>Ample</Text>
                     </TouchableOpacity>  
                     
                   </View>
                   <TouchableOpacity 
-                  style={styles.button} 
-                  activeOpacity={0.8}
-                  onPress={()=>{handleValidate()}}
-                  >
+                    style={styles.button} 
+                    activeOpacity={0.8}
+                    onPress={()=>{handleValidate()}}
+                    >
                     <Text style={styles.textButton}>
                       Valider
                     </Text>
@@ -100,11 +100,12 @@ export default function MarqueTypeScreen({ navigation, route }) {
         </View>
       </Modal>
       <SafeAreaView style={styles.header}>
-        <View style={styles.burgerIcon}>
+        {/* <View style={styles.burgerIcon}>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <FontAwesome name={"bars"} size={40} color={"#25958A"} />
             </TouchableOpacity>
-        </View>
+        </View> */}
+        <Text style={styles.retour}>Retour</Text>
       </SafeAreaView>
       <View style={styles.titleContainer}>
         <Text style={styles.H1}>Types</Text>
@@ -122,7 +123,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     background: {
       flex: 1,
-      backgroundColor: "#FCFAF1",
+      backgroundColor: "#fcfaf1",
       alignItems: "center",
       width: "100%",
       height: "100%",
@@ -159,9 +160,23 @@ const styles = StyleSheet.create({
       paddingLeft: 30,
       paddingTop: 15,
     },
+    // header: {
+    //   justifyContent: "flex-start",
+    //   width: "100%",
+    // },
     header: {
-      justifyContent: "flex-start",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "center",
       width: "100%",
+      padding: 20,
+      // marginTop: 40
+    },
+    retour: {
+      fontWeight: 'bold', 
+      color: '#D95B33',
+      fontSize: 20,
+      paddingTop: 10
     },
     H1: {
       fontSize: 24,
@@ -174,7 +189,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
     },
     modalView: {
-      backgroundColor: "white",
+      backgroundColor: "#fcfaf1",
       width: "90%",
       borderRadius: 20,
       padding: 30,
@@ -225,7 +240,7 @@ const styles = StyleSheet.create({
       marginHorizontal: 1.7,
       marginBottom: 15,
       backgroundColor: "#d95b33",
-      borderRadius: 30,
+      borderRadius: 10,
       shadowOpacity: 1,
       elevation: 4,
       shadowRadius: 4,
@@ -233,10 +248,17 @@ const styles = StyleSheet.create({
         width: 0,
         height: 4,
       },
-      shadowColor: "rgba(0, 0, 0, 0.25)",
+      shadowColor: "#d95b33",
     },
     textButton: {
       color: "#ffffff",
+      fontFamily: "Outfit",
+      height: 30,
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    text2Button: {
+      color: "#707b81",
       fontFamily: "Outfit",
       height: 30,
       fontWeight: "600",
@@ -265,17 +287,20 @@ const styles = StyleSheet.create({
       marginTop: 20,
       paddingTop: 8,
       marginBottom: 15,
-      marginHorizontal: 1.7,
-      backgroundColor: "#d6d1bd",
-      borderRadius: 30,
-      shadowOpacity: 1,
-      elevation: 4,
+      marginHorizontal: 5.9,
+      backgroundColor: "#fcfaf1",
+      borderRadius: 10,
+      shadowOpacity: 0.5,
+      //elevation: 70,
       shadowRadius: 4,
       shadowOffset: {
         width: 0,
         height: 4,
       },
-      shadowColor: "rgba(0, 0, 0, 0.25)",
+      //  borderBottomColor: 'red',
+      borderColor: '#d95b33',
+      borderWidth: 1,
+      shadowColor: "rgba(0, 0, 0, 0.15)",
     },
     textButton2: {
       color: "#707b81",
