@@ -1,4 +1,3 @@
-// Importations nécessaires
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux"
 import {
@@ -342,6 +341,7 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       paddingHorizontal: 20,
       width: "100%",
+      paddingTop: 15,
     },
     h3: {
       fontSize: 20,
