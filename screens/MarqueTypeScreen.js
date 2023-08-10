@@ -27,7 +27,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
     const handlePressType = (typePressed) => {
       setType(typePressed)
       if (categorie==='chaussures') {
-      navigation.navigate('RecommendationScreen',{categorie:categorie, marque:name, type:type, coupe:coupe})
+      navigation.navigate('RecommendationScreen',{categorie:categorie, marque:name, type:typePressed, coupe:coupe})
       } else {
       setIsModalVisible(true)
       }

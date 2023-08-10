@@ -277,7 +277,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
             <View style={styles.overContainer}>
               <View style={{marginTop: 20}}>
               {vetements.length >= 3 ? (<Text st>Merci de confirmer tes vêtements</Text>) : (
-              <Text>Vêtement {vetements.length+1}/3</Text>
+              <Text>Vêtements {vetements.length}/3</Text>
               )}
               </View>
                 {vetements.length >= 3 ? null : (

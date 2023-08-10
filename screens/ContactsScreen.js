@@ -44,7 +44,6 @@ export default function ContactScreen({ navigation }) {
 
         <View style={styles.pressBottom}>
           <TouchableOpacity
-            onPress={() => handleSubmit()}
             style={styles.register}
             activeOpacity={0.8}
           >

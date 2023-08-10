@@ -65,10 +65,10 @@ export default function MarqueScreen({ navigation, route }) {
           style={styles.input}
         />
       </View> */}
-      <ScrollView contentContainerStyle={styles.imageContainer}>
+      </View>
+      <ScrollView contentContainerStyle={styles.imageContainer} showsVerticalScrollIndicator={true}>
         {images}
       </ScrollView>
-      </View>
     </View>
   );
 }

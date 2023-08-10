@@ -95,42 +95,50 @@ const CustomDrawer = (props) => {
   
   
   return (
-    <DrawerContentScrollView {...props}>
-      {/* <View style={styles.drawerHeader}> */}
-        <View style={styles.profilView}>
-          <Image source={image ? { uri: image } : require('./assets/Profildefault.jpg')} style={styles.profilpic} />
-          <Text paddingTop={10}>@{username ? username : `username`}</Text>
-          <View style={styles.line}></View>
-        </View>
-      {/* </View> */}
-      {props.state.routes.map((route, index) => {
-        //map pour créer tous les drawerItems avec les styles associés et icones associés
-         if (route.name === 'Main') return null; 
+    <View style={{flex:1}}>
+      <DrawerContentScrollView {...props}>
+        {/* <View style={styles.drawerHeader}> */}
+          <View style={styles.profilView}>
+            <Image source={image ? { uri: image } : require('./assets/Profildefault.jpg')} style={styles.profilpic} />
+            <Text paddingTop={10}>@{username ? username : `username`}</Text>
+            <View style={styles.line}></View>
+          </View>
+        {/* </View> */}
+        {props.state.routes.map((route, index) => {
+          //map pour créer tous les drawerItems avec les styles associés et icones associés
+          if (route.name === 'Main') return null; 
 
-         const isFocused = props.state.index === index;
-         const color = isFocused ? "#25958A" : "#d95b33";
-         const iconName = routeIconMapping[route.name];
-        
-         return (
-             <DrawerItem 
-                 key={route.key} 
-                 label={route.name}
-                 labelStyle={{color: isFocused ? "#25958A" :  "black", fontFamily: 'Outfit'} }
-                 // ici, nous utilisons le style pour la couleur du label
-                 focused={isFocused}
-                 onPress={() => props.navigation.navigate(route.name)}
-                 icon={({ size }) => <View style={styles.icon}>
-                  <FontAwesome name={iconName} size={size} color={color} />
-                 </View> }
-                  
-             />
-         );
-      })}
-      <TouchableOpacity onPress={() => handleSignOut()} style={styles.signOutView}>
-        <FontAwesome name='sign-out' color={"#d95b33"} size={30}/>
-        <Text style={styles.signOutText}>Deconnexion</Text>
-      </TouchableOpacity>
-    </DrawerContentScrollView>
+          const isFocused = props.state.index === index;
+          const color = isFocused ? "#25958A" : "#d95b33";
+          const iconName = routeIconMapping[route.name];
+          
+          return (
+              <DrawerItem 
+                  key={route.key} 
+                  label={route.name}
+                  labelStyle={{color: isFocused ? "#25958A" :  "black", fontFamily: 'Outfit'} }
+                  // ici, nous utilisons le style pour la couleur du label
+                  focused={isFocused}
+                  onPress={() => props.navigation.navigate(route.name)}
+                  icon={({ size }) => <View style={styles.icon}>
+                    <FontAwesome name={iconName} size={size} color={color} />
+                  </View> }
+                    
+              />
+          );
+        })}
+        <TouchableOpacity onPress={() => handleSignOut()} style={styles.signOutView}>
+          <FontAwesome name='sign-out' color={"#d95b33"} size={30}/>
+          <Text style={styles.signOutText}>Deconnexion</Text>
+        </TouchableOpacity>
+      </DrawerContentScrollView>
+      <View style={styles.logoView}>
+        <Text style={styles.logo}>
+          <Text style={{ color: '#d95b33' }}>1</Text>
+          <Text style={{ color: '#25958a' }}>Size</Text>
+        </Text>
+      </View>
+    </View>
   );
 }
 
@@ -222,6 +230,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10
   },
+  logoView: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 20, // Ajustez ceci selon l'espace désiré
+  },
   icon:{
     minWidth: 25
   },
@@ -253,5 +266,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginTop: 20,
     marginBottom: 20
+  },
+  logo: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    fontSize: 26,
+    fontFamily: 'Outfit'
   }
 });

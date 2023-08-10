@@ -367,8 +367,7 @@ export default function ProfileScreen() {
         <TouchableOpacity
           style={styles.classicbutton}
           activeOpacity={0.8}
-          //todo : AJOUTER LA FONCTIONNALITE POUR INVITER UN AMI
-          // onPress={()=> }
+          onPress={()=>navigation.navigate('Mes amis') }
         >
           <Text style={styles.textButtonactive}>Inviter un ami</Text>
         </TouchableOpacity>
