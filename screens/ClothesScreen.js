@@ -1,5 +1,6 @@
 // Importations nécessaires
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux"
 import {
   StyleSheet,
   View,
@@ -22,7 +23,7 @@ const url = process.env.EXPO_PUBLIC_IP;
 // Composant principal
 export default function ClothesScreen() {
   // État pour gérer le token de l'utilisateur
-  const userToken = "DiQIm2bkhqLbnXDpwzwyF-zfEbqKxsfN"; // Remplacez par useSelector
+  const userToken = useSelector((state) => state.user.value.token); // Remplacez par useSelector
 
   // Initialisation de la navigation
   const navigation = useNavigation();

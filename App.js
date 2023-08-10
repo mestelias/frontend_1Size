@@ -72,7 +72,8 @@ const routeIconMapping = {
   "Calibrage": "bullseye",
   "Mes amis": "users",
   "Nous contacter": "envelope",
-  "Aide": "question"
+  "Aide": "question",
+  "Mes vêtements" : "shopping-bag"
 };
 
 const CustomDrawer = (props) => {
@@ -166,6 +167,7 @@ const AppDrawerNavigation = () => (
     <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profil" component={ProfileScreen} />
     <Drawer.Screen name="Calibrage" component={CalibrateHomeScreen} />
+    <Drawer.Screen name="Mes vêtements" component={ClothesScreen} />
     <Drawer.Screen name="Mes amis" component={FriendsScreen} />
     <Drawer.Screen name="Nous contacter" component={ContactsScreen} />
     <Drawer.Screen name="Aide" component={HelpScreen} />
