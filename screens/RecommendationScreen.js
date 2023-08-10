@@ -131,7 +131,7 @@ export default function RecommendationScreen({ navigation, route }) {
                   : require("../assets/animations/pants.json")
               }
               autoPlay
-              loop={false}
+              loop={true}
               style={styles.lottie}
             />
           )}

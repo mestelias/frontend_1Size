@@ -33,7 +33,6 @@ export default function MarqueTypeScreen({ navigation, route }) {
       }
     }
 
-r
     useEffect(()=>{
         fetch(`${url}/marques/types?marque=${name}&sexe=${sexeLC}&categorie=${categorie}`)
         .then((response)=> response.json())

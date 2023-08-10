@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
     backgroundColor: "#fcfaf1",
-    marginTop: 20,
+    marginTop: 10,
   },
   border: {
     paddingHorizontal: 35,
