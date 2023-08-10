@@ -26,10 +26,14 @@ export default function MarqueTypeScreen({ navigation, route }) {
 
     const handlePressType = (typePressed) => {
       setType(typePressed)
+      if (categorie==='chaussures') {
+      navigation.navigate('RecommendationScreen',{categorie:categorie, marque:name, type:type, coupe:coupe})
+      } else {
       setIsModalVisible(true)
+      }
     }
 
-
+r
     useEffect(()=>{
         fetch(`${url}/marques/types?marque=${name}&sexe=${sexeLC}&categorie=${categorie}`)
         .then((response)=> response.json())
@@ -57,7 +61,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
           >
             <View style={styles.centeredView}>
               <TouchableWithoutFeedback>
-                <View style={styles.modalView}>
+                <View style={styles.modalView}> 
                   <Text style={styles.textType}>Quelle coupe ?</Text>
                   <View style={styles.buttonChoiceView}>
                     <TouchableOpacity style={coupe === 'Slim' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Slim')}}>
@@ -66,11 +70,14 @@ export default function MarqueTypeScreen({ navigation, route }) {
                     <TouchableOpacity style={coupe === 'Regular' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Regular')}}>
                       <Text style={coupe === 'Regular' ? styles.textButton : styles.text2Button}>Regular</Text>
                     </TouchableOpacity>
+                    { categorie === 'haut' &&
                     <TouchableOpacity style={coupe === 'Ample' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Ample')}}>
                       <Text style={coupe === 'Ample' ? styles.textButton : styles.text2Button}>Ample</Text>
                     </TouchableOpacity>  
+                    }
                     
-                  </View>
+                  </View> 
+                  
                   <TouchableOpacity 
                     style={styles.button} 
                     activeOpacity={0.8}
@@ -101,7 +108,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
       </TouchableOpacity>
       </SafeAreaView>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Choisis ton {categorie}</Text>
+        <Text style={styles.H1}>Choisis ton type de {categorie}</Text>
         <View style={styles.border}></View>
       <View style={styles.container}>
       {types}

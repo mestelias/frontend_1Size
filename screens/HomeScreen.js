@@ -144,7 +144,7 @@ export default function CalibrateHomeScreen({ navigation }) {
           </View>
           <View style={styles.paragraphe}>
             <Text style={styles.text}>
-              Choisis ton type vêtement
+              Choisis ton type de vêtement
             </Text>
           </View>
         </View>

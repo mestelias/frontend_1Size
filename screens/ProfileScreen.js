@@ -236,20 +236,22 @@ export default function ProfileScreen() {
               <TouchableWithoutFeedback>  
                 <View style={styles.modalContent}>
                   <View style={{flexDirection:"row"}}>
-                  <Text style={styles.h3}>Prends une photo</Text>
                   <TouchableOpacity
                     onPress={() => {
                       handleCameraButton();
-                    }}>
-                    <Ionicons name="camera-outline" size={32} color="#D95B33"/>
+                    }}
+                    style={{flexDirection:'row', alignItems:'center'}}>
+                  <Text style={styles.h3}>Appareil photo</Text>
+                  <Ionicons name="camera-outline" size={32} color="#D95B33"/>
                   </TouchableOpacity>
                   </View>
-                  <View style={{flexDirection:"row"}}>
-                  <Text style={styles.h3}>Cherche dans ta galerie</Text>
+                  <View>
                   <TouchableOpacity
                     onPress={() => {
                       pickImage()
-                    }}>
+                    }}
+                    style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
+                  <Text style={styles.h3}>Ma galerie</Text>
                     <Ionicons name="folder-open-outline" size={32} color="#D95B33"/>
                   </TouchableOpacity>
                   </View>
