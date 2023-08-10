@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Image} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
@@ -8,15 +8,12 @@ import { recommendSize } from "../modules/recommendSize";
 import LottieView from "lottie-react-native";
 import { Animated, Easing } from "react-native";
 
-
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
-
-
 
 const url = process.env.EXPO_PUBLIC_IP;
 
 export default function RecommendationScreen({ navigation, route }) {
-  const { categorie, marque, type, coupe} = route.params
+  const { categorie, marque, type, coupe } = route.params;
   // L'état qui va stocker la taille idéale recommandée par l'algo
   const [recoTaille, setRecoTaille] = useState(null);
 
@@ -24,7 +21,7 @@ export default function RecommendationScreen({ navigation, route }) {
   const animationDuration = 5000; // Adaptez cette valeur à la durée réelle de votre animation (en ms).
   const animationProgress = useRef(new Animated.Value(0));
 
-  console.log('show animation', showAnimation)
+  console.log("show animation", showAnimation);
 
   // Récupération du token stocké dans le reducer
   const userToken = useSelector((state) => state.user.value.token);
@@ -48,13 +45,11 @@ export default function RecommendationScreen({ navigation, route }) {
   //TO DO : use effect d'initialistation qui va permettre à l'algo de calculer la reco de taille idéale
   useEffect(() => {
     const fetchData = async () => {
+      // Démarrage de l'animation
+      await new Promise((resolve) => setTimeout(resolve, animationDuration));
 
-        // Démarrage de l'animation
-        await new Promise(resolve => setTimeout(resolve, animationDuration));
-
-        // Cacher l'animation
-        setShowAnimation(false);
-
+      // Cacher l'animation
+      setShowAnimation(false);
 
       // Récupération des mensurations de l'utilisateur
       const responseForUserMensurations = await fetch(
@@ -79,13 +74,12 @@ export default function RecommendationScreen({ navigation, route }) {
     };
 
     fetchData();
-
   }, []);
 
   const handleSubmit = async () => {
     // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
     const responseForRecoSizes = await fetch(
-    `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}&${recoTaille}`
+      `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}&${recoTaille}`
     );
     const recoSizes = await responseForRecoSizes.json();
     //On ajoute le vêtement en BDD dans les vêtements en attente
@@ -100,12 +94,12 @@ export default function RecommendationScreen({ navigation, route }) {
         mensurations: recoSizes,
       }),
     })
-    .then((response) => response.json())
-    .then((vetement) => {
-      console.log("vêtement: ", vetement);
-      // Navigation vers la page de ses vêtements
-      navigation.navigate("Clothes");
-    });
+      .then((response) => response.json())
+      .then((vetement) => {
+        console.log("vêtement: ", vetement);
+        // Navigation vers la page de ses vêtements
+        navigation.navigate("Clothes");
+      });
   };
 
   return (
@@ -130,7 +124,7 @@ export default function RecommendationScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.H3}>Notre recommandation :</Text>
         <View style={styles.circleContainer}>
-           {/* {showAnimation && (
+          {/* {showAnimation && (
             <AnimatedLottieView
               source={require("../assets/animations/shoes-colorOneSize.json")}
               autoPlay
@@ -150,11 +144,22 @@ export default function RecommendationScreen({ navigation, route }) {
           style={styles.button}
           activeOpacity={0.8}
         >
-          <Text style={styles.textButton}>Je veux prendre cette taille</Text>
+          <Text style={styles.textButton}>Voir mes vêtements</Text>
         </TouchableOpacity>
-        <Text style={styles.text}>
-          Samy, le CEO de OneSize a approuvé cette taille recommandée.
-        </Text>
+        <View style={styles.footer}>
+          <Image
+            source={require("../assets/pic-c.jpg")}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              marginRight: 20,
+            }}
+          />
+          <Text style={styles.text}>
+            Samy, le CEO de OneSize a approuvé cette recommandation.
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -204,10 +209,10 @@ const styles = StyleSheet.create({
     // marginTop: 40
   },
   retour: {
-    fontWeight: 'bold', 
-    color: '#D95B33',
+    fontWeight: "bold",
+    color: "#D95B33",
     fontSize: 20,
-    paddingTop: 10
+    paddingTop: 10,
   },
   H1: {
     fontSize: 24,
@@ -222,8 +227,7 @@ const styles = StyleSheet.create({
   circleContainer: {
     alignItems: "center",
     justifyContent: "center",
-    width: '100%',
-
+    width: "100%",
   },
   circle: {
     justifyContent: "center",
@@ -270,5 +274,10 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     // height: 100,
-  }
+  },
+  footer: {
+    flexDirection: "row",
+    padding:10,
+    margin: 10,
+  },
 });

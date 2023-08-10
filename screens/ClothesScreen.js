@@ -192,7 +192,7 @@ const handleDeleteEnAttente = () => {
           <View style={styles.orangeLine}></View>
         </View>
         {vetementsEnAttente.length > 0 ? (
-        <ScrollView>
+        <View>
           {vetementsEnAttente.map((vetement) => (
             <View style={styles.centeredContainer} key={vetement._id}>
               <View style={styles.clothingItem}>
@@ -219,7 +219,7 @@ const handleDeleteEnAttente = () => {
               </View>
             </View>
               ))}
-        </ScrollView>
+        </View>
         ) : (
           <View style={styles.textContainer}>
             <Text style={{ ...styles.textButton, color: 'black' }}>Aucun vêtement en attente</Text>

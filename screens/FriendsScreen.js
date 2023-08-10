@@ -16,6 +16,9 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import defaultImage from '../assets/Profildefault.jpg';
+
+
 const url = process.env.EXPO_PUBLIC_IP;
 
 export default function FriendsScreen({ navigation }) {
@@ -90,7 +93,7 @@ export default function FriendsScreen({ navigation }) {
             />
           ) : (
             <Image
-              source={require("../assets/messi.jpg")}
+              source={require("../assets/Profildefault.jpg")}
               style={{
                 width: 50,
                 height: 50,
@@ -144,7 +147,7 @@ export default function FriendsScreen({ navigation }) {
             />
           ) : (
             <Image
-              source={require("../assets/messi.jpg")}
+              source={require("../assets/Profildefault.jpg")}
               style={{
                 width: 50,
                 height: 50,
@@ -381,7 +384,11 @@ export default function FriendsScreen({ navigation }) {
               <View style={styles.modalView}>
                 <View style={styles.modalViewProfil}>
                   <Image
-                    source={{ uri: friendSelected.image }}
+                    source={
+                      friendSelected.image
+                        ? { uri: friendSelected.image }
+                        : defaultImage
+                    }
                     style={{
                       width: 100,
                       height: 100,
@@ -391,7 +398,6 @@ export default function FriendsScreen({ navigation }) {
                     }}
                   />
                   <Text style={styles.H1}>{friendSelected.username}</Text>
-
                 </View>
 
                 <View style={styles.vetementsContainer}>
@@ -540,11 +546,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modalViewProfil :{
+  modalViewProfil: {
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-around",
-    alignItems: "center"
+    alignItems: "center",
   },
   h3: {
     color: "#000000",

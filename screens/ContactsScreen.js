@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
@@ -12,6 +13,11 @@ import {
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function ContactScreen({ navigation }) {
+
+  const [message, setMessage] = useState('');
+
+
+
   return (
     <ScrollView style={styles.background}>
       <KeyboardAvoidingView
@@ -28,8 +34,12 @@ export default function ContactScreen({ navigation }) {
           Envoie-nous ta demande en remplissant le formulaire ci-dessous
         </Text>
         <View style={styles.inputContainer}>
-          <Text style={styles.texte}>Ton message :</Text>
-          <TextInput placeholder="Message" style={[styles.input]} />
+          <TextInput 
+        value={message} 
+        onChangeText={setMessage} 
+        placeholder="Tapez votre message ici" 
+        multiline
+        style={styles.input}      />
         </View>
 
         <View style={styles.pressBottom}>
@@ -38,7 +48,7 @@ export default function ContactScreen({ navigation }) {
             style={styles.register}
             activeOpacity={0.8}
           >
-            <Text style={styles.textButton}>Envoyer le formulaire</Text>
+            <Text style={styles.textButton}>Envoyer</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -65,6 +75,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "600",
     fontFamily: "Outfit",
+    marginTop: 20,
     marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
@@ -103,8 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   pressBottom: {
-    flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
     width: "90%",
     backgroundColor: "#fcfaf1",
     padding: 20,
@@ -113,8 +123,10 @@ const styles = StyleSheet.create({
   },
   register: {
     alignItems: "center",
-    width: "100%",
-    height: "35%",
+    justifyContent: "center",
+    paddingTop: 3,
+    width: 250,
+    height: 50,
     marginTop: 10,
     backgroundColor: "#d95b33",
     borderRadius: 30,
