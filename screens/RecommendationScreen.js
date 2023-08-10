@@ -129,14 +129,14 @@ export default function RecommendationScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.H3}>Notre reco OneSize</Text>
         <View style={styles.circleContainer}>
-           {showAnimation && (
+           {/* {showAnimation && (
             <AnimatedLottieView
               source={require("../assets/animations/shoes-colorOneSize.json")}
               autoPlay
               loop={false}
               style={styles.lottie}
             />
-          )} 
+          )}  */}
 
           {recoTaille && (
             <View style={styles.circle}>

@@ -27,6 +27,7 @@ import ClothesScreen from "./screens/ClothesScreen";
 import RecommendationScreen from "./screens/RecommendationScreen";
 import MarqueScreen from "./screens/MarqueScreen";
 import MarqueTypeScreen from "./screens/MarqueTypeScreen";
+import TutorialScreen from "./screens/TutorialScreen";
 
 //Store
 import { Provider } from 'react-redux';
@@ -130,7 +131,7 @@ const CustomDrawer = (props) => {
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="SignIn"
+      initialRouteName="Tutorial"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Loading" component={LoadingScreen} />
@@ -142,6 +143,8 @@ const StackNavigator = () => {
       <Stack.Screen name="MarqueScreen" component={MarqueScreen} />
       <Stack.Screen name="MarqueTypeScreen" component={MarqueTypeScreen} />
       <Stack.Screen name="RecommendationScreen" component={RecommendationScreen} />
+      <Stack.Screen name="Tutorial" component={TutorialScreen} />
+      
 
     </Stack.Navigator>
   );
