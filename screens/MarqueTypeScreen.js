@@ -22,7 +22,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
     const [typesDispo, setTypesDispo] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [type, setType] = useState('')
-    const [coupe, setCoupe] = useState("Normale")
+    const [coupe, setCoupe] = useState("Regular")
 
     const handlePressType = (typePressed) => {
       setType(typePressed)
@@ -39,7 +39,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
     const types = typesDispo.map((type,i) => {
       return (
         <TouchableOpacity key={i} style={styles.photoContainer} onPress={()=>handlePressType(type)}>
-          <Text>{type}</Text>
+          <Text style={{fontSize : 30, fontFamily : 'Outfit'}}>{type}</Text>
         </TouchableOpacity>
       )
     })
@@ -58,17 +58,13 @@ export default function MarqueTypeScreen({ navigation, route }) {
             <View style={styles.centeredView}>
               <TouchableWithoutFeedback>
                 <View style={styles.modalView}>
-                  <Image
-                    source={require('../assets/vetements/teeshirt.jpeg')}
-                    style={styles.image}
-                  />
-                  <Text style={styles.textType}>Choisis ta coupe</Text>
+                  <Text style={styles.textType}>Quelle coupe ?</Text>
                   <View style={styles.buttonChoiceView}>
                     <TouchableOpacity style={coupe === 'Slim' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Slim')}}>
                       <Text style={coupe === 'Slim' ? styles.textButton : styles.text2Button}>Slim</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={coupe === 'Normale' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Normale')}}>
-                      <Text style={coupe === 'Normale' ? styles.textButton : styles.text2Button}>Regular</Text>
+                    <TouchableOpacity style={coupe === 'Regular' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Regular')}}>
+                      <Text style={coupe === 'Regular' ? styles.textButton : styles.text2Button}>Regular</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={coupe === 'Ample' ? styles.buttonCoupe : styles.button2Coupe} onPress={() => {setCoupe('Ample')}}>
                       <Text style={coupe === 'Ample' ? styles.textButton : styles.text2Button}>Ample</Text>
@@ -108,7 +104,7 @@ export default function MarqueTypeScreen({ navigation, route }) {
         <Text style={styles.retour}>Retour</Text>
       </SafeAreaView>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>Types</Text>
+        <Text style={styles.H1}>Choisis ton {categorie}</Text>
         <View style={styles.border}></View>
       <View style={styles.container}>
       {types}
@@ -141,9 +137,10 @@ const styles = StyleSheet.create({
       width: '100%'
     },
     photoContainer: {
-      marginTop: 20,
+      marginTop: 30,
       flexDirection: 'row',
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
+      fontFamily : 'Outfit'
     },
     titleContainer: {
       alignItems: "center",
@@ -155,6 +152,7 @@ const styles = StyleSheet.create({
       borderBottomWidth:3,
       borderBottomColor: '#d95b33', 
       borderRadius: 50,
+      marginBottom: 20
     },
     burgerIcon:{
       paddingLeft: 30,
@@ -230,7 +228,7 @@ const styles = StyleSheet.create({
         width: 0,
         height: 4,
       },
-      shadowColor: "rgba(0, 0, 0, 0.25)",
+      shadowColor: "#d95b33",
     },
     buttonCoupe: {
       width: 100,
@@ -279,7 +277,7 @@ const styles = StyleSheet.create({
         width: 0,
         height: 4,
       },
-      shadowColor: "rgba(0, 0, 0, 0.25)",
+      shadowColor: "#d6d1bd",
     },
     button2Coupe: {
       width: 100,
@@ -318,7 +316,6 @@ const styles = StyleSheet.create({
     image: {
       width: 100,
       height: 110,
-      borderRadius: 50,
       marginBottom: 15,
     },
 });

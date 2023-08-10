@@ -545,6 +545,13 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginBottom: 40,
     fontSize : 12,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "#d95b33",
   },
   savebutton: {
     alignItems: "center",
@@ -557,13 +564,21 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize : 12,
     marginBottom: 10,
+    shadowOpacity: 1,
+    elevation: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "#d95b33",
   },
   textButtonactive: {
-    color: "#707B81",
+    // color: "#707B81",
     height: 30,
     fontFamily: "Outfit",
     fontWeight: "600",
-    color : "#FFF"
+    color : "#FFF",
+    paddingTop: 5
   },
   textButtoninactive: {
     color: "#707B81",
@@ -571,6 +586,7 @@ const styles = StyleSheet.create({
     fontFamily: "Outfit",
     fontWeight: "600",
     color: "#707B81",
+    paddingTop: 5
   },
   imageAvatar: {
     width: 90,
@@ -627,12 +643,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     shadowOpacity: 1,
     elevation: 4,
-    shadowRadius: 4,
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
+    shadowColor: "#d95b33",
   },
   textButton: {
     color: "#ffffff",
@@ -651,12 +666,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     shadowOpacity: 1,
     elevation: 4,
-    shadowRadius: 4,
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.25)",
+    shadowColor: "#838b8c",
   },
   textButton2: {
     color: "#707b81",

@@ -271,109 +271,111 @@ export default function CalibrateTailles({ navigation, categorie }) {
       >
         <ScrollView keyboardShouldPersistTaps="always">
           <View style={styles.premierRoute}>
-            <View style={{marginTop: 20}}>
-            {vetements.length >= 3 ? (<Text st>Merci de confirmer tes vêtements</Text>) : (
-            <Text>Vêtement {vetements.length+1}/3</Text>
-            )}
-            </View>
-              {vetements.length >= 3 ? null : (
-              <View style={styles.containerInput}>
-              <SelectList 
-                  boxStyles={styles.box}
-                  inputStyles={styles.input}
-                  dropdownStyles={styles.dropdown}
-                  dropdownItemStyles={styles.dropdownItem}
-                  dropdownTextStyles={styles.dropdownText}
-                  setSelected={(val) => displayType(val)} 
-                  data={newDataMarques} 
-                  save="value"
-                  placeholder="Marque"
-              /> 
-              <SelectList 
-                  boxStyles={styles.box}
-                  inputStyles={styles.input}
-                  dropdownStyles={styles.dropdown}
-                  dropdownItemStyles={styles.dropdownItem}
-                  dropdownTextStyles={styles.dropdownText}
-                  setSelected={(val) => displayTailles(val)} 
-                  data={newDataTypes} 
-                  save="value"
-                  placeholder="Type"
-              />
-              <SelectList 
-                  boxStyles={styles.box}
-                  inputStyles={styles.input}
-                  dropdownStyles={styles.dropdown}
-                  dropdownItemStyles={styles.dropdownItem}
-                  dropdownTextStyles={styles.dropdownText}
-                  setSelected={(val) => setCoupe(val)} 
-                  data={coupes} 
-                  save="value"
-                  placeholder="Coupe"
-              />
-              <SelectList 
-                  boxStyles={styles.box}
-                  inputStyles={styles.input}
-                  dropdownStyles={styles.dropdown}
-                  dropdownItemStyles={styles.dropdownItem}
-                  dropdownTextStyles={styles.dropdownText}
-                  setSelected={(val) => setTaille(val)} 
-                  data={newDataTailles} 
-                  save="value"
-                  placeholder="Taille"
-              />
-              </View>)}
-              <View>
-                {/* Bouton Suivant */}
-                <TouchableOpacity
-                   style={
-                    vetements.length >= 3
-                      ? { ...styles.button, backgroundColor: '#D95B33'}
-                      : styles.button
-                  }
-                  activeOpacity={0.8}
-                  onPress={ vetements.length >= 3 ? handleFinish : handleSubmit}
-                >
-                  <Text style={
-                    vetements.length >= 3
-                      ? { ...styles.textButton, color: '#FFFF'}
-                      : styles.textButton
-                  }>
-                    {vetements.length >= 3 ? 'Confirmer' : 'Suivant'}
-                  </Text>
-                </TouchableOpacity>
-                <Modal visible={modalCongratsVisible} animationType="fade" transparent={true}  onRequestClose={() => setModalDeleteVisible(false)}>
-                  <TouchableWithoutFeedback onPress={() => setModalCongratsVisible(false)}>
-                    <View style={styles.modalContainer}>
-                      <View style={styles.modalContent}>
-                        <View style={styles.gradient}>
-                          <Image source={require('../assets/gradient.png')} style={styles.gradientImage} />
-                          <Image source={require('../assets/confetti.png')} style={styles.confettiImage} />
+            <View style={styles.overContainer}>
+              <View style={{marginTop: 20}}>
+              {vetements.length >= 3 ? (<Text st>Merci de confirmer tes vêtements</Text>) : (
+              <Text>Vêtement {vetements.length+1}/3</Text>
+              )}
+              </View>
+                {vetements.length >= 3 ? null : (
+                <View style={styles.containerInput}>
+                <SelectList 
+                    boxStyles={styles.box}
+                    inputStyles={styles.input}
+                    dropdownStyles={styles.dropdown}
+                    dropdownItemStyles={styles.dropdownItem}
+                    dropdownTextStyles={styles.dropdownText}
+                    setSelected={(val) => displayType(val)} 
+                    data={newDataMarques} 
+                    save="value"
+                    placeholder="Marque"
+                /> 
+                <SelectList 
+                    boxStyles={styles.box}
+                    inputStyles={styles.input}
+                    dropdownStyles={styles.dropdown}
+                    dropdownItemStyles={styles.dropdownItem}
+                    dropdownTextStyles={styles.dropdownText}
+                    setSelected={(val) => displayTailles(val)} 
+                    data={newDataTypes} 
+                    save="value"
+                    placeholder="Type"
+                />
+                <SelectList 
+                    boxStyles={styles.box}
+                    inputStyles={styles.input}
+                    dropdownStyles={styles.dropdown}
+                    dropdownItemStyles={styles.dropdownItem}
+                    dropdownTextStyles={styles.dropdownText}
+                    setSelected={(val) => setCoupe(val)} 
+                    data={coupes} 
+                    save="value"
+                    placeholder="Coupe"
+                />
+                <SelectList 
+                    boxStyles={styles.box}
+                    inputStyles={styles.input}
+                    dropdownStyles={styles.dropdown}
+                    dropdownItemStyles={styles.dropdownItem}
+                    dropdownTextStyles={styles.dropdownText}
+                    setSelected={(val) => setTaille(val)} 
+                    data={newDataTailles} 
+                    save="value"
+                    placeholder="Taille"
+                />
+                </View>)}
+                <View>
+                  {/* Bouton Suivant */}
+                  <TouchableOpacity
+                    style={
+                      vetements.length >= 3
+                        ? { ...styles.button, backgroundColor: '#D95B33'}
+                        : styles.button
+                    }
+                    activeOpacity={0.8}
+                    onPress={ vetements.length >= 3 ? handleFinish : handleSubmit}
+                  >
+                    <Text style={
+                      vetements.length >= 3
+                        ? { ...styles.textButton, color: '#FFFF'}
+                        : styles.textButton
+                    }>
+                      {vetements.length >= 3 ? 'Confirmer' : 'Suivant'}
+                    </Text>
+                  </TouchableOpacity>
+                  <Modal visible={modalCongratsVisible} animationType="fade" transparent={true}  onRequestClose={() => setModalDeleteVisible(false)}>
+                    <TouchableWithoutFeedback onPress={() => setModalCongratsVisible(false)}>
+                      <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                          <View style={styles.gradient}>
+                            <Image source={require('../assets/gradient.png')} style={styles.gradientImage} />
+                            <Image source={require('../assets/confetti.png')} style={styles.confettiImage} />
+                          </View>
+                          <Text style={styles.modalText}>Calibrage {categorieLC} réussi !</Text>
+                          <TouchableOpacity
+                            style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
+                            activeOpacity={0.8}
+                            onPress={() => navigation.navigate('Calibrage')} 
+                          >
+                            <Text style={styles.textButton}>
+                              Calibrer le reste
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
+                            activeOpacity={0.8}
+                            onPress={() => navigation.navigate('Home')} 
+                          >
+                            <Text style={styles.textButton}>
+                              Chercher un vêtement
+                            </Text>
+                          </TouchableOpacity>
                         </View>
-                        <Text style={styles.modalText}>Calibrage {categorieLC} réussi !</Text>
-                        <TouchableOpacity
-                          style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
-                          activeOpacity={0.8}
-                          onPress={() => navigation.navigate('Calibrage')} 
-                        >
-                          <Text style={styles.textButton}>
-                            Calibrer le reste
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
-                          activeOpacity={0.8}
-                          onPress={() => navigation.navigate('Home')} 
-                        >
-                          <Text style={styles.textButton}>
-                            Chercher un vêtement
-                          </Text>
-                        </TouchableOpacity>
                       </View>
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <ConfettiCannon count={200} origin={{x: -10, y: 0}} colors={['#25958A','#D95B33', '#D6D1BD']} autoStart={true} />
-                </Modal>
+                    </TouchableWithoutFeedback>
+                    <ConfettiCannon count={200} origin={{x: -10, y: 0}} colors={['#25958A','#D95B33', '#D6D1BD']} autoStart={true} />
+                  </Modal>
+                </View>
               </View>
               {vetements.map((vetement) => (
                 <View style={styles.centeredContainer} key={vetement._id}>
@@ -441,11 +443,12 @@ const styles = StyleSheet.create({
       shadowOpacity: 1,
       elevation: 4,
       shadowRadius: 4,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowColor: "rgba(0, 0, 0, 0.25)",
+      shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowColor: "#d95b33",
     },
     textButton: {
       color: "#ffffff",
@@ -543,4 +546,8 @@ const styles = StyleSheet.create({
     iconContainer: {
       marginRight : 30,
     },
+    overContainer: {
+      alignItems: 'center',
+      marginRight: 25
+    }
 })

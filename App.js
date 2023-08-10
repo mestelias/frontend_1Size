@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import { LogBox } from 'react-native';
 
 //Sound
 import React from "react";
@@ -46,6 +47,8 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {Text, Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { emptyStore } from './reducers/user'
+
+LogBox.ignoreAllLogs(true);
 
 const reducers=combineReducers({user});
 
@@ -125,7 +128,7 @@ const CustomDrawer = (props) => {
       })}
       <TouchableOpacity onPress={() => handleSignOut()} style={styles.signOutView}>
         <FontAwesome name='sign-out' color={"#d95b33"} size={30}/>
-        <Text style={styles.signOutText}>Sign Out</Text>
+        <Text style={styles.signOutText}>Deconnexion</Text>
       </TouchableOpacity>
     </DrawerContentScrollView>
   );
