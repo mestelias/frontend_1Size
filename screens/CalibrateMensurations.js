@@ -121,16 +121,21 @@ export default function CalibrateMensurations ({navigation, categorie}){
     
     // La fonction permet de fermer la modal et rediriger l'utilisateur vers la Home
     navigateToHome = () => {
-        setModalVisible(false)
-        navigation.navigate('Home')
+      navigation.navigate('Home'),
+      setModalVisible(false)
     }
+
+    navigateToCalibrage = () => {
+      navigation.navigate('Calibrage'),
+      setModalVisible(false)
+  }
 
     return (
         <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
         >
-         <Modal visible={modalVisible} animationType="fade" transparent={true}  onRequestClose={() => setModalDeleteVisible(false)}>
+        <Modal visible={modalVisible} animationType="fade" transparent={true}  onRequestClose={() => setModalVisible(false)}>
           <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
@@ -142,7 +147,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
                 <TouchableOpacity
                   style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
                   activeOpacity={0.8}
-                  onPress={() => navigation.navigate('Calibrage')} 
+                  onPress={() => navigateToCalibrage()} 
                 >
                   <Text style={styles.textButton}>
                     Calibrer le reste
@@ -151,7 +156,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
                 <TouchableOpacity
                   style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
                   activeOpacity={0.8}
-                  onPress={() => navigation.navigate('Home')} 
+                  onPress={() => navigateToHome()} 
                 >
                   <Text style={styles.textButton}>
                     Chercher un vêtement
@@ -365,6 +370,17 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: 'rgba(0,0,0,0.5)',
     },
+    modalContent: {
+      backgroundColor: "#fcfaf1",
+      padding: 20,
+      borderRadius: 10,
+      alignItems: "center",
+      marginHorizontal: 20,
+    },
+    modalText: {
+      fontSize: 18,
+      marginBottom: 20,
+    },
     scrollView:{
       flex: 1,
     },
@@ -376,5 +392,23 @@ const styles = StyleSheet.create({
       width: 150, 
       height: 150,
       borderRadius: 75, 
+    },
+    confettiImage: {
+      width: 100,
+      height: 100,
+    },
+    gradient: {
+      width: 150,
+      height: 150,
+      borderRadius: 75,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+      overflow: 'hidden', 
+    },
+    gradientImage: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
     },
 });
