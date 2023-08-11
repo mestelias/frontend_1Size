@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     color: "#d95b33",
   },
   size: {
-    color: "#707B81",
+    color: "#25958a",
     textAlign: "center",
     fontFamily: "Outfit",
     fontSize: 20,
