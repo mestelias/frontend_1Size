@@ -36,7 +36,7 @@ export default function FriendsScreen({ navigation }) {
   // Affiche la liste des amis à l'initialisation du composant
   useEffect(() => {
     fetchFriends();
-  }, []);
+  }, [userToken]);
 
   // Fonction qui permet d'afficher la liste d'amis de l'utilisateur
   const fetchFriends = async () => {
