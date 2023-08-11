@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logoGif.gif",
-      "resizeMode": "",
+      "resizeMode": "contain",
       "backgroundColor": "#25958a"
     },
     "assetBundlePatterns": [

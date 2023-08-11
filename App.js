@@ -95,7 +95,7 @@ const CustomDrawer = (props) => {
   
   
   return (
-    <View style={{flex:1}}>
+    <View style={{flex:1, backgroundColor: "#fcfaf1"}}>
       <DrawerContentScrollView {...props}>
         {/* <View style={styles.drawerHeader}> */}
           <View style={styles.profilView}>

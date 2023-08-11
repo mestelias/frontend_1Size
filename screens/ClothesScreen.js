@@ -302,7 +302,10 @@ export default function ClothesScreen() {
 
               <TouchableOpacity
                 style={styles.button2}
-                onPress={() => handleSubmit(true)}
+                onPress={() => {
+                  handleSubmit(true)
+                  setScreenEnAttente(false)
+                }}
               >
                 <Ionicons size={32} name="happy-outline" color="#25958A" />
                 {/* <Text style={{ ...styles.textButton, color: "#FFFF" }}>
