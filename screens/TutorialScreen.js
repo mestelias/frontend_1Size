@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import PagerView from 'react-native-pager-view';
 import PageOne from './tuto/TutoPageOne';
 import PageTwo from './tuto/TutoPageTwo';
 import PageThree from './tuto/TutoPageThree';
 import PageFour from './tuto/TutoPageFour';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function TutorialScreen({navigation}) {
     const [activePage, setActivePage] = useState(0)
@@ -13,7 +14,18 @@ export default function TutorialScreen({navigation}) {
     console.log(token)
   return (
     <View style={styles.container}>
+                  <View style={styles.donutContainer}>
+                <Image
+                    source={require('../assets/Donut.png')}
+                    style={styles.donutImage}
+                />
+            </View>
 
+            {/* "1 Size" text */}
+            <Text style={styles.logo}>
+                <Text style={{ color: '#d95b33' }}>1</Text>
+                <Text style={{ color: '#25958a' }}>Size</Text>
+            </Text>
         <PagerView style={styles.pagerView} initialPage={0} onPageSelected={(event) => {
           setActivePage(event.nativeEvent.position);
         }}>
@@ -42,8 +54,8 @@ export default function TutorialScreen({navigation}) {
         />
         ))}
         </View>
-        <TouchableOpacity onPress={() => token ? navigation.navigate("HomeStack") : navigation.navigate("SignIn")}>
-        <Text style={styles.skipButton}>Skip</Text>
+        <TouchableOpacity style={styles.skipButton} onPress={() => token ? navigation.navigate("HomeStack") : navigation.navigate("SignIn")}>
+        <FontAwesome name='home' size={40} color='#D95B33'/>
         </TouchableOpacity>  
         </View>
     </View>
@@ -53,7 +65,8 @@ export default function TutorialScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor:"#FCFAF1"
+        backgroundColor:"#FCFAF1",
+        height: "50%"
     },
     pagerView: {
         flex: 1,
@@ -84,4 +97,22 @@ const styles = StyleSheet.create({
       activeIndicator: {
         backgroundColor: '#D95B33',
       },
+      logo: {
+        textAlign: 'left',
+        fontSize: 45,
+        marginLeft: 40,
+        marginTop: 50,
+        fontFamily: 'Outfit',
+    },
+    donutContainer: {
+      position: 'absolute',
+      top: -140,
+      right: -150,
+      zIndex: 1, 
+      overflow: 'visible',
+    },
+    donutImage: {
+        width: 400,
+        height: 400,
+    },
 });
