@@ -267,6 +267,16 @@ export default function CalibrateTailles({ navigation, categorie }) {
         };
       } 
     
+      navigateToHome = () => {
+        setModalCongratsVisible(false),
+        navigation.navigate('Home')
+      }
+  
+      navigateToCalibrage = () => {
+        setModalCongratsVisible(false),
+        navigation.navigate('Calibrage')
+    }
+
       return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -360,7 +370,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                           <TouchableOpacity
                             style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
                             activeOpacity={0.8}
-                            onPress={() => navigation.navigate('Calibrage')} 
+                            onPress={() => navigateToHome()} 
                           >
                             <Text style={styles.textButton}>
                               Calibrer le reste
@@ -369,7 +379,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                           <TouchableOpacity
                             style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
                             activeOpacity={0.8}
-                            onPress={() => navigation.navigate('Home')} 
+                            onPress={() => navigateToCalibrage()} 
                           >
                             <Text style={styles.textButton}>
                               Chercher un vêtement

@@ -110,7 +110,10 @@ export default function RecommendationScreen({ navigation, route }) {
         </TouchableOpacity>
       </SafeAreaView>
       <View style={styles.titleContainer}>
-        <Text style={styles.H1}>One Size</Text>
+        <Text style={styles.H1}>
+            <Text style={{ color: '#d95b33' }}>1</Text>
+            <Text style={{ color: '#25958a' }}>Size</Text>
+        </Text>
         <View style={styles.border}></View>
         <View style={styles.searchedData}>
         { (categorie === "chaussures") ?
