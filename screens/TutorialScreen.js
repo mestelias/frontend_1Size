@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
     },
     donutContainer: {
       position: 'absolute',
-      top: -140,
-      right: -150,
+      top: -150,
+      right: -160,
       zIndex: 1, 
       overflow: 'visible',
     },
