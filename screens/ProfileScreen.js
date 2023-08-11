@@ -386,7 +386,7 @@ export default function ProfileScreen() {
         <Ionicons name="flash" size={32} color={flashMode === FlashMode.off ? 'white' : '#e8be4b'}/>
       </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.cameraSnap} onPress={() => cameraRef && takePicture()}>
+      <TouchableOpacity style={styles.cameraSnap} onPress={() => cameraRef && takePicture() && navigation.navigate('Profil')}>
         <Ionicons name="ellipse-outline" size={95} color="white"/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.upback} onPress={() => {setCameraVisible(false)}} >
