@@ -6,7 +6,7 @@ export default function PageOne() {
     <View style={styles.background}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.H1}>Obtiens ta vraie taille dans n'importe quelle marque !</Text>
+          <Text style={styles.H1}>Obtiens ta vraie taille pour n'importe quelle marque !</Text>
         </View>
       </View>
     </View>
