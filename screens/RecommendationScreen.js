@@ -27,57 +27,45 @@ export default function RecommendationScreen({ navigation, route }) {
   const userToken = useSelector((state) => state.user.value.token);
   const userSexe = useSelector((state) => state.user.value.genre).toLowerCase();
 
-  // A AFFICHER QUAND PAGE MARQUE OK Récupération des props de l'écran type/coupe
-  // const { categorie, marque, type, coupe } = route.params;
+  // Fonction qui retourne la reco en fonction des mensurations utilisateurs
+  const fetchData = async () => {
+        // Démarrage de l'animation
+        await new Promise((resolve) => setTimeout(resolve, animationDuration));
 
-  // let desiredFit = coupe;
+        // Cacher l'animation
+        setShowAnimation(false);
 
-  console.log("sexe", userSexe);
-  console.log("token", userToken);
-  console.log("recoTailleNull", recoTaille);
+        // Récupération des mensurations de l'utilisateur
+        const responseForUserMensurations = await fetch(
+          `${url}/users/mensurations/?token=${userToken}&categorie=${categorie}`
+        );
+        const userMensurations = await responseForUserMensurations.json();
+        console.log("Mensurations: ", userMensurations);
 
-  // A SUPPRIMER valeurs test
-  // const categorie = "haut";
-  // const marque = "Lacoste";
-  // const type = "Polo";
-  // const coupe = "normale";
+        // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
+        const responseForSizes = await fetch(
+          `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}`
+        );
+        const sizes = await responseForSizes.json();
+        console.log("Tailles: ", sizes);
 
-  //TO DO : use effect d'initialistation qui va permettre à l'algo de calculer la reco de taille idéale
+        // Appel de la fonction qui calcule la taille idéale
+        const bestFit = recommendSize(userMensurations, sizes, coupe);
+        console.log("Taille recommandée: ", bestFit[0]);
+
+        // Sauvegarde de la valeur retournée dans un état
+        setRecoTaille(bestFit[0]);
+      };
+
+    
   useEffect(() => {
-    const fetchData = async () => {
-      // Démarrage de l'animation
-      await new Promise((resolve) => setTimeout(resolve, animationDuration));
-
-      // Cacher l'animation
-      setShowAnimation(false);
-
-      // Récupération des mensurations de l'utilisateur
-      const responseForUserMensurations = await fetch(
-        `${url}/users/mensurations/?token=${userToken}&categorie=${categorie}`
-      );
-      const userMensurations = await responseForUserMensurations.json();
-      console.log("Mensurations: ", userMensurations);
-
-      // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
-      const responseForSizes = await fetch(
-        `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}`
-      );
-      const sizes = await responseForSizes.json();
-      console.log("Tailles: ", sizes);
-
-      // Appel de la fonction qui calcule la taille idéale
-      const bestFit = recommendSize(userMensurations, sizes, coupe);
-      console.log("Taille recommandée: ", bestFit[0]);
-
-      // Sauvegarde de la valeur retournée dans un état
-      setRecoTaille(bestFit[0]);
-    };
-
     fetchData();
   }, []);
 
   const handleSubmit = async () => {
     // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
+
+    //TODO CHECK WTF IS THIS SHIT
     const responseForRecoSizes = await fetch(
       `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}&${recoTaille}`
     );
@@ -96,7 +84,7 @@ export default function RecommendationScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((vetement) => {
-        console.log("vêtement: ", vetement);
+        console.log("vêtement: ", message);
         // Navigation vers la page de ses vêtements
         navigation.navigate("Clothes");
       });
