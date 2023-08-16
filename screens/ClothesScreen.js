@@ -9,7 +9,6 @@ import {
   Alert,
   ScrollView,
   TouchableWithoutFeedback,
-  hideModal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
