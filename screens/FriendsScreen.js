@@ -13,7 +13,6 @@ import {
 import { useSelector } from "react-redux";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import defaultImage from '../assets/Profildefault.jpg';
@@ -22,6 +21,7 @@ import defaultImage from '../assets/Profildefault.jpg';
 const url = process.env.EXPO_PUBLIC_IP;
 
 export default function FriendsScreen({ navigation }) {
+  //friend : tous les amis qui ont été fetch à l'initialisation
   const [friends, setFriends] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [friendProfile, setFriendProfile] = useState(false);
@@ -43,7 +43,6 @@ export default function FriendsScreen({ navigation }) {
     try {
       const response = await fetch(`${url}/users/friends?&token=${userToken}`);
       const data = await response.json();
-
       const sortedFriends = data.sort((a, b) =>
         a.username.localeCompare(b.username)
       );
@@ -168,12 +167,7 @@ export default function FriendsScreen({ navigation }) {
             alignItems: "center",
           }}
         >
-          {/* <TouchableOpacity style={{ marginRight : 5 }}>
-          <Text style={styles.text}>Rechercher</Text>
-        </TouchableOpacity> */}
           <FontAwesome name="shopping-bag" color={"#d95b33"} size={20} />
-
-          {/* <Ionicons size={32} name="close-circle-outline" color="#D95B33" /> */}
         </View>
       </View>
     );
@@ -265,7 +259,6 @@ export default function FriendsScreen({ navigation }) {
   };
 
   const openFriendProfile = (item) => {
-    console.log(item);
     setFriendProfile(true);
     setFriendSelected(item);
   };

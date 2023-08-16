@@ -119,7 +119,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
           compteur[key] = (compteur[key] || 0) + 1;
         });
       });
-    
+
       const moyenne = {};
     
       Object.keys(somme).forEach(key => {

@@ -20,9 +20,10 @@ function recommendSize(userData, brandSizes, desiredFit = 'Regular') {
 
         // Parcourir chaque mesure pour la taille actuelle
         for (let measure in brandSizes[size]) {
+            // Vérifier la mensuration existe dans le user ET dans la marques
             if (userData[measure] !== undefined && brandSizes[size][measure] !== undefined) {
                 // Calculez la différence pondérée par le coeff entre la taille de l'utilisateur & celle du tour de boucle
-                const difference = Math.abs(userData[measure] - brandSizes[size][measure]) * (coefficients[measure] || 1);
+                const difference = Math.abs(userData[measure] - brandSizes[size][measure]) * (coefficients[measure]);
                 totalDifference += difference;
             }
         }
