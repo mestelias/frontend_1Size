@@ -24,9 +24,11 @@ const url = process.env.EXPO_PUBLIC_IP
 
 export default function MarqueScreen({ navigation, route }) {
   const categorie = route.params.categorie
+
   const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
   const sexe = useSelector((state)=>state.user.value.genre)
   const sexeLC = sexe && sexe.toLowerCase()
+  
 
   //const [search, setSearch] = useState('');
 
@@ -38,13 +40,16 @@ export default function MarqueScreen({ navigation, route }) {
     );
   });
 
+// Fetch qui récupère toutes les marques de la catégorie (nom et image)
+
   useEffect(()=>{
     fetch(`${url}/marques/logos?sexe=${sexeLC}&categorie=${categorie}`)
     .then((response)=> response.json())
     .then((marques) => setMarquesDispo(marques))
-  
+    console.log("dans le useeffect")
   }, [categorie])
-
+  
+console.log("en dehors du useeffect")
   return (
     <View style={styles.container}>
       <View style={styles.header}>

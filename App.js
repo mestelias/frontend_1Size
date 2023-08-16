@@ -48,7 +48,9 @@ import {Text, Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { emptyStore } from './reducers/user'
 
-LogBox.ignoreAllLogs(true);
+// Ligne qui permet de supprimer les warning (passer en true pour ignorer aussi les erreurs)
+
+LogBox.ignoreAllLogs(true); 
 
 const reducers=combineReducers({user});
 
@@ -79,6 +81,8 @@ const routeIconMapping = {
   "Mes vêtements" : "shopping-bag"
 };
 
+// Permet de gérer le header et le footer de façon indépendante
+
 const CustomDrawer = (props) => {
 
   const dispatch = useDispatch()
@@ -89,11 +93,7 @@ const CustomDrawer = (props) => {
     dispatch(emptyStore())
     props.navigation.navigate('SignIn')
   }
-  //On filtre la route "main" du drawer, simplement à l'affichage, pour qu'elle reste en premier pour accéder à la stack
-  //navigation, mais sans apparaître dans le drawer
-
-  
-  
+    
   return (
     <View style={{flex:1, backgroundColor: "#fcfaf1"}}>
       <DrawerContentScrollView {...props}>
@@ -148,7 +148,6 @@ const StackNavigator = () => {
       initialRouteName="Tutorial"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="Loading" component={LoadingScreen} />
       <Stack.Screen name="Clothes" component={ClothesScreen} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
@@ -188,6 +187,9 @@ const AppDrawerNavigation = () => (
 );
 
 export default function App() {
+
+  // création variable pour la police Outfit si elle n'est pas prise en charge
+  
   const [fontsLoaded] = useFonts({
     Outfit: require("./assets/fonts/Outfit-Regular.ttf"),
   });

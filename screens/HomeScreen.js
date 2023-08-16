@@ -44,7 +44,7 @@ export default function CalibrateHomeScreen({ navigation }) {
           alignItems: "center",
           width: "70%",
           height: carouselItemHeight,
-        }}
+        }} 
       >
         <Image
           source={item.image}

@@ -370,7 +370,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                           <TouchableOpacity
                             style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
                             activeOpacity={0.8}
-                            onPress={() => navigateToHome()} 
+                            onPress={() => navigateToCalibrage()} 
                           >
                             <Text style={styles.textButton}>
                               Calibrer le reste
@@ -379,7 +379,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
                           <TouchableOpacity
                             style={{ ...styles.button, width: 250, marginTop : 10, marginBottom : 20}}
                             activeOpacity={0.8}
-                            onPress={() => navigateToCalibrage()} 
+                            onPress={() => navigateToHome()} 
                           >
                             <Text style={styles.textButton}>
                               Chercher un vêtement
