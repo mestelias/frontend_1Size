@@ -22,6 +22,7 @@ export default function CalibrateMensurations ({navigation, categorie}){
 
     const categorieLC = categorie.toLowerCase()
     // On stocke les inputs en ref (L'utilisation d'état re-render le composant et empêche la persistance du keyboard)
+    // Les noms des états liés aux inputs sont "firstRef, secondRef & thirdRef" suite à la modification dans le la route dans le back
     const firstRef = useRef(null);
     const secondRef = useRef(null);
     const thirdRef = useRef(null)
