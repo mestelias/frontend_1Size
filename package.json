@@ -34,6 +34,7 @@
     "expo-image": "~1.3.2",
     "expo-image-picker": "^14.3.2",
     "expo-status-bar": "~1.6.0",
+    "expo-updates": "^0.18.11",
     "install": "^0.13.0",
     "link": "^1.5.1",
     "lottie-react-native": "5.1.6",

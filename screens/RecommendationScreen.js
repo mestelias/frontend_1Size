@@ -118,20 +118,20 @@ export default function RecommendationScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.H3}>Notre recommandation </Text>
         <View style={styles.circleContainer}>
-            {/* {showAnimation && (
-            // <AnimatedLottieView
-            //   source={
-            //     categorie === "chaussures"
-            //       ? require("../assets/animations/shoes-colorOneSize.json")
-            //       : categorie === "haut"
-            //       ? require("../assets/animations/t-shirt-rocket.json")
-            //       : require("../assets/animations/pants.json")
-            //   }
-            //   autoPlay
-            //   loop={true}
-            //   style={styles.lottie}
-            // />
-          )} */}
+            {showAnimation && (
+            <AnimatedLottieView
+              source={
+                categorie === "chaussures"
+                  ? require("../assets/animations/shoes-colorOneSize.json")
+                  : categorie === "haut"
+                  ? require("../assets/animations/t-shirt-rocket.json")
+                  : require("../assets/animations/pants.json")
+              }
+              autoPlay
+              loop={true}
+              style={styles.lottie}
+            />
+          )}
 
           {recoTaille && (
             <View style={styles.circle}>
