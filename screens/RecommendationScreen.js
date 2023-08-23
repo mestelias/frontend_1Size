@@ -118,7 +118,7 @@ export default function RecommendationScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.H3}>Notre recommandation </Text>
         <View style={styles.circleContainer}>
-            {showAnimation && (
+            {/* {showAnimation && (
             <AnimatedLottieView
               source={
                 categorie === "chaussures"
@@ -131,7 +131,7 @@ export default function RecommendationScreen({ navigation, route }) {
               loop={true}
               style={styles.lottie}
             />
-          )}
+          )} */}
 
           {recoTaille && (
             <View style={styles.circle}>

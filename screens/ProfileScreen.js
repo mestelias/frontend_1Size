@@ -86,7 +86,8 @@ export default function ProfileScreen() {
   },[userToken])
 //rajout du userToken dans le useEffect, car c'est l'indication qu'un utilisateur se connecte
 //donc il faut charger les données dans la page profil 
-
+console.log(username)
+console.log("picPreview", picPreview)
   
   const handleSaveButton = async () => {
     setSaveModalVisible(false)
@@ -109,6 +110,7 @@ export default function ProfileScreen() {
         let data = await response.json();
         imageUrl = data.url;
     }
+
     // on fabrique l'objet qu'on va mettre en bdd
     let updateData = {
         token: userToken,
@@ -162,6 +164,7 @@ export default function ProfileScreen() {
     let cameraRef = useRef(null);
     const takePicture = async () => {
       const photo = await cameraRef.takePictureAsync({ quality: 0.3 })
+      console.log("photo.uri",photo.uri)
       setPicPreview(photo.uri)
     }
   
@@ -389,7 +392,6 @@ export default function ProfileScreen() {
       <TouchableOpacity style={styles.cameraSnap} onPress={() => {
         cameraRef &&
         takePicture(); 
-        setCameraVisible(false);
         setPicModalVisible(false)}}>
         <Ionicons name="ellipse-outline" size={95} color="white"/>
       </TouchableOpacity>
