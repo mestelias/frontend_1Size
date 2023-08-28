@@ -63,9 +63,7 @@ export default function RecommendationScreen({ navigation, route }) {
   }, []);
 
   const handleSubmit = async () => {
-    // Récupération de toutes les tailles et leurs mensurations du type de vêtement selon la catégorie, la marque, le sexe et le type
-
-    //TODO CHECK WTF IS THIS SHIT
+    // Récupération des mensurations
     const responseForRecoSizes = await fetch(
       `${url}/marques/tailleswithmensurations/?token=${userToken}&categorie=${categorie}&marque=${marque}&sexe=${userSexe}&type=${type}&${recoTaille}`
     );
@@ -84,7 +82,7 @@ export default function RecommendationScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((vetement) => {
-        console.log("vêtement: ", message);
+        console.log("vêtement: ", vetement);
         // Navigation vers la page de ses vêtements
         navigation.navigate("Clothes");
       });

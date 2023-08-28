@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ConfettiCannon from 'react-native-confetti-cannon';
+import { calculerMoyenne } from "../modules/calculerMoyenne";
 
 
 const url = process.env.EXPO_PUBLIC_IP
@@ -24,7 +25,6 @@ const url = process.env.EXPO_PUBLIC_IP
 export default function CalibrateTailles({ navigation, categorie }) {
     //cagtegorie vient des props de HomeCalibrateScreen => CalibrateScreen => CalibrateTailles
     const categorieLC = categorie.toLowerCase()
-    console.log('test:', categorieLC);
     const userToken = useSelector((state) => state.user.value.token);
 
     const sexe = useSelector((state)=>state.user.value.genre)
@@ -45,9 +45,6 @@ export default function CalibrateTailles({ navigation, categorie }) {
     
     // mensurations créées via l'algo de moyenne
     const [mensurationsCreees, setMensurationsCreees] = useState(null)
-
-    console.log(mensurationsCreees)
-    
     //Etats pour stocker l'ensemble des éléments récupérés en BDD 
     const [marquesDispo, setMarquesDispo] = useState([]); // récupéré au moment du fetch
     const [typesDispo, setTypesDispo] = useState([]); // récupéré au moment de la sélection de la marque
@@ -64,9 +61,9 @@ export default function CalibrateTailles({ navigation, categorie }) {
     const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
 
     const convertObject = (obj) => {
-      const firstValue = obj.tourDeHanches || obj.longueurJambe || obj.pointure || null;
-      const secondValue = obj.tourDePoitrine || obj.tourDeBassin || obj.longueur || null;
-      const thirdValue = obj.tourDeTaille || null;
+      const secondValue = obj.tourDeTaille || obj.pointure || null;
+      const firstValue = obj.tourDePoitrine || obj.tourDeBassin || obj.longueur || null;
+      const thirdValue = obj.tourDeHanches || obj.longueurJambe || null;
     
       // Pour les chaussures, renvoyer seulement les deux premières valeurs
       if (obj.pointure) {
@@ -95,40 +92,11 @@ export default function CalibrateTailles({ navigation, categorie }) {
           .then((response)=>response.json())
           .then((vetements) => {
             setVetements(vetements);
-            console.log(vetements)
             setAlreadyCalculated(false)
           }); 
     
     }, [counterChanged]) // se réinitialise à chaque fois que le compteur change pour que le compteur soit toujours d'actualité
-    
-    // Fonction pour générer le tableau de mensurations
-    const calculerMoyenne = (tableau) => {
-    
-      const array = tableau.map(e => e.mensurations)
-      // Initialisation de l'objet contenant la somme de chaque propriété
-      const somme = {};
-      // Initialisation du compteur du nombre de propriété similaire à objet
-      const compteur = {};
-    
-      array.forEach(obj => {
-        // Création d'un tableau de propriété sur lequel boucler
-        Object.keys(obj).forEach(key => {
-          // on incrémente la valeur des clées (si la clée n'existait pas on initialise à 0)
-          somme[key] = (somme[key] || 0) + obj[key];
-          // on compte le nombre de fois où la clée apparaît dans les objets
-          compteur[key] = (compteur[key] || 0) + 1;
-        });
-      });
 
-      const moyenne = {};
-    
-      Object.keys(somme).forEach(key => {
-        // on moyenne par rapport au nombre de fois où les clées apparaissent
-        moyenne[key] = somme[key] / compteur[key];
-      });
-    
-      return moyenne;
-    }
     // Lancer l'algo qu'à partir de 3 marques et si il n'a pas rentré lui même ses tailles
     if (vetements.length > 2 && !alreadyCalculated){
       setAlreadyCalculated(true)
@@ -136,15 +104,16 @@ export default function CalibrateTailles({ navigation, categorie }) {
     }
     // Si l'algo est passé par là : on met en bdd
     if (mensurationsCreees) {
+      console.log("mensurations creees : ", mensurationsCreees)
       const mensurationsConverties = convertObject(mensurationsCreees)
-
+      console.log("mensurations converties : ",mensurationsConverties)
       fetch(`${url}/users/mensurations/${categorieLC}/${userToken}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(mensurationsConverties),
         })
           .then((response) => response.json())
-          .then((data) => { console.log("data",data)})
+          .then((data) => { console.log("data mise en base de données",data)})
     }
     
     newDataMarques = marquesDispo.map((name, i) => {
@@ -190,52 +159,47 @@ export default function CalibrateTailles({ navigation, categorie }) {
     //TO DO l'impossibilité pour le user de faire suivant si le type qui reste affiché n'est pas disponible pour une marque + afficher un message d'erreur sur l'écran
     const handleSubmit = () => { 
     //Condition d'envoi du tableau de mensuration
-      if (!(marque === oldMarque)){  
-        if (taille) {
-          fetch(`${url}/marques/types?marque=${marque}&sexe=${sexeLC}&categorie=${categorieLC}`)
-          .then((response)=>response.json())
-          .then((types) => {
-            console.log('types',types);
-            console.log(type)
-            if(types.includes(type)){
-              fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexeLC}&categorie=${categorieLC}&taille=${taille}`)
-              .then((response)=>response.json())
-              .then((mensurations) => {
-                if (mensurations) {
-                  fetch(`${url}/users/vetements/${categorieLC}/${userToken}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      marque: marque,
-                      type: type,
-                      coupe: coupe,
-                      taille: taille,
-                      mensurations: mensurations,
-                      fit: true
-                    }),
-                  })
-                  .then((response) => response.json())
-                  .then((vetement) => {
-                    console.log(vetement);
-                    (() => {
-                    setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]); // fetch les marques en bdd
-                    })();
-                    console.log("marque enregistrée");
-                    setOldMarque(marque);
-                    setCounterChanged(!counterChanged);
-                  });
-                };    
-              })
-            } 
-            else {
-              Alert.alert("Ce type n'est pas disponible pour cette marque")
-            }  
-          })
-        }
+      if (marque === oldMarque){
+        return Alert.alert("Marque déjà utilisée") }
+
+      if (taille) {
+        fetch(`${url}/marques/types?marque=${marque}&sexe=${sexeLC}&categorie=${categorieLC}`)
+        .then((response)=>response.json())
+        .then((types) => {
+          if(types.includes(type)){
+            fetch(`${url}/marques/tableau?marque=${marque}&type=${type}&sexe=${sexeLC}&categorie=${categorieLC}&taille=${taille}`)
+            .then((response)=>response.json())
+            .then((mensurations) => {
+              if (mensurations) {
+                fetch(`${url}/users/vetements/${categorieLC}/${userToken}`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    marque: marque,
+                    type: type,
+                    coupe: coupe,
+                    taille: taille,
+                    mensurations: mensurations,
+                    fit: true
+                  }),
+                })
+                .then((response) => response.json())
+                .then((vetement) => {
+                  (() => {
+                  setMarquesActives((prevMarquesActives) => [...prevMarquesActives, marque]); // fetch les marques en bdd
+                  })();
+                  setOldMarque(marque);
+                  setCounterChanged(!counterChanged);
+                });
+              };    
+            })
+          } 
+          else {
+            Alert.alert("Ce type n'est pas disponible pour cette marque")
+          }  
+        })
       }
-      else {
-        Alert.alert("Marque déjà utilisée")
-      }
+      
     }
     
     const handleFinish = () => {
@@ -275,7 +239,7 @@ export default function CalibrateTailles({ navigation, categorie }) {
       navigateToCalibrage = () => {
         setModalCongratsVisible(false),
         navigation.navigate('Calibrage')
-    }
+      }
 
       return (
       <KeyboardAvoidingView

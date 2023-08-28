@@ -15,7 +15,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 
-// URL de l'API
+// URL de lu backend
 const url = process.env.EXPO_PUBLIC_IP;
 
 // Composant principal
